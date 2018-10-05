@@ -54,6 +54,9 @@
     },
     "dependencies": {
         "dat.gui": "^0.7.2",
+        "dsp.js": "^1.0.1",
+        "fft-js": "0.0.11",
+        "fft.js": "^4.0.3",
         "immutable": "^3.8.2",
         "phaser": "^3.14.0",
         "stats-js": "^1.0.0-alpha1"
