@@ -1,0 +1,61 @@
+{
+    "name": "phaser-3.14.0-boilerplate",
+    "version": "1.1.0",
+    "description": "Phaser 3.14.0 Boilerplate project for rapid development.",
+    "author": "Christian Holt (Sidaroth@protonmail.com)",
+    "main": "src/index.js",
+    "scripts": {
+        "default:start": "npm run clean && webpack --mode development",
+        "start": "webpack-dev-server",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "npm run clean && webpack --mode production",
+        "clean": "rimraf dist"
+    },
+    "license": "MIT",
+    "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
+    "homepage": "https://sidaroth.no",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sidaroth/Phaser3.Boilerplate.git"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.1.2",
+        "@babel/plugin-proposal-class-properties": "^7.1.0",
+        "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+        "@babel/preset-env": "^7.1.0",
+        "babel-eslint": "^8.2.6",
+        "babel-loader": "^8.0.4",
+        "copy-webpack-plugin": "^4.5.2",
+        "core-js": "^2.5.7",
+        "css-loader": "^1.0.0",
+        "eslint": "^4.19.1",
+        "eslint-config-airbnb-base": "^12.1.0",
+        "eslint-config-standard": "^10.2.1",
+        "eslint-import-resolver-webpack": "^0.10.1",
+        "eslint-plugin-import": "^2.14.0",
+        "eslint-plugin-node": "^4.2.2",
+        "eslint-plugin-promise": "^3.8.0",
+        "eslint-plugin-standard": "^3.1.0",
+        "expose-loader": "^0.7.5",
+        "file-loader": "^1.1.11",
+        "html-webpack-plugin": "^3.1.0",
+        "html-webpack-template": "^6.1.0",
+        "mini-css-extract-plugin": "^0.4.3",
+        "node-sass": "^4.9.3",
+        "raw-loader": "^0.5.1",
+        "resolve-url-loader": "^2.3.1",
+        "rimraf": "^2.6.2",
+        "sass-loader": "^7.1.0",
+        "stats-js": "^1.0.0-alpha1",
+        "style-loader": "^0.21.0",
+        "webpack": "^4.20.2",
+        "webpack-cli": "^3.1.1",
+        "webpack-dev-server": "^3.1.9"
+    },
+    "dependencies": {
+        "dat.gui": "^0.7.2",
+        "immutable": "^3.8.2",
+        "phaser": "^3.14.0",
+        "stats-js": "^1.0.0-alpha1"
+    }
+}

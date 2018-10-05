@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".", // This must be specified if "paths" is.
+        "paths": {
+            "configs/*": ["src/configs/*"],
+            "core/*": ["src/core/*"],
+            "scenes/*": ["src/scenes/*"],
+            "entities/*": ["src/entities/*"],
+            "components/*": ["src/components/*"],
+            "utils/*": ["src/utils/*"],
+            "styles/*": ["styles/*"],
+            "assets/*": ["assets/*"]
+        }
+    }
+}

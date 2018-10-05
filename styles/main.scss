@@ -1,0 +1,43 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Roboto', serif;
+    color: #757575;
+    letter-spacing: 0.21px;
+    font-weight: 700;
+    background-color: #757575;
+}
+
+#game {
+    height: 100%;
+    width: 100%;
+}
+
+#fullscreen_toggle {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    z-index: 1000000;
+    color: #aaaaaaaa;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: 0.2em;
+    text-align: center;
+
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+
+    /* You can be more comfortable with increased icons size */
+    font-size: 250%;
+
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
