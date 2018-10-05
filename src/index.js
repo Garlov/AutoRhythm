@@ -14,6 +14,9 @@ const phaserConfig = {
     backgroundColor: '#555555',
     parent: 'game',
     scene: [BootScene, LoadScene, Game],
+    audio: {
+        disableWebAudio: true,
+    },
 };
 
 const game = new Phaser.Game(phaserConfig);
