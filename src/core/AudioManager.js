@@ -15,15 +15,17 @@ const AudioManager = function createAudioManagerFunc() {
     let muteIcon;
     const muteIdentifier = `${gameConfig.GAME.TITLE.replace(/ /g, '_')}_isMuted`; // replace all spaces with _ for safety
     const soundEffects = new Map();
-    const backgroundMusic = new Map();
+    const music = new Map();
 
     function init() {
         state.setupMute();
-        // TODO fix map of background/sfx, split config or make mapped objects more complex
-        backgroundMusic.set(audioConfig.BG_SCORE.KEY, scene.sound.add(audioConfig.BG_SCORE.KEY));
-        Object.keys(audioConfig).forEach((objKey) => {
-            const AUDIO = audioConfig[objKey];
-            soundEffects.set(AUDIO.KEY, scene.sound.add(AUDIO.KEY));
+
+        music.set(audioConfig.MUSIC.ALL_ALONE.KEY, scene.sound.add(audioConfig.MUSIC.ALL_ALONE.KEY));
+        music.set(audioConfig.MUSIC.BOWERS_WILKINS.KEY, scene.sound.add(audioConfig.MUSIC.BOWERS_WILKINS.KEY));
+
+        Object.keys(audioConfig.SFX).forEach((objKey) => {
+            const SFX = audioConfig.SFX[objKey];
+            soundEffects.set(SFX.KEY, scene.sound.add(SFX.KEY));
         });
 
         return state;
@@ -48,9 +50,9 @@ const AudioManager = function createAudioManagerFunc() {
         }
     }
 
-    function playBgMusic(key = audioConfig.BG_SCORE.KEY) {
-        if (!state.isBgMusicPlaying && backgroundMusic.has(key)) {
-            const bgm = backgroundMusic.get(key);
+    function playBgMusic(key = audioConfig.MUSIC.ALL_ALONE.KEY) {
+        if (!state.isBgMusicPlaying && music.has(key)) {
+            const bgm = music.get(key);
             bgm.loop = true;
             bgm.volume = 0.7;
             bgm.play();
@@ -92,7 +94,7 @@ const AudioManager = function createAudioManagerFunc() {
     function destroy() {
         muteIcon.destroy();
         soundEffects.destroy();
-        backgroundMusic.destroy();
+        music.destroy();
     }
 
     return Object.assign(state, {

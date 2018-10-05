@@ -9,8 +9,8 @@ const LoadScene = function LoadSceneFunc() {
     let loadingBar;
 
     function loadAudio() {
-        Object.keys(audioConfig).forEach((objKey) => {
-            const AUDIO = audioConfig[objKey];
+        Object.keys(audioConfig.MUSIC).forEach((objKey) => {
+            const AUDIO = audioConfig.MUSIC[objKey];
             state.load.audio(AUDIO.KEY, AUDIO.PATH);
         });
     }
