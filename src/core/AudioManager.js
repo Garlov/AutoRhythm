@@ -16,6 +16,7 @@ const AudioManager = function createAudioManagerFunc() {
     const muteIdentifier = `${gameConfig.GAME.TITLE.replace(/ /g, '_')}_isMuted`; // replace all spaces with _ for safety
     const soundEffects = new Map();
     const music = new Map();
+    let bgm;
 
     function init() {
         state.setupMute();
@@ -52,12 +53,16 @@ const AudioManager = function createAudioManagerFunc() {
 
     function playBgMusic(key = audioConfig.MUSIC.ALL_ALONE.KEY) {
         if (!state.isBgMusicPlaying && music.has(key)) {
-            const bgm = music.get(key);
+            bgm = music.get(key);
             bgm.loop = true;
             bgm.volume = 0.7;
             bgm.play();
             state.isBgMusicPlaying = true;
         }
+    }
+
+    function getBackgroundMusic() {
+        return bgm;
     }
 
     function isAudioMuted() {
@@ -106,6 +111,7 @@ const AudioManager = function createAudioManagerFunc() {
         setScene,
         setPauseOnBlur,
         playBgMusic,
+        getBackgroundMusic,
         isAudioMuted,
         toggleMute,
         setupMute,

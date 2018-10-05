@@ -15,7 +15,7 @@ const phaserConfig = {
     parent: 'game',
     scene: [BootScene, LoadScene, Game],
     audio: {
-        disableWebAudio: true,
+        disableWebAudio: false,
     },
 };
 

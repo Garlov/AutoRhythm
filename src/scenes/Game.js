@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import { List } from 'immutable';
 import gameConfig from 'configs/gameConfig';
 import spriteConfig from 'configs/spriteConfig';
 import AudioManager from 'core/AudioManager';
@@ -13,6 +12,10 @@ const Game = function GameFunc() {
     let audioManager;
     let UIScene;
     let background;
+    let analyser;
+    let bufferLength;
+    let dataArray;
+    let vis;
 
     function cameraSetup() {
         // state.cameras.main.startFollow(state.player); // or whatever else.
@@ -31,13 +34,49 @@ const Game = function GameFunc() {
     }
 
     function create() {
-        background = state.add.image(0, 0, spriteConfig.BACKGROUND.KEY);
-        background.setOrigin(0, 0);
-        audioManager.playBgMusic();
         cameraSetup();
+        // start music
+        audioManager.playBgMusic();
+        // instatiate visulizer
+        vis = state.add.graphics();
+        // create context
+        const audioCtx = audioManager.getBackgroundMusic().source.context;
+        // setup analyser and buffer
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 2048;
+        bufferLength = analyser.fftSize;
+        dataArray = new Uint8Array(bufferLength);
+        // connect analyser to audio context/source
+        audioManager.getBackgroundMusic().source.connect(analyser);
     }
 
-    function update(time, delta) {}
+    function drawVisulizer() {
+        if (analyser) {
+            analyser.getByteTimeDomainData(dataArray);
+            vis.clear();
+            vis.lineStyle(5, 0xff0000, 1);
+            const width = gameConfig.GAME.VIEWWIDTH;
+            const height = gameConfig.GAME.VIEWHEIGHT;
+            const sliceWidth = (width * 1.0) / bufferLength;
+            let x = 0;
+            vis.beginPath();
+            vis.moveTo(0, height / 2);
+
+            for (let i = 0; i < bufferLength; i += 1) {
+                const v = dataArray[i] / 128;
+                const y = (v * height) / 2;
+                vis.lineTo(x, y);
+                x += sliceWidth;
+            }
+
+            vis.lineTo(width, height / 2);
+            vis.strokePath();
+        }
+    }
+
+    function update(time, delta) {
+        drawVisulizer();
+    }
 
     function destroy() {
         if (background) state.background.destroy();
