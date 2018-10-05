@@ -1,8 +1,8 @@
 {
-    "name": "phaser-3.14.0-boilerplate",
-    "version": "1.1.0",
-    "description": "Phaser 3.14.0 Boilerplate project for rapid development.",
-    "author": "Christian Holt (Sidaroth@protonmail.com)",
+    "name": "OpenJam.SpamToWin",
+    "version": "1.0.0",
+    "description": "Phaser 3.14.0 Open Jam 2018 project",
+    "author": "Christian Holt (Sidaroth@protonmail.com), Øyvind Nordli (oe.nordli@gmail.com)",
     "main": "src/index.js",
     "scripts": {
         "default:start": "npm run clean && webpack --mode development",
@@ -13,10 +13,10 @@
     },
     "license": "MIT",
     "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
-    "homepage": "https://sidaroth.no",
+    "homepage": "https://example.com",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/sidaroth/Phaser3.Boilerplate.git"
+        "url": "git+https://github.com/Garlov/OpenJam.SpamToWin.git"
     },
     "devDependencies": {
         "@babel/core": "^7.1.2",

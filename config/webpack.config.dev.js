@@ -99,7 +99,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: '../node_modules/html-webpack-template/index.ejs',
-            title: 'Boilerplate',
+            title: 'OpenJam.SpamToWin',
             meta: [{ name: 'robots', content: 'noindex,nofollow' }],
             appMountIds: ['game'],
             inject: false,

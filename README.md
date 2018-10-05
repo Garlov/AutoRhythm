@@ -1,8 +1,16 @@
-# Phaser3Boilerplate
+# Open Jam 2018
+THEME: SPAM TO WIN
 
-Phaser 3.14.0 Boilerplate project for rapid development.
+Phaser 3.14.0 Open Jam 2018 project.
 
 Documentation for Phaser: https://photonstorm.github.io/phaser3-docs/index.html
+
+## Tools
+-   Visual Studio Code
+-   Phaser 3
+-   
+-   
+-   
 
 ## Requirements
 
@@ -14,15 +22,15 @@ Documentation for Phaser: https://photonstorm.github.io/phaser3-docs/index.html
 
 1. Clone the repository
 2. Copy into a new folder/repository
-3. Update Package.json and index.html with author/title/etc.
-4. npm install
-5. npm start
+3. npm install
+4. npm start
 
 ### Contributions
 
-Pull requests with features that you believe should be in a phaser boilerplate project is welcome. You may also create issues regarding missing boilerplate.
+TODO: Update contributions
 
 ### Attributions
 
+TODO: Update later
 Default background Soundtrack is Full of Stars, by Philipp Weigl (http://freemusicarchive.org/music/Philipp_Weigl/Sound-trax/Philipp_Weigl_-_Full_of_Stars)
 Used under creative commons license CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/, https://creativecommons.org/licenses/by/4.0/legalcode)
