@@ -56,6 +56,8 @@ const AudioManager = function createAudioManagerFunc() {
             bgm = music.get(key);
             bgm.loop = true;
             bgm.volume = 0.7;
+            // bgm.rate = 0.5;
+            // console.log(bgm);
             bgm.play();
             state.isBgMusicPlaying = true;
         }
@@ -63,6 +65,14 @@ const AudioManager = function createAudioManagerFunc() {
 
     function getBackgroundMusic() {
         return bgm;
+    }
+
+    function getAudioContext() {
+        return bgm.source.context;
+    }
+
+    function getAudioSource() {
+        return bgm.source;
     }
 
     function isAudioMuted() {
@@ -111,7 +121,9 @@ const AudioManager = function createAudioManagerFunc() {
         setScene,
         setPauseOnBlur,
         playBgMusic,
+        getAudioContext,
         getBackgroundMusic,
+        getAudioSource,
         isAudioMuted,
         toggleMute,
         setupMute,

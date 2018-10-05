@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
 import gameConfig from 'configs/gameConfig';
-import spriteConfig from 'configs/spriteConfig';
 import AudioManager from 'core/AudioManager';
 import UI from 'scenes/UI';
+import createSineWaveVisualizer from 'entities/createSineWaveVisualiser';
+import createFrequencyVisualizer from 'entities/createFrequencyVisualizer';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -11,11 +12,7 @@ const Game = function GameFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.GAME);
     let audioManager;
     let UIScene;
-    let background;
-    let analyser;
-    let bufferLength;
-    let dataArray;
-    let vis;
+    const visualizers = [];
 
     function cameraSetup() {
         // state.cameras.main.startFollow(state.player); // or whatever else.
@@ -33,53 +30,31 @@ const Game = function GameFunc() {
             .init();
     }
 
+    function getAudioManager() {
+        return audioManager;
+    }
+
     function create() {
         cameraSetup();
         // start music
         audioManager.playBgMusic();
         // instatiate visulizer
-        vis = state.add.graphics();
-        // create context
-        const audioCtx = audioManager.getBackgroundMusic().source.context;
-        // setup analyser and buffer
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 2048;
-        bufferLength = analyser.fftSize;
-        dataArray = new Uint8Array(bufferLength);
-        // connect analyser to audio context/source
-        audioManager.getBackgroundMusic().source.connect(analyser);
-    }
+        visualizers.push(createSineWaveVisualizer());
 
-    function drawVisulizer() {
-        if (analyser) {
-            analyser.getByteTimeDomainData(dataArray);
-            vis.clear();
-            vis.lineStyle(5, 0xff0000, 1);
-            const width = gameConfig.GAME.VIEWWIDTH;
-            const height = gameConfig.GAME.VIEWHEIGHT;
-            const sliceWidth = (width * 1.0) / bufferLength;
-            let x = 0;
-            vis.beginPath();
-            vis.moveTo(0, height / 2);
+        visualizers.push(createFrequencyVisualizer());
 
-            for (let i = 0; i < bufferLength; i += 1) {
-                const v = dataArray[i] / 128;
-                const y = (v * height) / 2;
-                vis.lineTo(x, y);
-                x += sliceWidth;
-            }
-
-            vis.lineTo(width, height / 2);
-            vis.strokePath();
-        }
+        visualizers.forEach((viz, i) => {
+            viz.init(state);
+        });
     }
 
     function update(time, delta) {
-        drawVisulizer();
+        visualizers.forEach((viz) => {
+            viz.update();
+        });
     }
 
     function destroy() {
-        if (background) state.background.destroy();
         if (UI) UI.destroy();
     }
 
@@ -87,6 +62,7 @@ const Game = function GameFunc() {
         // props
         // methods
         init,
+        getAudioManager,
         create,
         update,
         destroy,

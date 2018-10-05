@@ -11,7 +11,7 @@ const phaserConfig = {
     type: Phaser.WEBGL,
     width: gameConfig.GAME.VIEWWIDTH,
     height: gameConfig.GAME.VIEWHEIGHT,
-    backgroundColor: '#555555',
+    backgroundColor: '#111111',
     parent: 'game',
     scene: [BootScene, LoadScene, Game],
     audio: {
