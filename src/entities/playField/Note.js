@@ -1,5 +1,7 @@
 import isGameEntity from 'components/entities/isGameEntity';
 import hasPosition from 'components/hasPosition';
+import canEmit from 'components/canEmit';
+import eventConfig from 'configs/eventConfig';
 
 const Note = function NoteFunc(parent) {
     const state = {};
@@ -15,10 +17,6 @@ const Note = function NoteFunc(parent) {
     function update(currentIndex, stepsPerSec, stepSize, max) {
         const distance = (index - currentIndex) * stepSize;
         state.setY(board.getY() - distance);
-        if (index < 323) {
-            // console.log(max, stepsPerSec, stepSize);
-            // console.log(state.getY());
-        }
         if (!rect && state.getY() > 0 && state.getY() < board.getY() + 400) {
             rect = board.getParentState().add.graphics();
             rect.lineStyle(2, 0xff0000, 1);
@@ -27,6 +25,8 @@ const Note = function NoteFunc(parent) {
         if (rect && state.getY() > board.getY() + 400) {
             rect.destroy();
             rect = undefined;
+            state.hit = true;
+            state.emit(eventConfig.EVENTS.TONE.LEFT_LANE, state);
         }
         if (rect) {
             rect.x = state.getX();
@@ -34,13 +34,20 @@ const Note = function NoteFunc(parent) {
         }
     }
 
+    function onHit() {
+        state.hit = true;
+    }
+
     const isGameEntityState = isGameEntity(state);
     const hasPositionState = hasPosition(state);
-    return Object.assign(state, isGameEntityState, hasPositionState, {
+    const canEmitState = canEmit(state);
+    return Object.assign(state, isGameEntityState, hasPositionState, canEmitState, {
         // props
+        hit: false,
         // methods
         init,
         update,
+        onHit,
     });
 };
 

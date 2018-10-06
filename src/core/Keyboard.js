@@ -1,16 +1,16 @@
 import canEmit from 'components/canEmit';
-import gameConfig from 'configs/gameConfig';
+import eventConfig from 'configs/eventConfig';
 
 const createKeyboardInput = function createKeyboardInputFunc() {
     const state = {};
     const canEmitState = canEmit(state);
 
     function keyDownFn(e) {
-        state.emit(gameConfig.EVENTS.KEYDOWN, { key: e.key, repeat: e.repeat, keyCode: e.keyCode });
+        state.emit(eventConfig.EVENTS.KEYBOARD.KEYDOWN, { key: e.key, repeat: e.repeat, keyCode: e.keyCode });
     }
 
     function keyUpFn(e) {
-        state.emit(gameConfig.EVENTS.KEYUP, { key: e.key, repeat: e.repeat, keyCode: e.keyCode });
+        state.emit(eventConfig.EVENTS.KEYBOARD.KEYUP, { key: e.key, repeat: e.repeat, keyCode: e.keyCode });
     }
 
     function enable() {
