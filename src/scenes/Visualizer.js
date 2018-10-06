@@ -3,10 +3,13 @@ import gameConfig from 'configs/gameConfig';
 import createSineWaveVisualizer from 'entities/createSineWaveVisualiser';
 import createFrequencyVisualizer from 'entities/createFrequencyVisualizer';
 import audioConfig from 'configs/audioConfig';
+import hasAudio from 'components/hasAudio';
 
 const createVisualizerScene = function createVisualizerSceneFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.VISUALIZER);
     const visualizers = [];
+
+    const hasAudioState = hasAudio(state);
 
     function create() {
         // // instantiate visualizers
@@ -16,12 +19,8 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         state.visualize();
     }
 
-    function _getAudioManager() {
-        return state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
-    }
-
-    function visualize(key = audioConfig.MUSIC.ALL_ALONE.KEY) {
-        const am = _getAudioManager();
+    function visualize(key = audioConfig.MUSIC.BOWERS_WILKINS.KEY) {
+        const am = state.getAudioManager();
         am.playMusic(key);
 
         visualizers.forEach((viz) => {
@@ -39,7 +38,7 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         visualizers.forEach(viz => viz.destroy());
     }
 
-    return Object.assign(state, {
+    return Object.assign(state, hasAudioState, {
         // props
         // methods
         create,

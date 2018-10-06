@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 import gameConfig from 'configs/gameConfig';
 import AudioManager from 'core/AudioManager';
 import UI from 'scenes/UI';
-import Visualizer from 'scenes/Visualizer';
+import MusicSelect from 'scenes/MusicSelect';
 import PlayField from 'scenes/PlayField';
+import createKeyboard from 'core/Keyboard';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -12,6 +13,7 @@ const Game = function GameFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.GAME);
     let audioManager;
     let currentScene;
+    const keyboard = createKeyboard();
     const gameStates = new Map();
 
     function cameraSetup() {
@@ -33,11 +35,19 @@ const Game = function GameFunc() {
             .setPauseOnBlur(true)
             .init();
 
-        gameStates.set(gameConfig.SCENES.VISUALIZER, Visualizer());
-        state.scene.add(gameConfig.SCENES.VISUALIZER, gameStates.get(gameConfig.SCENES.VISUALIZER), false);
+        gameStates.set(gameConfig.SCENES.MUSIC_SELECT, MusicSelect());
+        state.scene.add(gameConfig.SCENES.MUSIC_SELECT, gameStates.get(gameConfig.SCENES.MUSIC_SELECT), false);
 
-        currentScene = gameStates.get(gameConfig.SCENES.PLAY_FIELD);
+        // audioManager.playMusic();
+        currentScene = gameStates.get(gameConfig.SCENES.MUSIC_SELECT);
+        // currentScene = gameStates.get(gameConfig.SCENES.PLAY_FIELD);
         currentScene.scene.start();
+
+        keyboard.enable();
+    }
+
+    function getKeyboard() {
+        return keyboard;
     }
 
     function getAudioManager() {
@@ -46,7 +56,6 @@ const Game = function GameFunc() {
 
     function create() {
         cameraSetup();
-        gameStates.get(gameConfig.SCENES.VISUALIZER).visualize();
     }
 
     function update(time, delta) {}
@@ -62,6 +71,7 @@ const Game = function GameFunc() {
         // methods
         init,
         getAudioManager,
+        getKeyboard,
         create,
         update,
         destroy,

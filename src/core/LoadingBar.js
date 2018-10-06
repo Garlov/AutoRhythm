@@ -34,13 +34,13 @@ const LoadingBar = function LoadingBarFunc() {
         loaderBg.fillStyle(0x444444, 1);
         loaderBg.fillRect(x - width / 2 - padding, y - height / 2 - padding, width + padding * 2, height + padding * 2);
 
-        text = parentScene.add.text(x, y, 'Loading...', {
-            font: '16px Arial',
-            fill: '#eeeeee',
-            align: 'center',
-        });
-        text.setOrigin(0.5, 1);
-        text.y -= text.height + textPaddingFromBar;
+        // text = parentScene.add.text(x, y, 'Loading...', {
+        //     font: '16px Arial',
+        //     fill: '#eeeeee',
+        //     align: 'center',
+        // });
+        // text.setOrigin(0.5, 1);
+        // text.y -= text.height + textPaddingFromBar;
 
         parentScene.load.on('progress', updateProgressBar, state);
     }

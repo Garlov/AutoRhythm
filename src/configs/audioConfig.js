@@ -13,6 +13,8 @@ export default {
             PATH: 'assets/audio/all_alone.mp3',
         },
         TEST: {
+            ARTIST: 'Test',
+            TITLE: 'test tunes 10-20k',
             KEY: 'test',
             PATH: 'assets/audio/test.ogg',
         },
