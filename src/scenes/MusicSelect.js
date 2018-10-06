@@ -1,22 +1,21 @@
 import Phaser from 'phaser';
 import gameConfig from 'configs/gameConfig';
+import eventConfig from 'configs/eventConfig';
 import audioConfig from 'configs/audioConfig';
 import hasInput from 'components/hasInput';
 import canListen from 'components/canListen';
 import Visualizer from 'scenes/Visualizer';
 import hasAudio from 'components/hasAudio';
+import canEmit from 'components/canEmit';
 
 const MusicSelectScene = function MusicSelectSceneFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.MUSIC_SELECT);
     let currentSongIndex = 0;
     let graphicsObj;
+    let titleText;
 
     let visualizer;
-    const songs = [];
-
-    const hasInputState = hasInput(state);
-    const hasAudioState = hasAudio(state);
-    const canListenState = canListen(state);
+    let songs = [];
 
     function _renderSongs() {
         graphicsObj.clear();
@@ -57,7 +56,9 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
         });
     }
 
-    function _selectSong() {}
+    function _selectSong() {
+        state.emitGlobal(eventConfig.EVENTS.GAME.SONG_SELECTED, songs[currentSongIndex].key);
+    }
 
     function _previewSong() {
         const { key } = songs[currentSongIndex];
@@ -84,32 +85,50 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     }
 
     function _onKeyDown(e) {
-        if (e.keyCode === gameConfig.KEYCODES.LEFT_ARROW || e.keyCode === gameConfig.KEYCODES.UP_ARROW) {
-            _navigateUp();
-        }
+        if (state.sys.isActive()) {
+            if (e.keyCode === gameConfig.KEYCODES.LEFT_ARROW || e.keyCode === gameConfig.KEYCODES.UP_ARROW) {
+                _navigateUp();
+            }
 
-        if (e.keyCode === gameConfig.KEYCODES.RIGHT_ARROW || e.keyCode === gameConfig.KEYCODES.DOWN_ARROW) {
-            _navigateDown();
-        }
+            if (e.keyCode === gameConfig.KEYCODES.RIGHT_ARROW || e.keyCode === gameConfig.KEYCODES.DOWN_ARROW) {
+                _navigateDown();
+            }
 
-        if (e.keyCode === gameConfig.KEYCODES.ENTER) {
-            _selectSong();
+            if (e.keyCode === gameConfig.KEYCODES.ENTER) {
+                _selectSong();
+            }
         }
     }
 
-    function create() {
-        const titleText = state.add.text(gameConfig.GAME.VIEWWIDTH / 2, 20, 'Song Selection', {
-            font: '64px Arial',
-            fill: '#eeeeee',
-            align: 'center',
+    function stop() {
+        songs.forEach((song) => {
+            song.text.destroy();
         });
-        titleText.x -= titleText.width / 2;
 
-        graphicsObj = state.add.graphics();
+        songs = [];
+        visualizer.stop();
+        state.scene.stop();
+    }
+
+    function create() {
+        if (!titleText) {
+            titleText = state.add.text(gameConfig.GAME.VIEWWIDTH / 2, 20, 'Song Selection', {
+                font: '64px Arial',
+                fill: '#eeeeee',
+                align: 'center',
+            });
+            titleText.x -= titleText.width / 2;
+        }
+
+        if (!graphicsObj) {
+            graphicsObj = state.add.graphics();
+        }
         state.listenOn(state.getKeyboard(), 'keydown', _onKeyDown);
 
-        visualizer = Visualizer();
-        state.scene.add(gameConfig.SCENES.VISUALIZER, visualizer, true);
+        if (!visualizer) {
+            visualizer = Visualizer();
+            state.scene.add(gameConfig.SCENES.VISUALIZER, visualizer, true);
+        }
 
         _renderSongs();
         _previewSong();
@@ -117,14 +136,22 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
 
     function update(time, delta) {}
 
-    function destroy() {}
+    function destroy() {
+        console.log('destasdasd');
+        this.visualizer.destroy();
+    }
 
-    return Object.assign(state, hasInputState, canListenState, hasAudioState, {
+    const hasInputState = hasInput(state);
+    const hasAudioState = hasAudio(state);
+    const canListenState = canListen(state);
+    const canEmitState = canEmit(state);
+    return Object.assign(state, hasInputState, canListenState, hasAudioState, canEmitState, {
         // props
         // methods
         create,
         update,
         destroy,
+        stop,
     });
 };
 

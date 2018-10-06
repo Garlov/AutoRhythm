@@ -2,6 +2,8 @@ export default {
     EVENTS: {
         GAME: {
             STARTED: 'game started',
+            SONG_SELECTED: 'song selected',
+            SONG_ENDED: 'song ended',
         },
         KEYBOARD: {
             KEYDOWN: 'keydown',

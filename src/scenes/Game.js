@@ -5,6 +5,8 @@ import UI from 'scenes/UI';
 import MusicSelect from 'scenes/MusicSelect';
 import PlayField from 'scenes/PlayField';
 import createKeyboard from 'core/Keyboard';
+import eventConfig from 'configs/eventConfig';
+import canListen from 'components/canListen';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -12,9 +14,8 @@ import createKeyboard from 'core/Keyboard';
 const Game = function GameFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.GAME);
     let audioManager;
-    let currentScene;
+    const gui = UI();
     const keyboard = createKeyboard();
-    const gameStates = new Map();
 
     function cameraSetup() {
         // state.cameras.main.startFollow(state.player); // or whatever else.
@@ -22,27 +23,35 @@ const Game = function GameFunc() {
         state.cameras.main.setZoom(0.8);
     }
 
+    function _onSongSelected(e) {
+        state.scene.remove(gameConfig.SCENES.MUSIC_SELECT);
+        state.scene.add(gameConfig.SCENES.PLAY_FIELD, PlayField(), true);
+    }
+
+    function _onSongEnded(e) {
+        console.log(e);
+        // TODO: Score scene and actually care about event data.
+        state.scene.remove(gameConfig.SCENES.PLAY_FIELD);
+        state.scene.add(gameConfig.SCENES.MUSIC_SELECT, MusicSelect(), true);
+    }
+
+    function setupListeners() {
+        state.listenGlobal(eventConfig.EVENTS.GAME.SONG_ENDED, _onSongEnded);
+        state.listenGlobal(eventConfig.EVENTS.GAME.SONG_SELECTED, _onSongSelected);
+    }
+
     function init() {
         // After assets are loaded.
-        gameStates.set(gameConfig.SCENES.UI, UI());
-        state.scene.add(gameConfig.SCENES.UI, gameStates.get(gameConfig.SCENES.UI), true);
-
-        gameStates.set(gameConfig.SCENES.PLAY_FIELD, PlayField());
-        state.scene.add(gameConfig.SCENES.PLAY_FIELD, gameStates.get(gameConfig.SCENES.PLAY_FIELD), false);
+        state.scene.add(gameConfig.SCENES.UI, gui, true);
 
         audioManager = AudioManager()
-            .setScene(gameStates.get(gameConfig.SCENES.UI))
+            .setScene(gui)
             .setPauseOnBlur(true)
             .init();
 
-        gameStates.set(gameConfig.SCENES.MUSIC_SELECT, MusicSelect());
-        state.scene.add(gameConfig.SCENES.MUSIC_SELECT, gameStates.get(gameConfig.SCENES.MUSIC_SELECT), false);
-
-        currentScene = gameStates.get(gameConfig.SCENES.MUSIC_SELECT);
-        // currentScene = gameStates.get(gameConfig.SCENES.PLAY_FIELD);
-        currentScene.scene.start();
-
+        setupListeners();
         keyboard.enable();
+        state.scene.add(gameConfig.SCENES.MUSIC_SELECT, MusicSelect(), true);
     }
 
     function getKeyboard() {
@@ -59,13 +68,11 @@ const Game = function GameFunc() {
 
     function update(time, delta) {}
 
-    function destroy() {
-        gameStates.forEach((s) => {
-            s.destroy();
-        });
-    }
+    function destroy() {}
 
-    return Object.assign(state, {
+    const canListenState = canListen(state);
+
+    return Object.assign(state, canListenState, {
         // props
         // methods
         init,
