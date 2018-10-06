@@ -2,6 +2,7 @@ import isGameEntity from 'components/entities/isGameEntity';
 import hasPosition from 'components/hasPosition';
 import canEmit from 'components/canEmit';
 import eventConfig from 'configs/eventConfig';
+import getFunctionUsage from 'utils/getFunctionUsage';
 
 const Note = function NoteFunc(parent) {
     const state = {};
@@ -41,7 +42,14 @@ const Note = function NoteFunc(parent) {
     const isGameEntityState = isGameEntity(state);
     const hasPositionState = hasPosition(state);
     const canEmitState = canEmit(state);
-    return Object.assign(state, isGameEntityState, hasPositionState, canEmitState, {
+    const states = [
+        { state, name: 'state' },
+        { state: isGameEntityState, name: 'isGameEntity' },
+        { state: hasPositionState, name: 'hasPosition' },
+        { state: canEmitState, name: 'canEmit' },
+    ];
+    getFunctionUsage(states, 'Note');
+    return Object.assign(...states.map(s => s.state), {
         // props
         hit: false,
         // methods

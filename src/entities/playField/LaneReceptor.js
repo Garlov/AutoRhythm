@@ -6,6 +6,8 @@ import hasInput from 'components/hasInput';
 import canListen from 'components/canListen';
 import eventConfig from 'configs/eventConfig';
 import canEmit from 'components/canEmit';
+import getFunctionUsage from 'utils/getFunctionUsage';
+import pipe from 'utils/pipe';
 
 const LaneReceptor = function LaneReceptorFunc(parent) {
     const state = {};
@@ -61,7 +63,17 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     const hasInputState = hasInput(state);
     const canListenState = canListen(state);
     const canEmitState = canEmit(state);
-    return Object.assign(state, isGameEntityState, hasPositionState, hasSizeState, hasInputState, canListenState, canEmitState, {
+    const states = [
+        { state, name: 'state' },
+        { state: isGameEntityState, name: 'isGameEntity' },
+        { state: hasPositionState, name: 'hasPosition' },
+        { state: hasSizeState, name: 'hasSize' },
+        { state: hasInputState, name: 'hasInput' },
+        { state: canListenState, name: 'canListen' },
+        { state: canEmitState, name: 'canEmit' },
+    ];
+    getFunctionUsage(states, 'LaneReceptor');
+    return Object.assign(...states.map(s => s.state), {
         // props
         scene: board.getParentState().scene,
         // methods
@@ -69,6 +81,10 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         setColor,
         update,
         init,
+        destroy: pipe(
+            canListen.destroy,
+            canEmit.destroy,
+        ),
     });
 };
 
