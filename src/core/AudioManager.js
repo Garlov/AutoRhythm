@@ -11,6 +11,7 @@ const AudioManager = function createAudioManagerFunc() {
     const music = new Map();
     let currentSong;
     const currentVolume = 0.7;
+    const defaultSongKey = audioConfig.MUSIC.ALL_ALONE.KEY;
 
     function init() {
         state.setupMute();
@@ -54,7 +55,7 @@ const AudioManager = function createAudioManagerFunc() {
         state.isMusicPlaying = false;
     }
 
-    function playMusic(key = audioConfig.MUSIC.ALL_ALONE.KEY) {
+    function playMusic(key = defaultSongKey) {
         if (!state.isMusicPlaying && music.has(key)) {
             currentSong = music.get(key);
             currentSong.loop = true;
@@ -72,11 +73,11 @@ const AudioManager = function createAudioManagerFunc() {
         return currentSong;
     }
 
-    function getAudioContext(key = audioConfig.MUSIC.ALL_ALONE.KEY) {
+    function getAudioContext(key = defaultSongKey) {
         return music.get(key).source.context;
     }
 
-    function getAudioSource(key = audioConfig.MUSIC.ALL_ALONE.KEY) {
+    function getAudioSource(key = defaultSongKey) {
         return music.get(key).source;
     }
 

@@ -19,7 +19,7 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         state.visualize();
     }
 
-    function visualize(key = audioConfig.MUSIC.BOWERS_WILKINS.KEY) {
+    function visualize(key) {
         const am = state.getAudioManager();
         am.playMusic(key);
 
