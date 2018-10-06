@@ -1,6 +1,6 @@
 import gameConfig from 'configs/gameConfig';
-import { RFFT } from 'dsp.js';
 import createFrequencyMap from 'utils/createFrequencyMap';
+import getFunctionUsage from 'utils/getFunctionUsage';
 
 const createMusicAnalyzer = function createMusicAnalyzerFunc() {
     const state = {};
@@ -46,11 +46,18 @@ const createMusicAnalyzer = function createMusicAnalyzerFunc() {
         drawSummary();
     }
 
-    return Object.assign(state, {
+    const localState = {
         // props
         // methods
         init,
         update,
+    };
+
+    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }];
+
+    getFunctionUsage(states, 'createMusicAnalyzer');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
     });
 };
 

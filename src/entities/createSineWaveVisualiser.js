@@ -1,14 +1,11 @@
 import isVisualizer from 'components/isVisualizer';
 import hasPosition from 'components/hasPosition';
 import hasSize from 'components/hasSize';
+import getFunctionUsage from 'utils/getFunctionUsage';
 
 const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
     const state = {};
     let thickness = 3;
-
-    const isVisualizerState = isVisualizer(state);
-    const hasPositionState = hasPosition(state);
-    const hasSizeState = hasSize(state);
 
     function visualize(parentState, audioContext, audioSource) {
         if (!parentState || !audioContext || !audioSource) {
@@ -75,7 +72,11 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
         state.analyser = undefined;
     }
 
-    return Object.assign(state, isVisualizerState, hasPositionState, hasSizeState, {
+    const isVisualizerState = isVisualizer(state);
+    const hasPositionState = hasPosition(state);
+    const hasSizeState = hasSize(state);
+
+    const localState = {
         // props
         // methods
         visualize,
@@ -83,6 +84,19 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
         destroy,
         setLineStyle,
         stop,
+    };
+
+    const states = [
+        { state, name: 'state' },
+        { state: localState, name: 'localState' },
+        { state: isVisualizerState, name: 'isVisualizer' },
+        { state: hasPositionState, name: 'hasPosition' },
+        { state: hasSizeState, name: 'hasSize' },
+    ];
+
+    getFunctionUsage(states, 'createSineWaveVisualizer');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
     });
 };
 
