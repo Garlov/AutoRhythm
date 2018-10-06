@@ -18,8 +18,8 @@ Our team for the jam consisted of 3 people.
 A rhythm game based upon doing sinewave/frequency analysis of audio files to generate maps.
 
 ### Tools
--   Visual Studio Code
--   Phaser 3
+-   [Visual Studio Code](https://github.com/Microsoft/vscode)
+-   [Phaser 3.14](https://github.com/photonstorm/phaser)
 
 ### Requirements to build/host
 -   A modern browser.
