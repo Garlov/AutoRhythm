@@ -6,10 +6,10 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
     let bufferLength;
     let dataArray;
     let vis;
-    let width = gameConfig.GAME.VIEWWIDTH;
-    let height = gameConfig.GAME.VIEWHEIGHT / 2;
-    let x = 0;
-    let y = gameConfig.GAME.VIEWHEIGHT / 2;
+    const width = gameConfig.GAME.VIEWWIDTH;
+    const height = gameConfig.GAME.VIEWHEIGHT / 2;
+    const x = 0;
+    const y = gameConfig.GAME.VIEWHEIGHT / 2;
     let thickness = 3;
     let alpha = 1;
     let color = 0xdddddd;
@@ -31,16 +31,6 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
 
         // connect analyser to audio source
         audioSource.connect(analyser);
-    }
-
-    function setSize(w, h) {
-        width = w;
-        height = h;
-    }
-
-    function setPosition(xp, yp) {
-        x = xp;
-        y = yp;
     }
 
     function setLineStyle(t, c, a) {
@@ -77,8 +67,6 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
         // methods
         visualize,
         update,
-        setSize,
-        setPosition,
         setLineStyle,
     });
 };

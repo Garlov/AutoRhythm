@@ -6,22 +6,12 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
     let bufferLength;
     let dataArray;
     let vis;
-    let width = gameConfig.GAME.VIEWWIDTH;
-    let height = gameConfig.GAME.VIEWHEIGHT / 2;
-    let x = 0;
-    let y = 0;
+    const width = gameConfig.GAME.VIEWWIDTH;
+    const height = gameConfig.GAME.VIEWHEIGHT / 2;
+    const x = 0;
+    const y = 0;
     let alpha = 1;
     let color = 0xdddddd;
-
-    function setSize(w, h) {
-        width = w;
-        height = h;
-    }
-
-    function setPosition(xp, yp) {
-        x = xp;
-        y = yp;
-    }
 
     function setFillStyle(c, a) {
         color = c;
@@ -75,8 +65,6 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
         // methods
         visualize,
         update,
-        setSize,
-        setPosition,
         setFillStyle,
     });
 };
