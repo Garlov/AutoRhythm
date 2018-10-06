@@ -13,10 +13,6 @@ export default {
         VISUALIZER: 'visualizer',
         PLAY_FIELD: 'game_play_field',
     },
-    EVENTS: {
-        KEYDOWN: 'keydown',
-        KEYUP: 'keyup',
-    },
     KEYCODES: {
         LEFT_ARROW: 37,
         UP_ARROW: 38,
