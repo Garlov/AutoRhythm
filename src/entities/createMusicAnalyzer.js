@@ -1,14 +1,9 @@
 import gameConfig from 'configs/gameConfig';
 import { RFFT } from 'dsp.js';
+import createFrequencyMap from 'utils/createFrequencyMap';
 
 const createMusicAnalyzer = function createMusicAnalyzerFunc() {
     const state = {};
-    let analyser;
-    let bufferLength;
-    const samplesPerSecond = 4;
-    const stepSize = 1;
-    let numberOfChannels = 1;
-    let sampleRate = 48000;
     // let dataArray;
     let vis;
     const width = gameConfig.GAME.VIEWWIDTH;
@@ -19,7 +14,7 @@ const createMusicAnalyzer = function createMusicAnalyzerFunc() {
     const alpha = 1;
     const color = 0xdddddd;
 
-    const freqMap = [];
+    let freqMap = [];
     let currentIndex = 0;
 
     function constrain(n, min, max) {
@@ -55,27 +50,8 @@ const createMusicAnalyzer = function createMusicAnalyzerFunc() {
 
     function init(gameState) {
         vis = gameState.add.graphics();
-
-        const am = gameState.getAudioManager();
-        const { audioBuffer } = am.getBackgroundMusic();
-        ({ numberOfChannels, sampleRate } = audioBuffer);
-        const bufferSize = 2 ** 12;
-        const buffer = new Float64Array(bufferSize);
-        let start = 0;
-        // Loop through each channel and generate a frequency spectrum map.
-        for (let i = 0; i < 1; i += 1) {
-            const now = performance.now();
-            const channelData = audioBuffer.getChannelData(i);
-            while (start + bufferSize < channelData.length) {
-                buffer.set(channelData.slice(start, start + bufferSize));
-                start += bufferSize;
-                // Calculates a fast fourier transform spectrum.
-                const fft = new RFFT(bufferSize, sampleRate);
-                fft.forward(buffer);
-                freqMap.push(fft.spectrum);
-            }
-            console.log(performance.now() - now);
-        }
+        const { audioBuffer } = gameState.getAudioManager().getBackgroundMusic();
+        freqMap = createFrequencyMap(audioBuffer);
         drawSummary();
     }
 
