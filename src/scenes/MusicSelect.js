@@ -7,6 +7,8 @@ import canListen from 'components/canListen';
 import Visualizer from 'scenes/Visualizer';
 import hasAudio from 'components/hasAudio';
 import canEmit from 'components/canEmit';
+import getFunctionUsage from 'utils/getFunctionUsage';
+import pipe from 'utils/pipe';
 
 const MusicSelectScene = function MusicSelectSceneFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.MUSIC_SELECT);
@@ -137,7 +139,6 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     function update(time, delta) {}
 
     function destroy() {
-        console.log('destasdasd');
         this.visualizer.destroy();
     }
 
@@ -145,13 +146,37 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     const hasAudioState = hasAudio(state);
     const canListenState = canListen(state);
     const canEmitState = canEmit(state);
-    return Object.assign(state, hasInputState, canListenState, hasAudioState, canEmitState, {
+
+    const localState = {
         // props
         // methods
         create,
         update,
         destroy,
         stop,
+    };
+
+    const states = [
+        { state, name: 'state' },
+        { state: localState, name: 'localState' },
+        { state: hasInputState, name: 'hasInput' },
+        { state: hasAudioState, name: 'hasAudio' },
+        { state: canListenState, name: 'canListen' },
+        { state: canEmitState, name: 'canEmit' },
+    ];
+
+    getFunctionUsage(states, 'MusicSelect');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
+        update: pipe(
+            state.update,
+            localState.update,
+        ),
+        destroy: pipe(
+            localState.destroy,
+            canListen.destroy,
+            canEmit.destroy,
+        ),
     });
 };
 

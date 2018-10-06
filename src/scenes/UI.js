@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import Stats from 'stats-js';
 import * as dat from 'dat.gui';
 import gameConfig from 'configs/gameConfig';
+import getFunctionUsage from 'utils/getFunctionUsage';
+import pipe from 'utils/pipe';
 
 /**
  * Layer/Scene for UI elements.
@@ -55,11 +57,17 @@ const UI = function UIFunc() {
         document.body.removeChild(stats);
     }
 
-    return Object.assign(state, {
-        // props
+    const localState = {
         // methods
         create,
         destroy,
+    };
+
+    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }];
+
+    getFunctionUsage(states, 'UIScene');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
     });
 };
 

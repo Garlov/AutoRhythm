@@ -6,6 +6,8 @@ import canEmit from 'components/canEmit';
 import hasInput from 'components/hasInput';
 import canListen from 'components/canListen';
 import eventConfig from 'configs/eventConfig';
+import getFunctionUsage from 'utils/getFunctionUsage';
+import pipe from 'utils/pipe';
 
 const PlayField = function PlayFieldFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.PLAY_FIELD);
@@ -48,13 +50,36 @@ const PlayField = function PlayFieldFunc() {
     const canEmitState = canEmit(state);
     const hasInputState = hasInput(state);
     const canListenState = canListen(state);
-    return Object.assign(state, canEmitState, hasInputState, canListenState, {
+
+    const localState = {
         // props
         // methods
         init,
         create,
         update,
         destroy,
+    };
+
+    const states = [
+        { state, name: 'state' },
+        { state: localState, name: 'localState' },
+        { state: canEmitState, name: 'canEmit' },
+        { state: hasInputState, name: 'hasInput' },
+        { state: canListenState, name: 'canListen' },
+    ];
+
+    getFunctionUsage(states, 'PlayField');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
+        update: pipe(
+            state.update,
+            localState.update,
+        ),
+        destroy: pipe(
+            localState.destroy,
+            canEmit.destroy,
+            canListen.destroy,
+        ),
     });
 };
 

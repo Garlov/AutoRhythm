@@ -4,6 +4,7 @@ import createSineWaveVisualizer from 'entities/createSineWaveVisualiser';
 import createFrequencyVisualizer from 'entities/createFrequencyVisualizer';
 import hasAudio from 'components/hasAudio';
 import getFunctionUsage from 'utils/getFunctionUsage';
+import pipe from 'utils/pipe';
 
 const createVisualizerScene = function createVisualizerSceneFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.VISUALIZER);
@@ -67,7 +68,13 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
     const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }, { state: hasAudioState, name: 'hasAudio' }];
 
     getFunctionUsage(states, 'createVisualizerScene');
-    return Object.assign(...states.map(s => s.state), {});
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
+        update: pipe(
+            state.update,
+            localState.update,
+        ),
+    });
 };
 
 export default createVisualizerScene;

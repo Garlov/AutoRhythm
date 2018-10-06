@@ -3,6 +3,8 @@ import gameConfig from 'configs/gameConfig';
 import LoadingBar from 'core/LoadingBar';
 import spriteConfig from 'configs/spriteConfig';
 import audioConfig from 'configs/audioConfig';
+import getFunctionUsage from 'utils/getFunctionUsage';
+import pipe from 'utils/pipe';
 
 const LoadScene = function LoadSceneFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.LOAD);
@@ -48,13 +50,19 @@ const LoadScene = function LoadSceneFunc() {
         if (loadingBar) loadingBar.destroy();
     }
 
-    Object.assign(state, {
+    const localState = {
         // props
         // methods
         preload,
         destroy,
+    };
+
+    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }];
+
+    getFunctionUsage(states, 'LoadState');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
     });
-    return state;
 };
 
 export default LoadScene;

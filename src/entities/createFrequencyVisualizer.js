@@ -99,6 +99,7 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
             localState.destroy,
             isVisualizer.destroy,
         ),
+        stop: localState.stop,
     });
 };
 
