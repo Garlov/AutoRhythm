@@ -4,7 +4,7 @@ import AudioManager from 'core/AudioManager';
 import UI from 'scenes/UI';
 import createSineWaveVisualizer from 'entities/createSineWaveVisualiser';
 import createFrequencyVisualizer from 'entities/createFrequencyVisualizer';
-import createMusicAnalyzer from 'entities/musicAnalyzer';
+import createMusicAnalyzer from 'entities/createMusicAnalyzer';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -43,13 +43,11 @@ const Game = function GameFunc() {
         // instatiate visualizers
         // visualizers.push(createSineWaveVisualizer());
         // visualizers.push(createFrequencyVisualizer());
+        visualizers.push(createMusicAnalyzer());
 
-        // visualizers.forEach((viz, i) => {
-        //     viz.init(state);
-        // });
-
-        const analyzer = createMusicAnalyzer();
-        analyzer.init(state);
+        visualizers.forEach((viz, i) => {
+            viz.init(state);
+        });
     }
 
     function update(time, delta) {

@@ -44,6 +44,7 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
     function drawVisualizer() {
         if (analyser) {
             analyser.getByteFrequencyData(dataArray);
+            // console.log(dataArray);
 
             vis.clear();
             vis.fillStyle(color, alpha);

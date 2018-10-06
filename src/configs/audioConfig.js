@@ -8,6 +8,10 @@ export default {
             KEY: 'all_alone',
             PATH: 'assets/audio/all_alone.mp3',
         },
+        TEST: {
+            KEY: 'test',
+            PATH: 'assets/audio/test.ogg',
+        },
     },
     SFX: {},
 };
