@@ -22,10 +22,17 @@ const createMusicAnalyzer = function createMusicAnalyzerFunc() {
     const freqMap = [];
     let currentIndex = 0;
 
+    function constrain(n, min, max) {
+        if (n < min) return 0;
+        if (n > max) return max;
+        return n;
+    }
+
     // equalize, attenuates low freqs and boosts highs;
-    function equalize(value) {
-        // * Math.log((dataArray.length - i) * (0.5 / dataArray.length)) * (dataArray.length * 2);
-        return -value;
+    function equalize(value, i, l) {
+        let v = value * (-1 * Math.log((l - i) * (0.5 / (l * 2) / 200)) * (l / 2));
+        v = constrain(v * 4, 0, height);
+        return -v;
     }
 
     function drawSummary() {
@@ -36,8 +43,8 @@ const createMusicAnalyzer = function createMusicAnalyzerFunc() {
             const sliceWidth = (width * 1.0) / dataArray.length;
             vis.beginPath();
             for (let i = 0; i < dataArray.length; i += 1) {
-                const v = equalize(dataArray[i]);
-                vis.lineTo(x + sliceWidth * i, y + v * height);
+                const v = equalize(dataArray[i], i, dataArray.length);
+                vis.lineTo(x + sliceWidth * i, y + v);
             }
             vis.strokePath();
             currentIndex += 1;

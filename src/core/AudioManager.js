@@ -58,7 +58,7 @@ const AudioManager = function createAudioManagerFunc() {
             bgm = music.get(key);
             bgm.loop = true;
             bgm.volume = 0.7;
-            // bgm.rate = 0.5;
+            bgm.rate = 5.12;
             // console.log(bgm);
             bgm.play();
             state.isBgMusicPlaying = true;
