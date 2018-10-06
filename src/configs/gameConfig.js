@@ -11,6 +11,7 @@ export default {
         UI: 'UI',
         MUSIC_SELECT: 'music_select',
         VISUALIZER: 'visualizer',
+        PLAY_FIELD: 'game_play_field',
     },
     DEFAULT_TEXT_STYLE: {
         font: 'Roboto',

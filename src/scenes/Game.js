@@ -3,6 +3,7 @@ import gameConfig from 'configs/gameConfig';
 import AudioManager from 'core/AudioManager';
 import UI from 'scenes/UI';
 import Visualizer from 'scenes/Visualizer';
+import PlayField from 'scenes/PlayField';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -23,6 +24,9 @@ const Game = function GameFunc() {
         // After assets are loaded.
         gameStates.set(gameConfig.SCENES.UI, UI());
         state.scene.add(gameConfig.SCENES.UI, gameStates.get(gameConfig.SCENES.UI), true);
+
+        gameStates.set(gameConfig.SCENES.PLAY_FIELD, PlayField());
+        state.scene.add(gameConfig.SCENES.PLAY_FIELD, gameStates.get(gameConfig.SCENES.PLAY_FIELD), true);
 
         audioManager = AudioManager()
             .setScene(gameStates.get(gameConfig.SCENES.UI))
