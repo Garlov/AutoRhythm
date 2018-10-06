@@ -31,6 +31,7 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
                 const songObj = {
                     title,
                     artist,
+                    key: songData.KEY,
                     text: state.add.text(),
                 };
 
@@ -58,6 +59,11 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
 
     function _selectSong() {}
 
+    function _previewSong() {
+        state.getAudioManager().pauseMusic();
+        state.getAudioManager().playMusic(songs[currentSongIndex].key);
+    }
+
     function _navigateUp() {
         currentSongIndex -= 1;
         if (currentSongIndex < 0) {
@@ -65,6 +71,7 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
         }
 
         _renderSongs();
+        _previewSong();
     }
 
     function _navigateDown() {
@@ -73,6 +80,7 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
             currentSongIndex = 0;
         }
         _renderSongs();
+        _previewSong();
     }
 
     function _onKeyDown(e) {
@@ -102,6 +110,7 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
         state.scene.add(gameConfig.SCENES.VISUALIZER, visualizer, false);
 
         _renderSongs();
+        _previewSong();
     }
 
     function update(time, delta) {}

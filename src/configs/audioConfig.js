@@ -13,12 +13,13 @@ export default {
             PATH: 'assets/audio/all_alone.mp3',
         },
         TEST: {
-            ARTIST: 'Test',
-            TITLE: 'test tunes 10-20k',
+            ARTIST: 'Audacity',
+            TITLE: 'Test Tunes 10-20k hz',
             KEY: 'test',
             PATH: 'assets/audio/test.ogg',
         },
         TEST_15k: {
+            TITLE: '15k hz single tune test',
             KEY: 'TEST_15k',
             PATH: 'assets/audio/15k.ogg',
         },

@@ -2,13 +2,6 @@ import gameConfig from 'configs/gameConfig';
 import spriteConfig from 'configs/spriteConfig';
 import audioConfig from 'configs/audioConfig';
 
-/**
- * Default background Soundtrack is Full of Stars, by Philipp Weigl (http://freemusicarchive.org/music/Philipp_Weigl/Sound-trax/Philipp_Weigl_-_Full_of_Stars)
- * Used under creative commons license CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/, https://creativecommons.org/licenses/by/4.0/legalcode)
- *
- * Can we extend phaser SoundManager here for cleaner code?
- */
-
 const AudioManager = function createAudioManagerFunc() {
     const state = {};
     let scene;
@@ -17,6 +10,7 @@ const AudioManager = function createAudioManagerFunc() {
     const soundEffects = new Map();
     const music = new Map();
     let currentSong;
+    const currentVolume = 0.7;
 
     function init() {
         state.setupMute();
@@ -53,14 +47,25 @@ const AudioManager = function createAudioManagerFunc() {
         }
     }
 
+    function pauseMusic() {
+        if (currentSong) {
+            currentSong.pause();
+        }
+        state.isMusicPlaying = false;
+    }
+
     function playMusic(key = audioConfig.MUSIC.BOWERS_WILKINS.KEY) {
         if (!state.isMusicPlaying && music.has(key)) {
             currentSong = music.get(key);
             currentSong.loop = true;
-            currentSong.volume = 0.7;
+            currentSong.volume = currentVolume;
             currentSong.play();
             state.isMusicPlaying = true;
         }
+    }
+
+    function getCurrentVolume() {
+        return currentVolume;
     }
 
     function getCurrentSong() {
@@ -121,9 +126,11 @@ const AudioManager = function createAudioManagerFunc() {
         setScene,
         setPauseOnBlur,
         playMusic,
+        pauseMusic,
         getAudioContext,
         getCurrentSong,
         getAudioSource,
+        getCurrentVolume,
         isAudioMuted,
         toggleMute,
         setupMute,
