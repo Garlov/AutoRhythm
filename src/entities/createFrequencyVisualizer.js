@@ -62,6 +62,12 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
         state.analyser = undefined;
     }
 
+    function stop() {
+        if (state.vis) {
+            state.vis.clear();
+        }
+    }
+
     function update() {
         drawVisualizer();
     }
@@ -73,6 +79,7 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
         destroy,
         update,
         setFillStyle,
+        stop,
     });
 };
 

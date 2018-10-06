@@ -41,6 +41,14 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         });
     }
 
+    function stop() {
+        visualizers.forEach((viz) => {
+            viz.stop();
+        });
+
+        state.scene.stop();
+    }
+
     function destroy() {
         visualizers.forEach(viz => viz.destroy());
         visualizers = [];
@@ -53,6 +61,7 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         visualize,
         update,
         destroy,
+        stop,
     });
 };
 

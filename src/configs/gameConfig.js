@@ -27,6 +27,7 @@ export default {
         K: 75,
         L: 76,
         ENTER: 13,
+        ESCAPE: 27,
     },
     DEFAULT_TEXT_STYLE: {
         font: 'Roboto',

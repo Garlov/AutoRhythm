@@ -60,6 +60,12 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
         drawVisualizer();
     }
 
+    function stop() {
+        if (state.vis) {
+            state.vis.clear();
+        }
+    }
+
     function destroy() {
         if (state.vis) {
             state.vis.clear();
@@ -76,6 +82,7 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
         update,
         destroy,
         setLineStyle,
+        stop,
     });
 };
 
