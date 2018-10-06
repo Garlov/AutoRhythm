@@ -63,17 +63,8 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     const hasInputState = hasInput(state);
     const canListenState = canListen(state);
     const canEmitState = canEmit(state);
-    const states = [
-        { state, name: 'state' },
-        { state: isGameEntityState, name: 'isGameEntity' },
-        { state: hasPositionState, name: 'hasPosition' },
-        { state: hasSizeState, name: 'hasSize' },
-        { state: hasInputState, name: 'hasInput' },
-        { state: canListenState, name: 'canListen' },
-        { state: canEmitState, name: 'canEmit' },
-    ];
-    getFunctionUsage(states, 'LaneReceptor');
-    return Object.assign(...states.map(s => s.state), {
+
+    const localState = {
         // props
         scene: board.getParentState().scene,
         // methods
@@ -81,9 +72,26 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         setColor,
         update,
         init,
+    };
+
+    const states = [
+        { state, name: 'state' },
+        { state: localState, name: 'localState' },
+        { state: isGameEntityState, name: 'isGameEntity' },
+        { state: hasPositionState, name: 'hasPosition' },
+        { state: hasSizeState, name: 'hasSize' },
+        { state: hasInputState, name: 'hasInput' },
+        { state: canListenState, name: 'canListen' },
+        { state: canEmitState, name: 'canEmit' },
+    ];
+
+    getFunctionUsage(states, 'LaneReceptor');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
+        update: pipe(localState.update, isGameEntityState.update),
         destroy: pipe(
-            canListen.destroy,
-            canEmit.destroy,
+            canListenState.destroy,
+            canEmitState.destroy,
         ),
     });
 };

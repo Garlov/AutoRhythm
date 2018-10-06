@@ -7,6 +7,8 @@ import PlayField from 'scenes/PlayField';
 import createKeyboard from 'core/Keyboard';
 import eventConfig from 'configs/eventConfig';
 import canListen from 'components/canListen';
+import getFunctionUsage from 'utils/getFunctionUsage';
+import pipe from 'utils/pipe';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -72,7 +74,7 @@ const Game = function GameFunc() {
 
     const canListenState = canListen(state);
 
-    return Object.assign(state, canListenState, {
+    const localState = {
         // props
         // methods
         init,
@@ -81,6 +83,21 @@ const Game = function GameFunc() {
         create,
         update,
         destroy,
+    };
+
+    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }, { state: canListenState, name: 'canListen' }];
+
+    getFunctionUsage(states, 'Game');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
+        update: pipe(
+            state.update,
+            localState.update,
+        ),
+        destroy: pipe(
+            localState.destroy,
+            canListenState.destroy,
+        ),
     });
 };
 
