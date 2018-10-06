@@ -26,7 +26,7 @@ const Game = function GameFunc() {
         state.scene.add(gameConfig.SCENES.UI, gameStates.get(gameConfig.SCENES.UI), true);
 
         gameStates.set(gameConfig.SCENES.PLAY_FIELD, PlayField());
-        state.scene.add(gameConfig.SCENES.PLAY_FIELD, gameStates.get(gameConfig.SCENES.PLAY_FIELD), true);
+        state.scene.add(gameConfig.SCENES.PLAY_FIELD, gameStates.get(gameConfig.SCENES.PLAY_FIELD), false);
 
         audioManager = AudioManager()
             .setScene(gameStates.get(gameConfig.SCENES.UI))
@@ -35,7 +35,8 @@ const Game = function GameFunc() {
 
         gameStates.set(gameConfig.SCENES.VISUALIZER, Visualizer());
         state.scene.add(gameConfig.SCENES.VISUALIZER, gameStates.get(gameConfig.SCENES.VISUALIZER), false);
-        currentScene = gameStates.get(gameConfig.SCENES.VISUALIZER);
+
+        currentScene = gameStates.get(gameConfig.SCENES.PLAY_FIELD);
         currentScene.scene.start();
     }
 

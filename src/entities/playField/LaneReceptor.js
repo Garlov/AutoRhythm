@@ -8,6 +8,7 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     const board = parent;
     let index = 0;
     let rect;
+    let color = 0xcccccc;
 
     function init() {
         rect = board.getParentState().add.graphics();
@@ -19,10 +20,14 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         state.setX(x);
     }
 
+    function setColor(c) {
+        color = c;
+    }
+
     function update() {
         if (rect) {
             rect.clear();
-            rect.lineStyle(2, 0xcccccc, 1);
+            rect.lineStyle(2, color, 1);
 
             const x = state.getX() + board.getX();
             const y = state.getY() + board.getY();
@@ -37,6 +42,7 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         // props
         // methods
         setIndex,
+        setColor,
         update,
         init,
     });

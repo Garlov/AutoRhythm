@@ -53,7 +53,7 @@ const AudioManager = function createAudioManagerFunc() {
         }
     }
 
-    function playMusic(key = audioConfig.MUSIC.BOWERS_WILKINS.KEY) {
+    function playMusic(key = audioConfig.MUSIC.ALL_ALONE.KEY) {
         if (!state.isMusicPlaying && music.has(key)) {
             currentSong = music.get(key);
             currentSong.loop = true;
