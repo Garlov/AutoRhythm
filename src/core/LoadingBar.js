@@ -1,4 +1,5 @@
 import gameConfig from 'configs/gameConfig';
+import getFunctionUsage from 'utils/getFunctionUsage';
 
 /**
  * A multipurpose loading bar that can be added to any scene.
@@ -51,7 +52,9 @@ const LoadingBar = function LoadingBarFunc() {
         if (text) text.destroy();
     }
 
-    return Object.assign(state, {
+    const states = [{ state, name: 'state' }];
+    getFunctionUsage(states, 'LoadingBar');
+    return Object.assign(...states.map(s => s.state), {
         init,
         destroy,
     });

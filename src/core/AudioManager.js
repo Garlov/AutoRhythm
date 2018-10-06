@@ -1,6 +1,7 @@
 import gameConfig from 'configs/gameConfig';
 import spriteConfig from 'configs/spriteConfig';
 import audioConfig from 'configs/audioConfig';
+import getFunctionUsage from 'utils/getFunctionUsage';
 
 const AudioManager = function createAudioManagerFunc() {
     const state = {};
@@ -117,8 +118,9 @@ const AudioManager = function createAudioManagerFunc() {
         soundEffects.destroy();
         music.destroy();
     }
-
-    return Object.assign(state, {
+    const states = [{ state, name: 'state' }];
+    getFunctionUsage(states, 'AudioManager');
+    return Object.assign(...states.map(s => s.state), {
         // props
         isMusicPlaying: false,
         // methods

@@ -1,9 +1,9 @@
 import canEmit from 'components/canEmit';
 import eventConfig from 'configs/eventConfig';
+import getFunctionUsage from 'utils/getFunctionUsage';
 
 const createKeyboardInput = function createKeyboardInputFunc() {
     const state = {};
-    const canEmitState = canEmit(state);
 
     function keyDownFn(e) {
         state.emit(eventConfig.EVENTS.KEYBOARD.KEYDOWN, { key: e.key, repeat: e.repeat, keyCode: e.keyCode });
@@ -23,7 +23,10 @@ const createKeyboardInput = function createKeyboardInputFunc() {
         document.removeEventListener('keyup', keyUpFn);
     }
 
-    return Object.assign(state, canEmitState, {
+    const canEmitState = canEmit(state);
+    const states = [{ state, name: 'state' }, { state: canEmitState, name: 'canEmit' }];
+    getFunctionUsage(states, 'Keyboard');
+    return Object.assign(...states.map(s => s.state), {
         // props
         // methods
         disable,

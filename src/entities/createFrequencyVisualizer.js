@@ -1,13 +1,11 @@
 import isVisualizer from 'components/isVisualizer';
 import hasPosition from 'components/hasPosition';
 import hasSize from 'components/hasSize';
+import getFunctionUsage from 'utils/getFunctionUsage';
+import pipe from 'utils/pipe';
 
 const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
     const state = {};
-
-    const isVisualizerState = isVisualizer(state);
-    const hasPositionState = hasPosition(state);
-    const hasSizeState = hasSize(state);
 
     function setFillStyle(c, a) {
         state.color = c;
@@ -72,14 +70,35 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
         drawVisualizer();
     }
 
-    return Object.assign(state, isVisualizerState, hasPositionState, hasSizeState, {
-        // props
+    const isVisualizerState = isVisualizer(state);
+    const hasPositionState = hasPosition(state);
+    const hasSizeState = hasSize(state);
+
+    const localState = {
         // methods
         visualize,
         destroy,
         update,
         setFillStyle,
         stop,
+    };
+
+    const states = [
+        { state, name: 'state' },
+        { state: localState, name: 'localState' },
+        { state: isVisualizerState, name: 'isVisualizer' },
+        { state: hasPositionState, name: 'hasPosition' },
+        { state: hasSizeState, name: 'hasSize' },
+    ];
+
+    getFunctionUsage(states, 'createFrequencyVisualizer');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
+        update: localState.update,
+        destroy: pipe(
+            localState.destroy,
+            isVisualizer.destroy,
+        ),
     });
 };
 
