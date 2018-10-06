@@ -5,6 +5,7 @@ import UI from 'scenes/UI';
 import createSineWaveVisualizer from 'entities/createSineWaveVisualiser';
 import createFrequencyVisualizer from 'entities/createFrequencyVisualizer';
 import createMusicAnalyzer from 'entities/createMusicAnalyzer';
+import PlayField from 'scenes/PlayField';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -13,6 +14,7 @@ const Game = function GameFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.GAME);
     let audioManager;
     let UIScene;
+    let PlayFieldScene;
     const visualizers = [];
 
     function cameraSetup() {
@@ -23,6 +25,8 @@ const Game = function GameFunc() {
 
     function init() {
         // After assets are loaded.
+        PlayFieldScene = PlayField();
+        state.scene.add(gameConfig.SCENES.PLAY_FIELD, PlayFieldScene, true);
         UIScene = UI();
         state.scene.add(gameConfig.SCENES.UI, UIScene, true);
         audioManager = AudioManager()
