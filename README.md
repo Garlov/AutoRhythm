@@ -1,7 +1,7 @@
 # Open Jam 2018
 ### THEME: SPAM TO WIN
 
-Phaser 3.14.0 Open Jam 2018 project, built upon: https://github.com/Sidaroth/Phaser3.Boilerplate
+Phaser 3.14.0 Open Jam 2018 project, built upon: https://github.com/Sidaroth/Phaser3.Boilerplate </br>
 Documentation for Phaser: https://photonstorm.github.io/phaser3-docs/index.html
 
 ### Team
