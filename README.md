@@ -1,16 +1,21 @@
 # Open Jam 2018
+
 THEME: SPAM TO WIN
 
-Phaser 3.14.0 Open Jam 2018 project.
-
+Phaser 3.14.0 Open Jam 2018 project, built upon: https://github.com/Sidaroth/Phaser3.Boilerplate
 Documentation for Phaser: https://photonstorm.github.io/phaser3-docs/index.html
 
+## Description
+
+A rhythm game based upon doing sinewave/frequency analysis of audio files to generate maps.
+
 ## Tools
+
 -   Visual Studio Code
 -   Phaser 3
--   
--   
--   
+-
+-
+-
 
 ## Requirements
 
