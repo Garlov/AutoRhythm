@@ -5,11 +5,14 @@ const isGameEntity = function isGameEntityFunc(state) {
         console.log(`id: %c${state.id}`, 'color: yellow');
     }
 
+    function update() {}
+
     return {
         // props
         id: getUUID(),
         // methods
         printInfo,
+        update,
     };
 };
 
