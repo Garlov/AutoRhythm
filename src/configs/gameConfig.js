@@ -9,6 +9,8 @@ export default {
         LOAD: 'game_load',
         GAME: 'game_game',
         UI: 'UI',
+        MUSIC_SELECT: 'music_select',
+        VISUALIZER: 'visualizer',
     },
     DEFAULT_TEXT_STYLE: {
         font: 'Roboto',

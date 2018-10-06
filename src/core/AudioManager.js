@@ -16,7 +16,7 @@ const AudioManager = function createAudioManagerFunc() {
     const muteIdentifier = `${gameConfig.GAME.TITLE.replace(/ /g, '_')}_isMuted`; // replace all spaces with _ for safety
     const soundEffects = new Map();
     const music = new Map();
-    let bgm;
+    let currentSong;
 
     function init() {
         state.setupMute();
@@ -53,28 +53,26 @@ const AudioManager = function createAudioManagerFunc() {
         }
     }
 
-    function playBgMusic(key = audioConfig.MUSIC.BOWERS_WILKINS.KEY) {
-        if (!state.isBgMusicPlaying && music.has(key)) {
-            bgm = music.get(key);
-            bgm.loop = true;
-            bgm.volume = 0.7;
-            // bgm.rate = 0.5;
-            // console.log(bgm);
-            bgm.play();
-            state.isBgMusicPlaying = true;
+    function playMusic(key = audioConfig.MUSIC.BOWERS_WILKINS.KEY) {
+        if (!state.isMusicPlaying && music.has(key)) {
+            currentSong = music.get(key);
+            currentSong.loop = true;
+            currentSong.volume = 0.7;
+            currentSong.play();
+            state.isMusicPlaying = true;
         }
     }
 
-    function getBackgroundMusic() {
-        return bgm;
+    function getCurrentSong() {
+        return currentSong;
     }
 
-    function getAudioContext() {
-        return bgm.source.context;
+    function getAudioContext(key = audioConfig.MUSIC.ALL_ALONE.KEY) {
+        return music.get(key).source.context;
     }
 
-    function getAudioSource() {
-        return bgm.source;
+    function getAudioSource(key = audioConfig.MUSIC.ALL_ALONE.KEY) {
+        return music.get(key).source;
     }
 
     function isAudioMuted() {
@@ -116,15 +114,15 @@ const AudioManager = function createAudioManagerFunc() {
 
     return Object.assign(state, {
         // props
-        isBgMusicPlaying: false,
+        isMusicPlaying: false,
         // methods
         init,
         playSfx,
         setScene,
         setPauseOnBlur,
-        playBgMusic,
+        playMusic,
         getAudioContext,
-        getBackgroundMusic,
+        getCurrentSong,
         getAudioSource,
         isAudioMuted,
         toggleMute,

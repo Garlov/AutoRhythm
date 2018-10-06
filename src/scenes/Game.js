@@ -2,9 +2,7 @@ import Phaser from 'phaser';
 import gameConfig from 'configs/gameConfig';
 import AudioManager from 'core/AudioManager';
 import UI from 'scenes/UI';
-import createSineWaveVisualizer from 'entities/createSineWaveVisualiser';
-import createFrequencyVisualizer from 'entities/createFrequencyVisualizer';
-import createMusicAnalyzer from 'entities/createMusicAnalyzer';
+import Visualizer from 'scenes/Visualizer';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -12,8 +10,8 @@ import createMusicAnalyzer from 'entities/createMusicAnalyzer';
 const Game = function GameFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.GAME);
     let audioManager;
-    let UIScene;
-    const visualizers = [];
+    let currentScene;
+    const gameStates = new Map();
 
     function cameraSetup() {
         // state.cameras.main.startFollow(state.player); // or whatever else.
@@ -23,12 +21,18 @@ const Game = function GameFunc() {
 
     function init() {
         // After assets are loaded.
-        UIScene = UI();
-        state.scene.add(gameConfig.SCENES.UI, UIScene, true);
+        gameStates.set(gameConfig.SCENES.UI, UI());
+        state.scene.add(gameConfig.SCENES.UI, gameStates.get(gameConfig.SCENES.UI), true);
+
         audioManager = AudioManager()
-            .setScene(UIScene)
+            .setScene(gameStates.get(gameConfig.SCENES.UI))
             .setPauseOnBlur(true)
             .init();
+
+        gameStates.set(gameConfig.SCENES.VISUALIZER, Visualizer());
+        state.scene.add(gameConfig.SCENES.VISUALIZER, gameStates.get(gameConfig.SCENES.VISUALIZER), false);
+        currentScene = gameStates.get(gameConfig.SCENES.VISUALIZER);
+        currentScene.scene.start();
     }
 
     function getAudioManager() {
@@ -37,27 +41,15 @@ const Game = function GameFunc() {
 
     function create() {
         cameraSetup();
-        // start music
-        audioManager.playBgMusic();
-
-        // instatiate visualizers
-        // visualizers.push(createSineWaveVisualizer());
-        visualizers.push(createFrequencyVisualizer());
-        visualizers.push(createMusicAnalyzer());
-
-        visualizers.forEach((viz, i) => {
-            viz.init(state);
-        });
+        gameStates.get(gameConfig.SCENES.VISUALIZER).visualize();
     }
 
-    function update(time, delta) {
-        visualizers.forEach((viz) => {
-            viz.update();
-        });
-    }
+    function update(time, delta) {}
 
     function destroy() {
-        if (UI) UI.destroy();
+        gameStates.forEach((s) => {
+            s.destroy();
+        });
     }
 
     return Object.assign(state, {

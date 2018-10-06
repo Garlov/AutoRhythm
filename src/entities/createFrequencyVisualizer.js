@@ -28,24 +28,29 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
         alpha = a;
     }
 
-    function init(gameState) {
-        vis = gameState.add.graphics();
+    function visualize(parentState, audioContext, audioSource) {
+        if (!parentState || !audioContext || !audioSource) {
+            console.warn('Missing vital components required for visualization. A parent scene state is required for rendering, audioContext and audioSource is required for analysis.');
+            return;
+        }
+
+        vis = parentState.add.graphics();
 
         // setup analyser and buffer
-        const am = gameState.getAudioManager();
-        analyser = am.getAudioContext().createAnalyser();
+        analyser = audioContext.createAnalyser();
         analyser.smoothingTimeConstant = 0;
-        analyser.fftSize = 1024;
+        analyser.fftSize = 256;
+
         bufferLength = analyser.frequencyBinCount;
         dataArray = new Uint8Array(bufferLength);
-        // connect analyser to audio context/source
-        am.getAudioSource().connect(analyser);
+
+        // connect analyser to audio source
+        audioSource.connect(analyser);
     }
 
     function drawVisualizer() {
         if (analyser) {
             analyser.getByteFrequencyData(dataArray);
-            // console.log(dataArray);
 
             vis.clear();
             vis.fillStyle(color, alpha);
@@ -56,7 +61,7 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
 
             for (let i = 0; i < bufferLength; i += 1) {
                 barHeight = (height / 255) * dataArray[i];
-                vis.fillRect(x + barWidth * i, y + height - barHeight, barWidth, barHeight);
+                vis.strokeRect(x + barWidth * i, y + height - barHeight, barWidth, barHeight);
             }
         }
     }
@@ -68,7 +73,7 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
     return Object.assign(state, {
         // props
         // methods
-        init,
+        visualize,
         update,
         setSize,
         setPosition,

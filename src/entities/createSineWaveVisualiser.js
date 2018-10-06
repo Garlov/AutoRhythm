@@ -14,17 +14,23 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
     let alpha = 1;
     let color = 0xdddddd;
 
-    function init(gameState) {
-        vis = gameState.add.graphics();
+    function visualize(parentState, audioContext, audioSource) {
+        if (!parentState || !audioContext || !audioSource) {
+            console.warn('Missing vital components required for visualization. A parent scene state is required for rendering, audioContext and audioSource is required for analysis.');
+            return;
+        }
+
+        vis = parentState.add.graphics();
 
         // setup analyser and buffer
-        const am = gameState.getAudioManager();
-        analyser = am.getAudioContext().createAnalyser();
-        analyser.fftSize = 4096;
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 2 ** 12;
+
         bufferLength = analyser.fftSize;
         dataArray = new Uint8Array(bufferLength);
-        // connect analyser to audio context/source
-        am.getAudioSource().connect(analyser);
+
+        // connect analyser to audio source
+        audioSource.connect(analyser);
     }
 
     function setSize(w, h) {
@@ -51,14 +57,13 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
 
             const sliceWidth = (width * 1.0) / bufferLength;
             vis.beginPath();
-            // vis.moveTo(x, y + height / 2);
 
             for (let i = 0; i < bufferLength; i += 1) {
                 const v = dataArray[i] / 128;
+
                 vis.lineTo(x + sliceWidth * i, y + (v * height) / 2);
             }
 
-            // vis.lineTo(x + width, y + height / 2);
             vis.strokePath();
         }
     }
@@ -70,7 +75,7 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
     return Object.assign(state, {
         // props
         // methods
-        init,
+        visualize,
         update,
         setSize,
         setPosition,

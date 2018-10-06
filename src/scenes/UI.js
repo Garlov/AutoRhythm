@@ -45,7 +45,7 @@ const UI = function UIFunc() {
     }
 
     function create() {
-        setupDatGui();
+        // setupDatGui();
         setupPerformanceStats();
     }
 
