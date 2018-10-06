@@ -72,11 +72,12 @@ const Board = function BoardFunc(parent) {
         const { duration } = song.audioBuffer;
         const currentTime = song.getCurrentTime();
         const indexesPerSecond = freqMap.length / duration;
-        const currentIndex = parseInt((freqMap.length / duration) * currentTime);
+        const currentIndexF = (freqMap.length / duration) * currentTime;
+        const currentIndex = parseInt(currentIndexF);
 
         notes.forEach((n) => {
             if (n) {
-                n.update(currentIndex, indexesPerSecond, 150, freqMap.length);
+                n.update(currentIndexF, indexesPerSecond, 150, freqMap.length);
             }
         });
 
@@ -94,7 +95,6 @@ const Board = function BoardFunc(parent) {
     function setFrequencyMap(s, fm) {
         song = s;
         freqMap = fm;
-        console.log(s);
     }
 
     function getParentState() {

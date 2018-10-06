@@ -38,9 +38,9 @@ const Game = function GameFunc() {
         gameStates.set(gameConfig.SCENES.MUSIC_SELECT, MusicSelect());
         state.scene.add(gameConfig.SCENES.MUSIC_SELECT, gameStates.get(gameConfig.SCENES.MUSIC_SELECT), false);
 
-        // audioManager.playMusic();
-        currentScene = gameStates.get(gameConfig.SCENES.MUSIC_SELECT);
-        // currentScene = gameStates.get(gameConfig.SCENES.PLAY_FIELD);
+        audioManager.playMusic();
+        // currentScene = gameStates.get(gameConfig.SCENES.MUSIC_SELECT);
+        currentScene = gameStates.get(gameConfig.SCENES.PLAY_FIELD);
         currentScene.scene.start();
 
         keyboard.enable();
