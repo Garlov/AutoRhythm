@@ -42,7 +42,7 @@ const Game = function GameFunc() {
 
         // instatiate visualizers
         // visualizers.push(createSineWaveVisualizer());
-        // visualizers.push(createFrequencyVisualizer());
+        visualizers.push(createFrequencyVisualizer());
         visualizers.push(createMusicAnalyzer());
 
         visualizers.forEach((viz, i) => {

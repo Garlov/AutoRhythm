@@ -24,6 +24,7 @@ const AudioManager = function createAudioManagerFunc() {
         music.set(audioConfig.MUSIC.ALL_ALONE.KEY, scene.sound.add(audioConfig.MUSIC.ALL_ALONE.KEY));
         music.set(audioConfig.MUSIC.BOWERS_WILKINS.KEY, scene.sound.add(audioConfig.MUSIC.BOWERS_WILKINS.KEY));
         music.set(audioConfig.MUSIC.TEST.KEY, scene.sound.add(audioConfig.MUSIC.TEST.KEY));
+        music.set(audioConfig.MUSIC.TEST_15k.KEY, scene.sound.add(audioConfig.MUSIC.TEST_15k.KEY));
 
         Object.keys(audioConfig.SFX).forEach((objKey) => {
             const SFX = audioConfig.SFX[objKey];
@@ -52,7 +53,7 @@ const AudioManager = function createAudioManagerFunc() {
         }
     }
 
-    function playBgMusic(key = audioConfig.MUSIC.TEST.KEY) {
+    function playBgMusic(key = audioConfig.MUSIC.BOWERS_WILKINS.KEY) {
         if (!state.isBgMusicPlaying && music.has(key)) {
             bgm = music.get(key);
             bgm.loop = true;

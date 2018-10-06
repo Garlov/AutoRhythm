@@ -12,6 +12,10 @@ export default {
             KEY: 'test',
             PATH: 'assets/audio/test.ogg',
         },
+        TEST_15k: {
+            KEY: 'TEST_15k',
+            PATH: 'assets/audio/15k.ogg',
+        },
     },
     SFX: {},
 };

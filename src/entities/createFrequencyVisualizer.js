@@ -34,7 +34,8 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
         // setup analyser and buffer
         const am = gameState.getAudioManager();
         analyser = am.getAudioContext().createAnalyser();
-        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0;
+        analyser.fftSize = 1024;
         bufferLength = analyser.frequencyBinCount;
         dataArray = new Uint8Array(bufferLength);
         // connect analyser to audio context/source
@@ -55,7 +56,7 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
 
             for (let i = 0; i < bufferLength; i += 1) {
                 barHeight = (height / 255) * dataArray[i];
-                vis.strokeRect(x + barWidth * i, y + height - barHeight, barWidth, barHeight);
+                vis.fillRect(x + barWidth * i, y + height - barHeight, barWidth, barHeight);
             }
         }
     }
