@@ -11,7 +11,7 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     let currentSongIndex = 0;
     let graphicsObj;
 
-    const visualizer = Visualizer();
+    let visualizer;
     const songs = [];
 
     const hasInputState = hasInput(state);
@@ -60,8 +60,8 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     function _selectSong() {}
 
     function _previewSong() {
-        state.getAudioManager().pauseMusic();
-        state.getAudioManager().playMusic(songs[currentSongIndex].key);
+        const { key } = songs[currentSongIndex];
+        visualizer.visualize(key);
     }
 
     function _navigateUp() {
@@ -107,7 +107,9 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
 
         graphicsObj = state.add.graphics();
         state.listenOn(state.getKeyboard(), 'keydown', _onKeyDown);
-        state.scene.add(gameConfig.SCENES.VISUALIZER, visualizer, false);
+
+        visualizer = Visualizer();
+        state.scene.add(gameConfig.SCENES.VISUALIZER, visualizer, true);
 
         _renderSongs();
         _previewSong();

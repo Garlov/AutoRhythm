@@ -1,21 +1,17 @@
-import gameConfig from 'configs/gameConfig';
+import isVisualizer from 'components/isVisualizer';
+import hasPosition from 'components/hasPosition';
+import hasSize from 'components/hasSize';
 
 const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
     const state = {};
-    let analyser;
-    let bufferLength;
-    let dataArray;
-    let vis;
-    const width = gameConfig.GAME.VIEWWIDTH;
-    const height = gameConfig.GAME.VIEWHEIGHT / 2;
-    const x = 0;
-    const y = 0;
-    let alpha = 1;
-    let color = 0xdddddd;
+
+    const isVisualizerState = isVisualizer(state);
+    const hasPositionState = hasPosition(state);
+    const hasSizeState = hasSize(state);
 
     function setFillStyle(c, a) {
-        color = c;
-        alpha = a;
+        state.color = c;
+        state.alpha = a;
     }
 
     function visualize(parentState, audioContext, audioSource) {
@@ -24,46 +20,57 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
             return;
         }
 
-        vis = parentState.add.graphics();
+        if (!state.vis) {
+            state.vis = parentState.add.graphics();
+        }
 
         // setup analyser and buffer
-        analyser = audioContext.createAnalyser();
-        analyser.smoothingTimeConstant = 0;
-        analyser.fftSize = 256;
-
-        bufferLength = analyser.frequencyBinCount;
-        dataArray = new Uint8Array(bufferLength);
+        state.analyser = audioContext.createAnalyser();
+        state.analyser.smoothingTimeConstant = 0;
+        state.analyser.fftSize = 256;
+        state.bufferLength = state.analyser.frequencyBinCount;
+        state.dataArray = new Uint8Array(state.bufferLength);
 
         // connect analyser to audio source
-        audioSource.connect(analyser);
+        audioSource.connect(state.analyser);
     }
 
     function drawVisualizer() {
-        if (analyser) {
-            analyser.getByteFrequencyData(dataArray);
+        if (state.analyser && state.vis) {
+            state.analyser.getByteFrequencyData(state.dataArray);
 
-            vis.clear();
-            vis.fillStyle(color, alpha);
-            vis.lineStyle(2, color, alpha);
+            state.vis.clear();
+            state.vis.fillStyle(state.color, state.alpha);
+            state.vis.lineStyle(2, state.color, state.alpha);
 
-            const barWidth = width / bufferLength;
+            const barWidth = state.getWidth() / state.bufferLength;
             let barHeight;
 
-            for (let i = 0; i < bufferLength; i += 1) {
-                barHeight = (height / 255) * dataArray[i];
-                vis.strokeRect(x + barWidth * i, y + height - barHeight, barWidth, barHeight);
+            for (let i = 0; i < state.bufferLength; i += 1) {
+                barHeight = (state.getHeight() / 255) * state.dataArray[i];
+                state.vis.strokeRect(state.getX() + barWidth * i, state.getY() + state.getHeight() - barHeight, barWidth, barHeight);
             }
         }
+    }
+
+    function destroy() {
+        if (state.vis) {
+            state.vis.clear();
+            state.vis.destroy();
+        }
+
+        state.analyser = undefined;
     }
 
     function update() {
         drawVisualizer();
     }
 
-    return Object.assign(state, {
+    return Object.assign(state, isVisualizerState, hasPositionState, hasSizeState, {
         // props
         // methods
         visualize,
+        destroy,
         update,
         setFillStyle,
     });
