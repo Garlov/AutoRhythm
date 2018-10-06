@@ -2,25 +2,32 @@ import Phaser from 'phaser';
 import gameConfig from 'configs/gameConfig';
 import createSineWaveVisualizer from 'entities/createSineWaveVisualiser';
 import createFrequencyVisualizer from 'entities/createFrequencyVisualizer';
-import audioConfig from 'configs/audioConfig';
 import hasAudio from 'components/hasAudio';
 
 const createVisualizerScene = function createVisualizerSceneFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.VISUALIZER);
-    const visualizers = [];
+    let visualizers = [];
 
     const hasAudioState = hasAudio(state);
 
     function create() {
         // // instantiate visualizers
-        visualizers.push(createSineWaveVisualizer());
-        visualizers.push(createFrequencyVisualizer());
+        const sineViz = createSineWaveVisualizer();
+        const freqViz = createFrequencyVisualizer();
 
-        state.visualize();
+        sineViz.setSize({ width: gameConfig.GAME.VIEWWIDTH / 2.5, height: gameConfig.GAME.VIEWHEIGHT / 3 });
+        sineViz.setPosition({ x: gameConfig.GAME.VIEWWIDTH / 2, y: gameConfig.GAME.VIEWHEIGHT - sineViz.getHeight() / 1.5 });
+
+        freqViz.setSize({ width: gameConfig.GAME.VIEWWIDTH / 2.5, height: gameConfig.GAME.VIEWHEIGHT / 3 });
+        freqViz.setPosition({ x: 0, y: gameConfig.GAME.VIEWHEIGHT - freqViz.getHeight() / 1.5 });
+
+        visualizers.push(sineViz);
+        visualizers.push(freqViz);
     }
 
     function visualize(key) {
         const am = state.getAudioManager();
+        am.pauseMusic();
         am.playMusic(key);
 
         visualizers.forEach((viz) => {
@@ -36,6 +43,7 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
 
     function destroy() {
         visualizers.forEach(viz => viz.destroy());
+        visualizers = [];
     }
 
     return Object.assign(state, hasAudioState, {

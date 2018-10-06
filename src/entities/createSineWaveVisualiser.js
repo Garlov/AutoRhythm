@@ -1,18 +1,14 @@
-import gameConfig from 'configs/gameConfig';
+import isVisualizer from 'components/isVisualizer';
+import hasPosition from 'components/hasPosition';
+import hasSize from 'components/hasSize';
 
 const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
     const state = {};
-    let analyser;
-    let bufferLength;
-    let dataArray;
-    let vis;
-    const width = gameConfig.GAME.VIEWWIDTH;
-    const height = gameConfig.GAME.VIEWHEIGHT / 2;
-    const x = 0;
-    const y = gameConfig.GAME.VIEWHEIGHT / 2;
     let thickness = 3;
-    let alpha = 1;
-    let color = 0xdddddd;
+
+    const isVisualizerState = isVisualizer(state);
+    const hasPositionState = hasPosition(state);
+    const hasSizeState = hasSize(state);
 
     function visualize(parentState, audioContext, audioSource) {
         if (!parentState || !audioContext || !audioSource) {
@@ -20,41 +16,43 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
             return;
         }
 
-        vis = parentState.add.graphics();
+        if (!state.vis) {
+            state.vis = parentState.add.graphics();
+        }
 
         // setup analyser and buffer
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 2 ** 12;
+        state.analyser = audioContext.createAnalyser();
+        state.analyser.fftSize = 2 ** 12;
 
-        bufferLength = analyser.fftSize;
-        dataArray = new Uint8Array(bufferLength);
+        state.bufferLength = state.analyser.fftSize;
+        state.dataArray = new Uint8Array(state.bufferLength);
 
         // connect analyser to audio source
-        audioSource.connect(analyser);
+        audioSource.connect(state.analyser);
     }
 
     function setLineStyle(t, c, a) {
         thickness = t;
-        color = c;
-        alpha = a;
+        state.color = c;
+        state.alpha = a;
     }
 
     function drawVisualizer() {
-        if (analyser) {
-            analyser.getByteTimeDomainData(dataArray);
-            vis.clear();
-            vis.lineStyle(thickness, color, alpha);
+        if (state.analyser && state.vis) {
+            state.analyser.getByteTimeDomainData(state.dataArray);
+            state.vis.clear();
+            state.vis.lineStyle(thickness, state.color, state.alpha);
 
-            const sliceWidth = (width * 1.0) / bufferLength;
-            vis.beginPath();
+            const sliceWidth = (state.getWidth() * 1.0) / state.bufferLength;
+            state.vis.beginPath();
 
-            for (let i = 0; i < bufferLength; i += 1) {
-                const v = dataArray[i] / 128;
+            for (let i = 0; i < state.bufferLength; i += 1) {
+                const v = state.dataArray[i] / 128;
 
-                vis.lineTo(x + sliceWidth * i, y + (v * height) / 2);
+                state.vis.lineTo(state.getX() + sliceWidth * i, state.getY() + (v * state.getHeight()) / 2);
             }
 
-            vis.strokePath();
+            state.vis.strokePath();
         }
     }
 
@@ -62,11 +60,21 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
         drawVisualizer();
     }
 
-    return Object.assign(state, {
+    function destroy() {
+        if (state.vis) {
+            state.vis.clear();
+            state.vis.destroy();
+        }
+
+        state.analyser = undefined;
+    }
+
+    return Object.assign(state, isVisualizerState, hasPositionState, hasSizeState, {
         // props
         // methods
         visualize,
         update,
+        destroy,
         setLineStyle,
     });
 };
