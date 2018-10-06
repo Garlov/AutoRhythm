@@ -2,6 +2,7 @@ import isVisualizer from 'components/isVisualizer';
 import hasPosition from 'components/hasPosition';
 import hasSize from 'components/hasSize';
 import getFunctionUsage from 'utils/getFunctionUsage';
+import pipe from 'utils/pipe';
 
 const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
     const state = {};
@@ -97,6 +98,15 @@ const createSineWaveVisualizer = function createSineWaveVisualizerFunc() {
     getFunctionUsage(states, 'createSineWaveVisualizer');
     return Object.assign(...states.map(s => s.state), {
         // pipes and overrides
+        update: localState.update,
+        destroy: pipe(
+            localState.destroy,
+            isVisualizerState.destroy,
+        ),
+        stop: pipe(
+            localState.stop,
+            isVisualizerState.stop,
+        ),
     });
 };
 

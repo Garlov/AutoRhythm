@@ -97,7 +97,7 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
         update: localState.update,
         destroy: pipe(
             localState.destroy,
-            isVisualizer.destroy,
+            isVisualizerState.destroy,
         ),
     });
 };
