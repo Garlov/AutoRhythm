@@ -118,9 +118,8 @@ const AudioManager = function createAudioManagerFunc() {
         soundEffects.destroy();
         music.destroy();
     }
-    const states = [{ state, name: 'state' }];
-    getFunctionUsage(states, 'AudioManager');
-    return Object.assign(...states.map(s => s.state), {
+
+    const localState = {
         // props
         isMusicPlaying: false,
         // methods
@@ -138,6 +137,13 @@ const AudioManager = function createAudioManagerFunc() {
         toggleMute,
         setupMute,
         destroy,
+    };
+
+    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }];
+
+    getFunctionUsage(states, 'AudioManager');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
     });
 };
 

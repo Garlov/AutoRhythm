@@ -23,14 +23,18 @@ const createKeyboardInput = function createKeyboardInputFunc() {
         document.removeEventListener('keyup', keyUpFn);
     }
 
-    const canEmitState = canEmit(state);
-    const states = [{ state, name: 'state' }, { state: canEmitState, name: 'canEmit' }];
-    getFunctionUsage(states, 'Keyboard');
-    return Object.assign(...states.map(s => s.state), {
+    const localState = {
         // props
         // methods
         disable,
         enable,
+    };
+
+    const canEmitState = canEmit(state);
+    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }, { state: canEmitState, name: 'canEmit' }];
+    getFunctionUsage(states, 'Keyboard');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
     });
 };
 

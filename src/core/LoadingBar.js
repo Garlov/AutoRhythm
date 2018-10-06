@@ -52,11 +52,16 @@ const LoadingBar = function LoadingBarFunc() {
         if (text) text.destroy();
     }
 
-    const states = [{ state, name: 'state' }];
-    getFunctionUsage(states, 'LoadingBar');
-    return Object.assign(...states.map(s => s.state), {
+    const localState = {
+        // methods
         init,
         destroy,
+    };
+
+    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }];
+    getFunctionUsage(states, 'LoadingBar');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
     });
 };
 export default LoadingBar;

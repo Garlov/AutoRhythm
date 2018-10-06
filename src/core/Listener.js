@@ -10,9 +10,7 @@ const Listener = function ListenerFunc(event, fn, once, emitState) {
         state.dropped = true;
     }
 
-    const states = [{ state, name: 'state' }];
-    getFunctionUsage(states, 'Listener');
-    return Object.assign(...states.map(s => s.state), {
+    const localState = {
         // props
         id: getUUID(),
         dropped: false,
@@ -26,6 +24,13 @@ const Listener = function ListenerFunc(event, fn, once, emitState) {
             },
         // methods
         drop,
+    };
+
+    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }];
+
+    getFunctionUsage(states, 'Listener');
+    return Object.assign(...states.map(s => s.state), {
+        // pipes and overrides
     });
 };
 
