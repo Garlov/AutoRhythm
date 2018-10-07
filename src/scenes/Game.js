@@ -50,7 +50,7 @@ const Game = function GameFunc() {
 
         audioManager = AudioManager()
             .setScene(gui)
-            .setPauseOnBlur(true)
+            .setPauseOnBlur(false)
             .init();
 
         setupListeners();

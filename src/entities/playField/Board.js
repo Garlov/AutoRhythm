@@ -24,6 +24,14 @@ const Board = function BoardFunc(parent) {
     let multiplier = 1;
     let multiplierText;
 
+    // NPS calculations.
+    let notesPastLane = 0;
+    let notesAtLastCheck = 0;
+    let lastNpsCheckTime = 0;
+    const npsWindow = 1000; // how long between each calculation in ms.
+    let npsText;
+    let peak = 0;
+
     function incrementScore(val) {
         if (val < 0) {
             multiplier = 1;
@@ -37,6 +45,10 @@ const Board = function BoardFunc(parent) {
     }
 
     function onNoteLeftLane(note) {
+        notesPastLane += 1;
+    }
+
+    function onNoteLeftLaneNoHit(note) {
         incrementScore(-10);
     }
 
@@ -68,6 +80,13 @@ const Board = function BoardFunc(parent) {
             align: 'center',
         });
 
+        npsText = parent.add.text(20, gameConfig.GAME.VIEWHEIGHT, 'NPS', {
+            font: '32px Arial',
+            fill: '#eeeeee',
+            align: 'center',
+        });
+        npsText.y -= npsText.height;
+
         const laneSize = (gameConfig.GAME.VIEWWIDTH - x * 2) / laneCount;
         state.setPosition({ x, y });
         for (let i = 0; i < laneCount; i += 1) {
@@ -81,7 +100,7 @@ const Board = function BoardFunc(parent) {
         }
 
         const threshold = {
-            0: -60000,
+            0: -90000,
             1: -30000,
             2: -20000,
             3: -5000,
@@ -95,7 +114,7 @@ const Board = function BoardFunc(parent) {
             3: 0,
         };
         for (let i = 0; i < freqMap.length; i += 1) {
-            const signal = freqMap[i].slice(0, freqMap[i].length * 0.5);
+            const signal = freqMap[i].slice(0, freqMap[i].length * 0.8);
             for (let laneIndex = 0; laneIndex < laneCount; laneIndex += 1) {
                 let notesInLane = lanes[laneIndex];
                 if (!notesInLane) {
@@ -109,7 +128,8 @@ const Board = function BoardFunc(parent) {
                 if (res < threshold[laneIndex]) {
                     const note = Note(state);
                     note.init(i, state.getX() + laneSize * laneIndex + laneSize / 2);
-                    state.listenOn(note, eventConfig.EVENTS.TONE.LEFT_LANE, onNoteLeftLane);
+                    state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE_NO_HIT, onNoteLeftLaneNoHit);
+                    state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE, onNoteLeftLane);
                     notesInLane.push(note);
                     notes.push(note);
                     count[laneIndex] += 1;
@@ -126,6 +146,18 @@ const Board = function BoardFunc(parent) {
         const currentTime = song.getCurrentTime();
         const currentIndexF = (freqMap.length / duration) * currentTime;
         const currentIndex = parseInt(currentIndexF);
+
+        // NPS Calculations.
+        const npsCheckTime = performance.now();
+        if (npsCheckTime - lastNpsCheckTime > npsWindow) {
+            lastNpsCheckTime = npsCheckTime;
+
+            const noteDifference = notesPastLane - notesAtLastCheck;
+            if (peak < noteDifference) peak = noteDifference;
+
+            npsText.setText(`NPS:  ${noteDifference / (npsWindow / 1000)} (Peak: ${peak})`);
+            notesAtLastCheck = notesPastLane;
+        }
 
         const { delta } = parentState.game.loop;
         notes.forEach((n) => {

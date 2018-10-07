@@ -13,7 +13,7 @@ export default {
             RECEPTOR_DOWN: 'receptor down',
         },
         TONE: {
-            LEFT_LANE: 'tone left lane',
+            LEFT_LANE_NO_HIT: 'tone left lane no hit',
         },
     },
 };
