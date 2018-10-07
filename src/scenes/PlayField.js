@@ -68,18 +68,6 @@ const PlayField = function PlayFieldFunc(key) {
         createBoard();
     }
 
-    function _onKeyDown(e) {
-        if (state.sys.isActive()) {
-            if (e.keyCode === gameConfig.KEYCODES.ESCAPE) {
-                _showScoreScreen();
-            }
-        }
-    }
-
-    function setupListeners() {
-        state.listenOn(state.getKeyboard(), eventConfig.EVENTS.KEYBOARD.KEYDOWN, _onKeyDown);
-    }
-
     function createFreqMap() {
         if (!freqMap) {
             const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
@@ -104,8 +92,6 @@ const PlayField = function PlayFieldFunc(key) {
         createBoard();
 
         currentSong.resume();
-
-        setupListeners();
     }
 
     function update(time, delta) {

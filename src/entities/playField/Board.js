@@ -8,6 +8,7 @@ import eventConfig from 'configs/eventConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 import canEmit from 'components/canEmit';
+import hasInput from 'components/hasInput';
 
 const Board = function BoardFunc(parent) {
     const state = {};
@@ -134,6 +135,24 @@ const Board = function BoardFunc(parent) {
         }
     }
 
+    function _onKeyDown(e) {
+        if (e.keyCode === gameConfig.KEYCODES.ESCAPE) {
+            state.emit(eventConfig.EVENTS.SONG.SONG_END, {
+                escape: true,
+                loss: true,
+                npsPeak: peak,
+                bestCombo: comboPeak,
+                score,
+                notesHit,
+                totalNotes: notes.length,
+            });
+        }
+    }
+
+    function setupListeners() {
+        state.listenOn(parentState.getKeyboard(), eventConfig.EVENTS.KEYBOARD.KEYDOWN, _onKeyDown);
+    }
+
     function init() {
         scoreText = parent.add.text(20, 20, `${score}`, {
             font: '64px Arial',
@@ -199,6 +218,7 @@ const Board = function BoardFunc(parent) {
         console.log(performance.now() - now);
         console.log(count, notes.length);
 
+        setupListeners();
         drawHealthBar();
     }
 
