@@ -1,6 +1,6 @@
 export default {
     COMPOSITION_INFO: {
-        ENABLE: true,
+        ENABLE: false,
         ENABLE_FILTER: false,
         FILTER: [],
         ENABLE_FACTORY_FILTER: false,

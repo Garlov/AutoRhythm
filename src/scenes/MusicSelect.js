@@ -139,7 +139,9 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     function update(time, delta) {}
 
     function destroy() {
-        this.visualizer.destroy();
+        visualizer.destroy();
+        state.scene.remove(gameConfig.SCENES.VISUALIZER);
+        visualizer = undefined;
     }
 
     const hasInputState = hasInput(state);
