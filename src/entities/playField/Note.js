@@ -67,8 +67,10 @@ const Note = function NoteFunc(parent) {
     function onHit() {
         state.hit = true;
         createNoteEffect();
-        noteBg.destroy();
-        noteBg = undefined;
+        if (noteBg) {
+            noteBg.destroy();
+            noteBg = undefined;
+        }
         state.emit(eventConfig.EVENTS.TONE.LEFT_LANE, state);
     }
 
