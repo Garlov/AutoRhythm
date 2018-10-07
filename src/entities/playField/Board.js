@@ -53,7 +53,6 @@ const Board = function BoardFunc(parent) {
     }
 
     function onNoteLeftLane(note) {
-        console.log(note);
         if (note.hit) {
             notesHit += 1;
         }
@@ -161,7 +160,7 @@ const Board = function BoardFunc(parent) {
         const { duration } = song.audioBuffer;
         const currentTime = song.getCurrentTime();
         const currentIndexF = (freqMap.length / duration) * currentTime;
-        const currentIndex = parseInt(currentIndexF);
+        // const currentIndex = parseInt(currentIndexF);
 
         if (currentTime > duration) {
             state.emit(eventConfig.EVENTS.SONG.SONG_END, {

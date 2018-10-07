@@ -14,8 +14,29 @@ const AudioManager = function createAudioManagerFunc() {
     const currentVolume = 0.7;
     const defaultSongKey = audioConfig.MUSIC.ALL_ALONE.KEY;
 
+    function _updateMute() {
+        if (state.isAudioMuted()) {
+            muteIcon.setTexture(spriteConfig.SPEAKER_OFF.KEY);
+            scene.sound.mute = true;
+        } else {
+            muteIcon.setTexture(spriteConfig.SPEAKER.KEY);
+            scene.sound.mute = false;
+        }
+    }
+
+    function _setupMute() {
+        muteIcon = scene.add.image(1850, 1040, spriteConfig.SPEAKER.KEY);
+        muteIcon.setScrollFactor(0);
+        muteIcon.tint = gameConfig.UI_DEFAULT.tint;
+        muteIcon.depth = 3;
+        muteIcon.setInteractive();
+        muteIcon.on('pointerup', state.toggleMute, state);
+
+        _updateMute();
+    }
+
     function init() {
-        state.setupMute();
+        _setupMute();
 
         music.set(audioConfig.MUSIC.ALL_ALONE.KEY, scene.sound.add(audioConfig.MUSIC.ALL_ALONE.KEY));
         music.set(audioConfig.MUSIC.BOWERS_WILKINS.KEY, scene.sound.add(audioConfig.MUSIC.BOWERS_WILKINS.KEY));
@@ -92,30 +113,9 @@ const AudioManager = function createAudioManagerFunc() {
         return localStorage.getItem(muteIdentifier) === 'true';
     }
 
-    function _updateMute() {
-        if (state.isAudioMuted()) {
-            muteIcon.setTexture(spriteConfig.SPEAKER_OFF.KEY);
-            scene.sound.mute = true;
-        } else {
-            muteIcon.setTexture(spriteConfig.SPEAKER.KEY);
-            scene.sound.mute = false;
-        }
-    }
-
     function toggleMute() {
         const muteStatus = (!state.isAudioMuted()).toString();
         localStorage.setItem(muteIdentifier, muteStatus);
-        _updateMute();
-    }
-
-    function setupMute() {
-        muteIcon = scene.add.image(1850, 1040, spriteConfig.SPEAKER.KEY);
-        muteIcon.setScrollFactor(0);
-        muteIcon.tint = gameConfig.UI_DEFAULT.tint;
-        muteIcon.depth = 3;
-        muteIcon.setInteractive();
-        muteIcon.on('pointerup', state.toggleMute, state);
-
         _updateMute();
     }
 
@@ -143,7 +143,6 @@ const AudioManager = function createAudioManagerFunc() {
         getCurrentVolume,
         isAudioMuted,
         toggleMute,
-        setupMute,
         destroy,
     };
 
