@@ -72,9 +72,9 @@ const Board = function BoardFunc(parent) {
         state.setPosition({ x, y });
         for (let i = 0; i < laneCount; i += 1) {
             const laneReceptor = LaneReceptor(state);
+            laneReceptor.setSize({ width: laneSize, height: 100 });
             laneReceptor.init();
             laneReceptor.setIndex(i);
-            laneReceptor.setSize({ width: laneSize, height: 100 });
             laneReceptors.push(laneReceptor);
 
             state.listenOn(laneReceptor, eventConfig.EVENTS.LANE.RECEPTOR_DOWN, onReceptorDown);
