@@ -44,7 +44,7 @@ const PlayField = function PlayFieldFunc(key) {
     }
 
     function update(time, delta) {
-        board.update();
+        board.update(delta);
     }
 
     function destroy() {
@@ -79,8 +79,8 @@ const PlayField = function PlayFieldFunc(key) {
     return Object.assign(...states.map(s => s.state), {
         // pipes and overrides
         update: pipe(
-            state.update,
             localState.update,
+            state.update,
         ),
         destroy: pipe(
             localState.destroy,

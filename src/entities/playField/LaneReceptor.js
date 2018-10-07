@@ -41,7 +41,6 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         const y = state.getY() + board.getY();
 
         const elemWidth = state.getWidth() - pushIndicatorPadding * 2;
-        console.log(elemWidth);
         pushIndicator.lineStyle(5, color, 1);
         pushIndicator.beginPath();
         pushIndicator.moveTo(0, 0);

@@ -11,16 +11,32 @@ const Note = function NoteFunc(parent) {
     let board = parent;
     let index = 0;
     const noteSize = 40;
+    let noteEffect;
+    let noteEffectSize = noteSize;
+    const noteEffectPos = { x: 0, y: 0 };
+
+    function drawNoteEffect() {
+        noteEffect.clear();
+        noteEffect.lineStyle(2, 0xcccccc, 1);
+        noteEffect.strokeCircle(noteEffectPos.x, noteEffectPos.y, noteEffectSize);
+    }
+
+    function createNoteEffect() {
+        noteEffect = board.getParentState().add.graphics();
+        noteEffectPos.x = state.getX();
+        noteEffectPos.y = state.getY();
+        drawNoteEffect();
+    }
 
     function init(i, x) {
         state.setX(x);
         index = i;
     }
 
-    function update({ currentIndex, stepSize }) {
+    function update({ currentIndex, stepSize, delta }) {
         const distance = (index - currentIndex) * stepSize;
         state.setY(board.getY() - distance);
-        if (!noteBg && state.getY() > 0 && state.getY() < board.getY() + 400) {
+        if (!noteBg && state.getY() > 0 && state.getY() < board.getY() + 400 && !state.hit) {
             noteBg = board.getParentState().add.graphics();
             noteBg.fillStyle(0xcccccc, 1);
             noteBg.fillCircle(0, 0, noteSize);
@@ -37,10 +53,22 @@ const Note = function NoteFunc(parent) {
             noteBg.x = state.getX();
             noteBg.y = state.getY();
         }
+        if (noteEffect) {
+            noteEffectSize += (delta / 1000) * 800;
+            if (noteEffectSize > 100) {
+                noteEffect.destroy();
+                noteEffect = undefined;
+            } else {
+                drawNoteEffect();
+            }
+        }
     }
 
     function onHit() {
         state.hit = true;
+        createNoteEffect();
+        noteBg.destroy();
+        noteBg = undefined;
     }
 
     function destroy() {

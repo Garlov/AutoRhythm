@@ -127,9 +127,10 @@ const Board = function BoardFunc(parent) {
         const currentIndexF = (freqMap.length / duration) * currentTime;
         const currentIndex = parseInt(currentIndexF);
 
+        const { delta } = parentState.game.loop;
         notes.forEach((n) => {
             if (n) {
-                n.update({ currentIndex: currentIndexF, stepSize: 150 });
+                n.update({ currentIndex: currentIndexF, stepSize: 150, delta });
             }
         });
 
