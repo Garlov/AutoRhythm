@@ -19,9 +19,13 @@ const PlayField = function PlayFieldFunc(key) {
     function _onKeyDown(e) {
         if (state.sys.isActive()) {
             if (e.keyCode === gameConfig.KEYCODES.ESCAPE) {
-                state.emitGlobal(eventConfig.EVENTS.GAME.SONG_ENDED, { escape: true });
+                state.emitGlobal(eventConfig.EVENTS.GAME.PLAY_ENDED, {});
             }
         }
+    }
+
+    function _onSongEnd(e) {
+        console.log(e);
     }
 
     function setupListeners() {
@@ -36,8 +40,10 @@ const PlayField = function PlayFieldFunc(key) {
         const freqMap = createFrequencyMap(currentSong.audioBuffer);
 
         board = Board(state);
+        state.listenOnce(board, eventConfig.EVENTS.SONG.SONG_END, _onSongEnd);
         board.setFrequencyMap(currentSong, freqMap);
         board.init();
+        currentSong.loop = false;
         currentSong.resume();
 
         setupListeners();

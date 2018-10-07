@@ -33,14 +33,13 @@ const Game = function GameFunc() {
     }
 
     function _onSongEnded(e) {
-        // TODO: Score scene and actually care about event data.
         state.scene.manager.getScene(gameConfig.SCENES.PLAY_FIELD).destroy();
         state.scene.remove(gameConfig.SCENES.PLAY_FIELD);
         state.scene.add(gameConfig.SCENES.MUSIC_SELECT, MusicSelect(), true);
     }
 
     function setupListeners() {
-        state.listenGlobal(eventConfig.EVENTS.GAME.SONG_ENDED, _onSongEnded);
+        state.listenGlobal(eventConfig.EVENTS.GAME.PLAY_ENDED, _onSongEnded);
         state.listenGlobal(eventConfig.EVENTS.GAME.SONG_SELECTED, _onSongSelected);
     }
 

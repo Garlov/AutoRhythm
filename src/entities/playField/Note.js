@@ -45,10 +45,9 @@ const Note = function NoteFunc(parent) {
             noteBg.destroy();
             noteBg = undefined;
             if (!state.hit) {
-                state.hit = true;
+                state.miss = true;
                 state.emit(eventConfig.EVENTS.TONE.LEFT_LANE_NO_HIT, state);
             }
-            state.emit(eventConfig.EVENTS.TONE.LEFT_LANE, state);
         }
         if (noteBg) {
             noteBg.x = state.getX();
@@ -70,6 +69,7 @@ const Note = function NoteFunc(parent) {
         createNoteEffect();
         noteBg.destroy();
         noteBg = undefined;
+        state.emit(eventConfig.EVENTS.TONE.LEFT_LANE, state);
     }
 
     function destroy() {
@@ -88,6 +88,7 @@ const Note = function NoteFunc(parent) {
     const localState = {
         // props
         hit: false,
+        miss: false,
         // methods
         init,
         update,
