@@ -224,6 +224,11 @@ const Board = function BoardFunc(parent) {
             multiplierText.destroy();
             multiplierText = undefined;
         }
+
+        if (npsText) {
+            npsText.destroy();
+            npsText = undefined;
+        }
     }
 
     const isGameEntityState = isGameEntity(state);
