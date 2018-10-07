@@ -37,7 +37,21 @@ const PlayField = function PlayFieldFunc(key) {
         audioMan.playMusic(currentKey);
         const currentSong = audioMan.getCurrentSong();
         currentSong.pause();
-        const freqMap = createFrequencyMap(currentSong.audioBuffer);
+
+        const now = performance.now();
+
+        const threshold = {
+            0: -40000,
+            1: -30000,
+            2: -30000,
+            3: -30000,
+        };
+
+        // percentile ranges for each lane in the frequency map.
+        const laneRanges = [0.05, 0.1, 0.3, 1];
+
+        const freqMap = createFrequencyMap(currentSong.audioBuffer, 4, laneRanges, threshold);
+        console.log(performance.now() - now);
 
         board = Board(state);
         state.listenOnce(board, eventConfig.EVENTS.SONG.SONG_END, _onSongEnd);

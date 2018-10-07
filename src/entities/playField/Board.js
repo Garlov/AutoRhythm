@@ -112,13 +112,6 @@ const Board = function BoardFunc(parent) {
             state.listenOn(laneReceptor, eventConfig.EVENTS.LANE.RECEPTOR_DOWN, onReceptorDown);
         }
 
-        const threshold = {
-            0: -90000,
-            1: -30000,
-            2: -20000,
-            3: -5000,
-        };
-
         const count = {
             max: freqMap.length,
             0: 0,
@@ -127,32 +120,29 @@ const Board = function BoardFunc(parent) {
             3: 0,
         };
 
+        const now = performance.now();
         for (let i = 0; i < freqMap.length; i += 1) {
-            const signal = freqMap[i].slice(0, freqMap[i].length * 0.8);
+            // loop through all the song 'chunks'
+
             for (let laneIndex = 0; laneIndex < laneCount; laneIndex += 1) {
                 let notesInLane = lanes[laneIndex];
                 if (!notesInLane) {
-                    notesInLane = [];
+                    notesInLane = new Array(freqMap.length).fill(undefined);
                     lanes.push(notesInLane);
                 }
-                const laneSignalLength = signal.length / laneCount;
-                const start = laneIndex * laneSignalLength;
-                const laneSignal = signal.slice(start, start.laneSignalLength);
-                const res = laneSignal.reduce((tot, curr) => tot + curr, 0);
-                if (res < threshold[laneIndex]) {
+
+                if (freqMap[i][laneIndex]) {
                     const note = Note(state);
                     note.init(i, state.getX() + laneSize * laneIndex + laneSize / 2);
                     state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE_NO_HIT, onNoteLeftLaneNoHit);
                     state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE, onNoteLeftLane);
-                    notesInLane.push(note);
+                    notesInLane[i] = note;
                     notes.push(note);
                     count[laneIndex] += 1;
-                } else {
-                    notesInLane.push(undefined);
                 }
             }
         }
-
+        console.log(performance.now() - now);
         console.log(count, notes.length);
     }
 
@@ -160,7 +150,6 @@ const Board = function BoardFunc(parent) {
         const { duration } = song.audioBuffer;
         const currentTime = song.getCurrentTime();
         const currentIndexF = (freqMap.length / duration) * currentTime;
-        // const currentIndex = parseInt(currentIndexF);
 
         if (currentTime > duration) {
             state.emit(eventConfig.EVENTS.SONG.SONG_END, {
@@ -195,12 +184,6 @@ const Board = function BoardFunc(parent) {
         });
 
         laneReceptors.forEach((laneReceptor, i) => {
-            // const note = lanes[i][currentIndex];
-            // if (note) {
-            // laneReceptor.setColor(0x00ff00);
-            // } else {
-            // laneReceptor.setColor(0xcccccc);
-            // }
             laneReceptor.update();
         });
     }

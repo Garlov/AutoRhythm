@@ -13,7 +13,17 @@ function equalize(value, i, l) {
     return -v;
 }
 
-const createFrequencyMap = function createFrequencyMapFunc(audioBuffer) {
+function getLaneIndex(i, lanePercents, laneLength) {
+    for (let j = 0; j < lanePercents.length; j += 1) {
+        if (i < lanePercents[j] * laneLength) {
+            return j;
+        }
+    }
+
+    return 0;
+}
+
+const createFrequencyMap = function createFrequencyMapFunc(audioBuffer, numberOfLanes, laneRanges, thresholds) {
     const { sampleRate, numberOfChannels } = audioBuffer;
     const freqMap = [];
     const bufferSize = 2 ** 12;
@@ -38,19 +48,46 @@ const createFrequencyMap = function createFrequencyMapFunc(audioBuffer) {
     }
 
     // console.log(performance.now() - now);
-    // Generate a frequency map in spectrum chunks, using a (RFFT) fast fourier transform.
+    // Generate a frequency map in spectrum chunks, using a fast fourier transform. (RFFT)
+    let lastLaneIndex = 0;
     while (start + bufferSize < monoData.length) {
         buffer.set(monoData.slice(start, start + bufferSize));
         start += bufferSize;
         // Calculates a fast fourier transform spectrum.
         const fft = new RFFT(bufferSize, sampleRate);
         fft.forward(buffer);
-        for (let j = 0; j < fft.spectrum.length; j += 1) {
-            fft.spectrum[j] = equalize(fft.spectrum[j], j, fft.spectrum.length);
+
+        let laneSignalSum = 0;
+        const laneData = new Array(numberOfLanes).fill(false);
+        for (let i = 0; i < fft.spectrum.length; i += 1) {
+            if (i > laneRanges[laneRanges.length - 1] * fft.spectrum.length) {
+                // if (laneSignalSum < thresholds[lastLaneIndex]) {
+                //     laneData[lastLaneIndex] = true;
+                // }
+                break;
+            }
+
+            const laneIndex = getLaneIndex(i, laneRanges, fft.spectrum.length);
+            if (lastLaneIndex !== laneIndex) {
+                if (laneSignalSum < thresholds[lastLaneIndex]) {
+                    laneData[lastLaneIndex] = true;
+                }
+
+                laneSignalSum = 0;
+            }
+
+            fft.spectrum[i] = equalize(fft.spectrum[i], i, fft.spectrum.length);
+            laneSignalSum += fft.spectrum[i];
+
+            lastLaneIndex = laneIndex;
         }
-        freqMap.push(fft.spectrum);
+
+        if (laneSignalSum < thresholds[lastLaneIndex]) {
+            laneData[lastLaneIndex] = true;
+        }
+
+        freqMap.push(laneData);
     }
-    // console.log(performance.now() - now);
 
     return freqMap;
 };
