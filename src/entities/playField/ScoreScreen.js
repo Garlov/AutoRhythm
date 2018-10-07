@@ -16,8 +16,10 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
     let background;
     let score = 0;
     let scoreText;
+    let titleText;
     let retryButton;
     let menuButton;
+    let win = false;
 
     function onRetry() {
         state.emit(eventConfig.EVENTS.SCORE_SCREEN.RETRY);
@@ -42,17 +44,36 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
         state.refresh();
     }
 
+    function setWin(val) {
+        win = val;
+        state.refresh();
+    }
+
     function refresh() {
         if (!background) {
             background = parentState.add.graphics();
         }
         background.clear();
+        background.fillStyle(0x000000, 1);
+        background.fillRect(state.getX(), state.getY(), state.getWidth(), state.getHeight());
         background.lineStyle(3, 0xcccccc, 1);
         background.strokeRect(state.getX(), state.getY(), state.getWidth(), state.getHeight());
 
+        if (!titleText) {
+            titleText = parent.add.text(0, 0, '', {
+                font: '64px Arial',
+                fill: '#eeeeee',
+                align: 'center',
+            });
+        }
+
+        titleText.text = win ? 'Congratulations, you won!' : 'Sorry, better luck next time';
+        titleText.x = state.getX() + state.getWidth() / 2 - titleText.width / 2;
+        titleText.y = state.getY() + 20;
+
         if (!scoreText) {
             scoreText = parent.add.text(0, 0, '', {
-                font: '64px Arial',
+                font: '40px Arial',
                 fill: '#eeeeee',
                 align: 'center',
             });
@@ -60,7 +81,7 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
 
         scoreText.text = `Your score: ${score}`;
         scoreText.x = state.getX() + state.getWidth() / 2 - scoreText.width / 2;
-        scoreText.y = state.getY();
+        scoreText.y = state.getY() + 100;
 
         if (!retryButton) {
             retryButton = Button(parentState);
@@ -92,6 +113,10 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
             background.destroy();
             background = undefined;
         }
+        if (titleText) {
+            titleText.destroy();
+            titleText = undefined;
+        }
         if (scoreText) {
             scoreText.destroy();
             scoreText = undefined;
@@ -117,6 +142,7 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
         // methods
         init,
         setScore,
+        setWin,
         refresh,
         destroy,
     };
