@@ -9,9 +9,10 @@ import eventConfig from 'configs/eventConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 
-const PlayField = function PlayFieldFunc() {
+const PlayField = function PlayFieldFunc(key) {
     const state = new Phaser.Scene(gameConfig.SCENES.PLAY_FIELD);
     let board;
+    const currentKey = key;
 
     function init() {}
 
@@ -28,10 +29,9 @@ const PlayField = function PlayFieldFunc() {
     }
 
     function create() {
-        const currentSong = state.scene.manager
-            .getScene(gameConfig.SCENES.GAME)
-            .getAudioManager()
-            .getCurrentSong();
+        const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
+        audioMan.playMusic(currentKey);
+        const currentSong = audioMan.getCurrentSong();
         const freqMap = createFrequencyMap(currentSong.audioBuffer);
 
         board = Board(state);

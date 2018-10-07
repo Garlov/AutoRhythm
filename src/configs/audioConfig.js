@@ -1,5 +1,11 @@
 export default {
     MUSIC: {
+        OPEN_JAM: {
+            ARTIST: 'BleepBloopBleep1',
+            TITLE: 'Open Jam Track 1',
+            KEY: 'OpenJam',
+            PATH: 'assets/audio/open_jam_track_1.wav',
+        },
         BOWERS_WILKINS: {
             ARTIST: 'WOWA',
             TITLE: 'Bowers & Wilkins',
@@ -17,11 +23,6 @@ export default {
             TITLE: 'Test Tunes 10-20k hz',
             KEY: 'test',
             PATH: 'assets/audio/test.ogg',
-        },
-        TEST_15k: {
-            TITLE: '15k hz single tune test',
-            KEY: 'TEST_15k',
-            PATH: 'assets/audio/15k.ogg',
         },
     },
     SFX: {},

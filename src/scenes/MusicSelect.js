@@ -59,7 +59,7 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     }
 
     function _selectSong() {
-        state.emitGlobal(eventConfig.EVENTS.GAME.SONG_SELECTED, songs[currentSongIndex].key);
+        state.emitGlobal(eventConfig.EVENTS.GAME.SONG_SELECTED, { key: songs[currentSongIndex].key });
     }
 
     function _previewSong() {

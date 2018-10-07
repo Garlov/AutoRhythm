@@ -20,7 +20,7 @@ const AudioManager = function createAudioManagerFunc() {
         music.set(audioConfig.MUSIC.ALL_ALONE.KEY, scene.sound.add(audioConfig.MUSIC.ALL_ALONE.KEY));
         music.set(audioConfig.MUSIC.BOWERS_WILKINS.KEY, scene.sound.add(audioConfig.MUSIC.BOWERS_WILKINS.KEY));
         music.set(audioConfig.MUSIC.TEST.KEY, scene.sound.add(audioConfig.MUSIC.TEST.KEY));
-        music.set(audioConfig.MUSIC.TEST_15k.KEY, scene.sound.add(audioConfig.MUSIC.TEST_15k.KEY));
+        music.set(audioConfig.MUSIC.OPEN_JAM.KEY, scene.sound.add(audioConfig.MUSIC.OPEN_JAM.KEY));
 
         Object.keys(audioConfig.SFX).forEach((objKey) => {
             const SFX = audioConfig.SFX[objKey];
@@ -64,6 +64,12 @@ const AudioManager = function createAudioManagerFunc() {
             currentSong.play();
             state.isMusicPlaying = true;
         }
+    }
+
+    function stopMusic() {
+        currentSong.stop();
+        currentSong = null;
+        state.isMusicPlaying = false;
     }
 
     function getCurrentVolume() {
@@ -114,6 +120,7 @@ const AudioManager = function createAudioManagerFunc() {
     }
 
     function destroy() {
+        state.stopMusic();
         muteIcon.destroy();
         soundEffects.destroy();
         music.destroy();
@@ -129,6 +136,7 @@ const AudioManager = function createAudioManagerFunc() {
         setPauseOnBlur,
         playMusic,
         pauseMusic,
+        stopMusic,
         getAudioContext,
         getCurrentSong,
         getAudioSource,

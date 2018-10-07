@@ -26,14 +26,15 @@ const Game = function GameFunc() {
     }
 
     function _onSongSelected(e) {
+        audioManager.stopMusic();
         state.scene.manager.getScene(gameConfig.SCENES.MUSIC_SELECT).destroy();
         state.scene.remove(gameConfig.SCENES.MUSIC_SELECT);
-        state.scene.add(gameConfig.SCENES.PLAY_FIELD, PlayField(), true);
+        state.scene.add(gameConfig.SCENES.PLAY_FIELD, PlayField(e.key), true);
     }
 
     function _onSongEnded(e) {
-        console.log(e);
         // TODO: Score scene and actually care about event data.
+        state.scene.manager.getScene(gameConfig.SCENES.PLAY_FIELD).destroy();
         state.scene.remove(gameConfig.SCENES.PLAY_FIELD);
         state.scene.add(gameConfig.SCENES.MUSIC_SELECT, MusicSelect(), true);
     }
