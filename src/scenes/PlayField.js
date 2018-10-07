@@ -32,11 +32,13 @@ const PlayField = function PlayFieldFunc(key) {
         const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
         audioMan.playMusic(currentKey);
         const currentSong = audioMan.getCurrentSong();
+        currentSong.pause();
         const freqMap = createFrequencyMap(currentSong.audioBuffer);
 
         board = Board(state);
         board.setFrequencyMap(currentSong, freqMap);
         board.init();
+        currentSong.resume();
 
         setupListeners();
     }

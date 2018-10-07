@@ -27,8 +27,10 @@ const Note = function NoteFunc(parent) {
         if (rect && state.getY() > board.getY() + 400) {
             rect.destroy();
             rect = undefined;
-            state.hit = true;
-            state.emit(eventConfig.EVENTS.TONE.LEFT_LANE, state);
+            if (!state.hit) {
+                state.hit = true;
+                state.emit(eventConfig.EVENTS.TONE.LEFT_LANE, state);
+            }
         }
         if (rect) {
             rect.x = state.getX();
