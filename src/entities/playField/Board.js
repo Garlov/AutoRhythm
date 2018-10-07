@@ -76,12 +76,13 @@ const Board = function BoardFunc(parent) {
         const minIndex = parseInt(indexesPerSec * (currentTime - threshold));
         const maxIndex = parseInt(indexesPerSec * (currentTime + threshold));
 
-        const hit = false;
+        let hit = false;
         for (let i = minIndex; i <= maxIndex; i += 1) {
             const note = lanes[e.index][i];
             if (note && (!note.hit || !note.miss)) {
                 incrementScore(100);
                 note.onHit();
+                hit = true;
                 break;
             }
         }
