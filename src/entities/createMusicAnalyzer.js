@@ -1,5 +1,5 @@
 import gameConfig from 'configs/gameConfig';
-import createFrequencyMap from 'utils/createFrequencyMap';
+import createNoteMap from 'utils/createNoteMap';
 import getFunctionUsage from 'utils/getFunctionUsage';
 
 const createMusicAnalyzer = function createMusicAnalyzerFunc() {
@@ -38,7 +38,7 @@ const createMusicAnalyzer = function createMusicAnalyzerFunc() {
     function init(gameState) {
         vis = gameState.add.graphics();
         const { audioBuffer } = gameState.getAudioManager().getBackgroundMusic();
-        freqMap = createFrequencyMap(audioBuffer);
+        freqMap = createNoteMap(audioBuffer);
         drawSummary();
     }
 

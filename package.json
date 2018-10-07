@@ -56,6 +56,7 @@
         "dat.gui": "^0.7.2",
         "dsp.js": "^1.0.1",
         "immutable": "^3.8.2",
+        "mersenne-twister": "^1.1.0",
         "phaser": "^3.14.0",
         "stats-js": "^1.0.0-alpha1"
     }

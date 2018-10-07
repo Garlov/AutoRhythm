@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import gameConfig from 'configs/gameConfig';
 import Board from 'entities/playField/Board';
-import createFrequencyMap from 'utils/createFrequencyMap';
+import createNoteMap from 'utils/createNoteMap';
 import canEmit from 'components/canEmit';
 import hasInput from 'components/hasInput';
 import canListen from 'components/canListen';
@@ -80,7 +80,7 @@ const PlayField = function PlayFieldFunc(key) {
         state.listenOn(state.getKeyboard(), eventConfig.EVENTS.KEYBOARD.KEYDOWN, _onKeyDown);
     }
 
-    function createFreqMap() {
+    function createNotes() {
         if (!freqMap) {
             const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
             const currentSong = audioMan.getCurrentSong();
@@ -89,7 +89,7 @@ const PlayField = function PlayFieldFunc(key) {
 
             // percentile ranges for each lane in the frequency map.
             const laneRanges = [0.05, 0.15, 0.4, 75];
-            freqMap = createFrequencyMap(currentSong.audioBuffer, 4, laneRanges, threshold);
+            freqMap = createNoteMap(currentSong.audioBuffer, 4, laneRanges, threshold);
         }
     }
 
@@ -100,7 +100,7 @@ const PlayField = function PlayFieldFunc(key) {
         currentSong.pause();
         currentSong.loop = false;
 
-        createFreqMap();
+        createNotes();
         createBoard();
 
         currentSong.resume();

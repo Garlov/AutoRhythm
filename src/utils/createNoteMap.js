@@ -23,7 +23,7 @@ function getLaneIndex(i, lanePercents, laneLength) {
     return 0;
 }
 
-const createFrequencyMap = function createFrequencyMapFunc(audioBuffer, numberOfLanes, laneRanges, thresholds) {
+const createNoteMap = function createNoteMapFunc(audioBuffer, numberOfLanes, laneRanges, thresholds) {
     const { sampleRate, numberOfChannels } = audioBuffer;
     const freqMap = [];
     const bufferSize = 2 ** 12;
@@ -104,4 +104,4 @@ const createFrequencyMap = function createFrequencyMapFunc(audioBuffer, numberOf
     return freqMap;
 };
 
-export default createFrequencyMap;
+export default createNoteMap;
