@@ -167,10 +167,10 @@ const Board = function BoardFunc(parent) {
             lr.destroy();
         });
         laneReceptors = [];
-        notes = [];
         notes.forEach((n) => {
             n.destroy();
         });
+        notes = [];
         // no need to destroy, just empty
         lanes = [];
 
