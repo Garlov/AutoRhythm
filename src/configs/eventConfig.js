@@ -3,7 +3,7 @@ export default {
         GAME: {
             STARTED: 'game started',
             SONG_SELECTED: 'song selected',
-            SONG_ENDED: 'song ended',
+            PLAY_ENDED: 'play ended',
         },
         KEYBOARD: {
             KEYDOWN: 'keydown',
@@ -14,6 +14,11 @@ export default {
         },
         TONE: {
             LEFT_LANE_NO_HIT: 'tone left lane no hit',
+            LEFT_LANE: 'tone left lane',
+        },
+        SONG: {
+            SONG_END: 'song ended',
+            SONG_START: 'song started',
         },
         BUTTON: {
             CLICK: 'button click',

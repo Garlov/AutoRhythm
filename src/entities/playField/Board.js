@@ -7,6 +7,7 @@ import canListen from 'components/canListen';
 import eventConfig from 'configs/eventConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
+import canEmit from 'components/canEmit';
 
 const Board = function BoardFunc(parent) {
     const state = {};
@@ -21,7 +22,7 @@ const Board = function BoardFunc(parent) {
     let song;
     let score = 0;
     let scoreText;
-    let multiplier = 1;
+    let combo = 1;
     let multiplierText;
 
     // NPS calculations.
@@ -32,24 +33,36 @@ const Board = function BoardFunc(parent) {
     let npsText;
     let peak = 0;
 
+    let notesHit = 0;
+    let comboPeak = 0;
+
     function incrementScore(val) {
         if (val < 0) {
-            multiplier = 1;
+            combo = 1;
         }
-        score += val * multiplier;
+        score += val * combo;
         scoreText.text = `${score}`;
         if (val > 0) {
-            multiplier += 1;
+            combo += 1;
+
+            if (combo > comboPeak) {
+                comboPeak = combo;
+            }
         }
-        multiplierText.text = `${multiplier}x`;
+        multiplierText.text = `${combo}x`;
     }
 
     function onNoteLeftLane(note) {
+        if (note.hit) {
+            notesHit += 1;
+        }
+
         notesPastLane += 1;
     }
 
     function onNoteLeftLaneNoHit(note) {
         incrementScore(-10);
+        notesPastLane += 1;
     }
 
     function onReceptorDown(e) {
@@ -59,7 +72,7 @@ const Board = function BoardFunc(parent) {
         const currentIndex = parseInt(currentIndexF);
 
         const note = lanes[e.index][currentIndex];
-        if (note && !note.hit) {
+        if (note && (!note.hit || !note.miss)) {
             incrementScore(100);
             note.onHit();
         } else {
@@ -74,7 +87,7 @@ const Board = function BoardFunc(parent) {
             align: 'center',
         });
 
-        multiplierText = parent.add.text(20, 100, `${multiplier}x`, {
+        multiplierText = parent.add.text(20, 100, `${combo}x`, {
             font: '64px Arial',
             fill: '#eeeeee',
             align: 'center',
@@ -113,6 +126,7 @@ const Board = function BoardFunc(parent) {
             2: 0,
             3: 0,
         };
+
         for (let i = 0; i < freqMap.length; i += 1) {
             const signal = freqMap[i].slice(0, freqMap[i].length * 0.8);
             for (let laneIndex = 0; laneIndex < laneCount; laneIndex += 1) {
@@ -138,14 +152,28 @@ const Board = function BoardFunc(parent) {
                 }
             }
         }
-        console.log(count);
+
+        console.log(count, notes.length);
     }
 
     function update() {
         const { duration } = song.audioBuffer;
         const currentTime = song.getCurrentTime();
         const currentIndexF = (freqMap.length / duration) * currentTime;
-        const currentIndex = parseInt(currentIndexF);
+        // const currentIndex = parseInt(currentIndexF);
+
+        if (currentTime > duration) {
+            state.emit(eventConfig.EVENTS.SONG.SONG_END, {
+                escape: false,
+                loss: false,
+                npsPeak: peak,
+                bestCombo: comboPeak,
+                score,
+                notesHit,
+                totalNotes: notes.length,
+            });
+            return;
+        }
 
         // NPS Calculations.
         const npsCheckTime = performance.now();
@@ -218,6 +246,7 @@ const Board = function BoardFunc(parent) {
     const isGameEntityState = isGameEntity(state);
     const hasPositionState = hasPosition(state);
     const canListenState = canListen(state);
+    const canEmitState = canEmit(state);
 
     const localState = {
         // props
@@ -236,6 +265,7 @@ const Board = function BoardFunc(parent) {
         { state: isGameEntityState, name: 'isGameEntity' },
         { state: hasPositionState, name: 'hasPosition' },
         { state: canListenState, name: 'canListen' },
+        { state: canEmitState, name: 'canEmit' },
     ];
 
     getFunctionUsage(states, 'Board');
@@ -247,7 +277,8 @@ const Board = function BoardFunc(parent) {
         ),
         destroy: pipe(
             localState.destroy,
-            canListen.destroy,
+            canListenState.destroy,
+            canEmitState.destroy,
         ),
     });
 };
