@@ -45,7 +45,12 @@ const PlayField = function PlayFieldFunc(key) {
         board.update();
     }
 
-    function destroy() {}
+    function destroy() {
+        if (board) {
+            board.destroy();
+            board = undefined;
+        }
+    }
 
     const canEmitState = canEmit(state);
     const hasInputState = hasInput(state);
