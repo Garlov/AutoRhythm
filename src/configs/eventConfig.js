@@ -20,5 +20,12 @@ export default {
             SONG_END: 'song ended',
             SONG_START: 'song started',
         },
+        BUTTON: {
+            CLICK: 'button click',
+        },
+        SCORE_SCREEN: {
+            RETRY: 'score screen retry clicked',
+            MENU: 'score screen menu clicked',
+        },
     },
 };
