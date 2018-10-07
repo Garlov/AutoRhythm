@@ -66,16 +66,26 @@ const Board = function BoardFunc(parent) {
     }
 
     function onReceptorDown(e) {
-        const { duration } = song.audioBuffer;
-        const currentTime = song.getCurrentTime();
-        const currentIndexF = (freqMap.length / duration) * currentTime;
-        const currentIndex = parseInt(currentIndexF);
+        const threshold = 0.1; // 100 ms both ways
 
-        const note = lanes[e.index][currentIndex];
-        if (note && (!note.hit || !note.miss)) {
-            incrementScore(100);
-            note.onHit();
-        } else {
+        const { duration } = song.audioBuffer;
+        const indexesPerSec = freqMap.length / duration;
+        const secondsPerIndex = 1 / indexesPerSec;
+        const currentTime = song.getCurrentTime() - secondsPerIndex / 2; // move center of note to center of receptor
+
+        const minIndex = parseInt(indexesPerSec * (currentTime - threshold));
+        const maxIndex = parseInt(indexesPerSec * (currentTime + threshold));
+
+        const hit = false;
+        for (let i = minIndex; i <= maxIndex; i += 1) {
+            const note = lanes[e.index][i];
+            if (note && (!note.hit || !note.miss)) {
+                incrementScore(100);
+                note.onHit();
+                break;
+            }
+        }
+        if (!hit) {
             incrementScore(-10);
         }
     }
