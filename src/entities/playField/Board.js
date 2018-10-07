@@ -25,6 +25,10 @@ const Board = function BoardFunc(parent) {
     let combo = 1;
     let multiplierText;
 
+    const maxHealth = 25;
+    let health = maxHealth;
+    let healthBar;
+
     // NPS calculations.
     let notesPastLane = 0;
     let notesAtLastCheck = 0;
@@ -35,6 +39,43 @@ const Board = function BoardFunc(parent) {
 
     let notesHit = 0;
     let comboPeak = 0;
+
+    function drawHealthBar() {
+        if (!healthBar) {
+            healthBar = parentState.add.graphics();
+        }
+        healthBar.clear();
+        healthBar.fillStyle(0xcccccc, 1);
+        const width = 20 * health;
+        healthBar.fillRect(gameConfig.GAME.VIEWWIDTH - width - 20, 20, width, 25);
+    }
+
+    function updateHealth(val) {
+        if (val < 0) {
+            health -= 1;
+        } else {
+            health += 0.1;
+        }
+
+        if (health > 25) {
+            health = 25;
+        }
+
+        if (health <= 0) {
+            state.emit(eventConfig.EVENTS.SONG.SONG_END, {
+                escape: false,
+                loss: true,
+                npsPeak: peak,
+                bestCombo: comboPeak,
+                score,
+                notesHit,
+                totalNotes: notes.length,
+            });
+            return;
+        }
+
+        drawHealthBar();
+    }
 
     function incrementScore(val) {
         if (val < 0) {
@@ -50,6 +91,8 @@ const Board = function BoardFunc(parent) {
             }
         }
         multiplierText.text = `${combo}x`;
+
+        updateHealth(val);
     }
 
     function onNoteLeftLane(note) {
@@ -155,6 +198,8 @@ const Board = function BoardFunc(parent) {
         }
         console.log(performance.now() - now);
         console.log(count, notes.length);
+
+        drawHealthBar();
     }
 
     function update() {
@@ -239,6 +284,11 @@ const Board = function BoardFunc(parent) {
         if (npsText) {
             npsText.destroy();
             npsText = undefined;
+        }
+
+        if (healthBar) {
+            healthBar.destroy();
+            healthBar = undefined;
         }
     }
 
