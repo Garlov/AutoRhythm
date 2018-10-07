@@ -20,11 +20,11 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
     let menuButton;
 
     function onRetry() {
-        console.log('retry');
+        state.emit(eventConfig.EVENTS.SCORE_SCREEN.RETRY);
     }
 
     function onMenu() {
-        console.log('menu');
+        state.emit(eventConfig.EVENTS.SCORE_SCREEN.MENU);
     }
 
     function init() {
@@ -87,6 +87,25 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
         });
     }
 
+    function destroy() {
+        if (background) {
+            background.destroy();
+            background = undefined;
+        }
+        if (scoreText) {
+            scoreText.destroy();
+            scoreText = undefined;
+        }
+        if (retryButton) {
+            retryButton.destroy();
+            retryButton = undefined;
+        }
+        if (menuButton) {
+            menuButton.destroy();
+            menuButton = undefined;
+        }
+    }
+
     const isGameEntityState = isGameEntity(state);
     const canEmitState = canEmit(state);
     const canListenState = canListen(state);
@@ -99,6 +118,7 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
         init,
         setScore,
         refresh,
+        destroy,
     };
 
     const states = [
@@ -121,6 +141,11 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
         setSize: pipe(
             hasSizeState.setSize,
             localState.refresh,
+        ),
+        destroy: pipe(
+            localState.destroy,
+            canEmitState.destroy,
+            canListenState.destroy,
         ),
     });
 };

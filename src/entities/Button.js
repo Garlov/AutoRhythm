@@ -57,12 +57,17 @@ const Button = function ButtonFunc(parent) {
     }
 
     function destroy() {
-        if (!background) {
+        if (background) {
             background.destroy();
             background = undefined;
         }
 
-        if (!textElem) {
+        if (zone) {
+            zone.destroy();
+            zone = undefined;
+        }
+
+        if (textElem) {
             textElem.destroy();
             textElem = undefined;
         }

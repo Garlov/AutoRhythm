@@ -23,5 +23,9 @@ export default {
         BUTTON: {
             CLICK: 'button click',
         },
+        SCORE_SCREEN: {
+            RETRY: 'score screen retry clicked',
+            MENU: 'score screen menu clicked',
+        },
     },
 };

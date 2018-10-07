@@ -88,8 +88,10 @@ const AudioManager = function createAudioManagerFunc() {
     }
 
     function stopMusic() {
-        currentSong.stop();
-        currentSong = null;
+        if (currentSong) {
+            currentSong.stop();
+            currentSong = null;
+        }
         state.isMusicPlaying = false;
     }
 

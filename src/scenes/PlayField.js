@@ -15,23 +15,76 @@ const PlayField = function PlayFieldFunc(key) {
     let board;
     let scoreScreen;
     const currentKey = key;
+    let freqMap;
 
     function init() {}
+
+    function _showScoreScreen() {
+        if (scoreScreen) return;
+        const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
+        audioMan.stopMusic();
+        scoreScreen = ScoreScreen(state);
+        scoreScreen.init();
+        state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.MENU, _onGoToMenu);
+        state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.RETRY, _onRetry);
+    }
+
+    function _onSongEnd(e) {
+        _showScoreScreen();
+    }
+
+    function createBoard() {
+        if (board) {
+            board.destroy();
+            board = undefined;
+        }
+
+        const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
+        audioMan.playMusic(currentKey);
+        const currentSong = audioMan.getCurrentSong();
+
+        board = Board(state);
+        state.listenOnce(board, eventConfig.EVENTS.SONG.SONG_END, _onSongEnd);
+        board.setFrequencyMap(currentSong, freqMap);
+        board.init();
+    }
+
+    function _onGoToMenu() {
+        state.emitGlobal(eventConfig.EVENTS.GAME.PLAY_ENDED, {});
+    }
+
+    function _onRetry() {
+        if (scoreScreen) {
+            scoreScreen.destroy();
+            scoreScreen = undefined;
+        }
+        const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
+        audioMan.stopMusic();
+        audioMan.playMusic(currentKey);
+        const currentSong = audioMan.getCurrentSong();
+        currentSong.loop = false;
+
+        createBoard();
+    }
 
     function _onKeyDown(e) {
         if (state.sys.isActive()) {
             if (e.keyCode === gameConfig.KEYCODES.ESCAPE) {
-                state.emitGlobal(eventConfig.EVENTS.GAME.PLAY_ENDED, {});
+                _showScoreScreen();
             }
         }
     }
 
-    function _onSongEnd(e) {
-        console.log(e);
-    }
-
     function setupListeners() {
         state.listenOn(state.getKeyboard(), eventConfig.EVENTS.KEYBOARD.KEYDOWN, _onKeyDown);
+    }
+
+    function createFreqMap() {
+        if (!freqMap) {
+            const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
+            const currentSong = audioMan.getCurrentSong();
+            freqMap = createFrequencyMap(currentSong.audioBuffer);
+        }
     }
 
     function create() {
@@ -39,23 +92,20 @@ const PlayField = function PlayFieldFunc(key) {
         audioMan.playMusic(currentKey);
         const currentSong = audioMan.getCurrentSong();
         currentSong.pause();
-        const freqMap = createFrequencyMap(currentSong.audioBuffer);
-
-        board = Board(state);
-        state.listenOnce(board, eventConfig.EVENTS.SONG.SONG_END, _onSongEnd);
-        board.setFrequencyMap(currentSong, freqMap);
-        board.init();
         currentSong.loop = false;
-        currentSong.resume();
 
-        scoreScreen = ScoreScreen(state);
-        scoreScreen.init();
+        createFreqMap();
+        createBoard();
+
+        currentSong.resume();
 
         setupListeners();
     }
 
     function update(time, delta) {
-        board.update(delta);
+        if (board && !scoreScreen) {
+            board.update(delta);
+        }
     }
 
     function destroy() {
@@ -68,6 +118,8 @@ const PlayField = function PlayFieldFunc(key) {
             scoreScreen.destroy();
             scoreScreen = undefined;
         }
+
+        freqMap = undefined;
     }
 
     const canEmitState = canEmit(state);
