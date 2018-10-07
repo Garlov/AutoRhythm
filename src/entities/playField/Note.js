@@ -10,7 +10,7 @@ const Note = function NoteFunc(parent) {
     let noteBg;
     let board = parent;
     let index = 0;
-    const noteSize = 25;
+    const noteSize = 40;
 
     function init(i, x) {
         state.setX(x);
@@ -22,7 +22,7 @@ const Note = function NoteFunc(parent) {
         state.setY(board.getY() - distance);
         if (!noteBg && state.getY() > 0 && state.getY() < board.getY() + 400) {
             noteBg = board.getParentState().add.graphics();
-            noteBg.lineStyle(2, 0xff0000, 1);
+            noteBg.fillStyle(0xcccccc, 1);
             noteBg.fillCircle(0, 0, noteSize);
         }
         if (noteBg && state.getY() > board.getY() + 400) {

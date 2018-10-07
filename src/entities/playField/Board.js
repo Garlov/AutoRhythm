@@ -15,7 +15,7 @@ const Board = function BoardFunc(parent) {
     let lanes = [];
     let notes = [];
     const laneCount = 4;
-    const x = 400;
+    const x = 600;
     const y = gameConfig.GAME.VIEWHEIGHT - 100;
     let freqMap;
     let song;

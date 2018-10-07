@@ -14,8 +14,10 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     let board = parent;
     let index = 0;
     let pushIndicator;
+    let topGradient;
+    let bottomGradient;
     let color = 0xcccccc;
-    const pushIndicatorPadding = 5;
+    const pushIndicatorPadding = 1;
 
     function onKeyDown(e) {
         if (!e.repeat && e.keyCode === gameConfig.KEYCODES.Z && index === 0) {
@@ -38,13 +40,27 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         const x = state.getX() + board.getX();
         const y = state.getY() + board.getY();
 
+        const elemWidth = state.getWidth() - pushIndicatorPadding * 2;
+        console.log(elemWidth);
         pushIndicator.lineStyle(5, color, 1);
         pushIndicator.beginPath();
-        pushIndicator.moveTo(pushIndicatorPadding, 0);
-        pushIndicator.lineTo(state.getWidth() - pushIndicatorPadding * 2, 0);
+        pushIndicator.moveTo(0, 0);
+        pushIndicator.lineTo(elemWidth, 0);
         pushIndicator.strokePath();
         pushIndicator.x = x;
         pushIndicator.y = y;
+
+        topGradient = board.getParentState().add.graphics();
+        topGradient.fillGradientStyle(0x000000, 0x000000, color, color, 0.4);
+        topGradient.fillRect(0, -state.getHeight() / 2, elemWidth, state.getHeight() / 2);
+        topGradient.x = x;
+        topGradient.y = y;
+
+        bottomGradient = board.getParentState().add.graphics();
+        bottomGradient.fillGradientStyle(color, color, 0x000000, 0x000000, 0.4);
+        bottomGradient.fillRect(0, 0, elemWidth, state.getHeight() / 2);
+        bottomGradient.x = x;
+        bottomGradient.y = y;
     }
 
     function setIndex(i) {
@@ -53,7 +69,10 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         state.listenOn(state.getKeyboard(), eventConfig.EVENTS.KEYBOARD.KEYDOWN, onKeyDown);
         state.setX(x);
         if (pushIndicator) {
-            pushIndicator.x = state.getX() + board.getX();
+            const totX = state.getX() + board.getX();
+            pushIndicator.x = totX + pushIndicatorPadding;
+            topGradient.x = totX + pushIndicatorPadding;
+            bottomGradient.x = totX + pushIndicatorPadding;
         }
     }
 
@@ -67,6 +86,11 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         if (pushIndicator) {
             pushIndicator.destroy();
             pushIndicator = undefined;
+        }
+
+        if (topGradient) {
+            topGradient.destroy();
+            topGradient = undefined;
         }
 
         board = undefined;
