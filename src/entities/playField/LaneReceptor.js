@@ -37,7 +37,7 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
 
     function setIndex(i) {
         index = i;
-        const x = ((gameConfig.GAME.VIEWWIDTH - board.getPadding() * 2) / board.getLaneCount()) * index;
+        const x = ((gameConfig.GAME.VIEWWIDTH - board.getX() * 2) / board.getLaneCount()) * index;
         state.listenOn(state.getKeyboard(), eventConfig.EVENTS.KEYBOARD.KEYDOWN, onKeyDown);
         state.setX(x);
     }

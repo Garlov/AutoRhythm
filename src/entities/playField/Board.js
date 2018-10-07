@@ -15,7 +15,8 @@ const Board = function BoardFunc(parent) {
     let lanes = [];
     let notes = [];
     const laneCount = 4;
-    const padding = 100;
+    const x = 400;
+    const y = gameConfig.GAME.VIEWHEIGHT - 250;
     let freqMap;
     let song;
     let score = 0;
@@ -67,9 +68,7 @@ const Board = function BoardFunc(parent) {
             align: 'center',
         });
 
-        const x = padding;
-        const y = gameConfig.GAME.VIEWHEIGHT - padding - 50;
-        const laneSize = (gameConfig.GAME.VIEWWIDTH - padding * 2) / laneCount;
+        const laneSize = (gameConfig.GAME.VIEWWIDTH - x * 2) / laneCount;
         state.setPosition({ x, y });
         for (let i = 0; i < laneCount; i += 1) {
             const laneReceptor = LaneReceptor(state);
@@ -109,7 +108,7 @@ const Board = function BoardFunc(parent) {
                 const res = laneSignal.reduce((tot, curr) => tot + curr, 0);
                 if (res < threshold[laneIndex]) {
                     const note = Note(state);
-                    note.init(i, state.getX() + laneSize * laneIndex);
+                    note.init(i, state.getX() + (laneSize * laneIndex) + (laneSize / 2));
                     state.listenOn(note, eventConfig.EVENTS.TONE.LEFT_LANE, onNoteLeftLane);
                     notesInLane.push(note);
                     notes.push(note);
@@ -158,10 +157,6 @@ const Board = function BoardFunc(parent) {
         return laneCount;
     }
 
-    function getPadding() {
-        return padding;
-    }
-
     function destroy() {
         laneReceptors.forEach((lr) => {
             lr.destroy();
@@ -199,7 +194,6 @@ const Board = function BoardFunc(parent) {
         setFrequencyMap,
         getParentState,
         getLaneCount,
-        getPadding,
         destroy,
     };
 

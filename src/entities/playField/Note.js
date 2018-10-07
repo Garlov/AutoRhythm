@@ -7,9 +7,10 @@ import pipe from 'utils/pipe';
 
 const Note = function NoteFunc(parent) {
     const state = {};
-    let rect;
+    let noteBg;
     let board = parent;
     let index = 0;
+    const noteSize = 25;
 
     function init(i, x) {
         state.setX(x);
@@ -19,22 +20,22 @@ const Note = function NoteFunc(parent) {
     function update({ currentIndex, stepSize }) {
         const distance = (index - currentIndex) * stepSize;
         state.setY(board.getY() - distance);
-        if (!rect && state.getY() > 0 && state.getY() < board.getY() + 400) {
-            rect = board.getParentState().add.graphics();
-            rect.lineStyle(2, 0xff0000, 1);
-            rect.strokeRect(0, 0, 50, 50);
+        if (!noteBg && state.getY() > 0 && state.getY() < board.getY() + 400) {
+            noteBg = board.getParentState().add.graphics();
+            noteBg.lineStyle(2, 0xff0000, 1);
+            noteBg.fillCircle(0, 0, noteSize);
         }
-        if (rect && state.getY() > board.getY() + 400) {
-            rect.destroy();
-            rect = undefined;
+        if (noteBg && state.getY() > board.getY() + 400) {
+            noteBg.destroy();
+            noteBg = undefined;
             if (!state.hit) {
                 state.hit = true;
                 state.emit(eventConfig.EVENTS.TONE.LEFT_LANE, state);
             }
         }
-        if (rect) {
-            rect.x = state.getX();
-            rect.y = state.getY();
+        if (noteBg) {
+            noteBg.x = state.getX();
+            noteBg.y = state.getY();
         }
     }
 
@@ -43,9 +44,9 @@ const Note = function NoteFunc(parent) {
     }
 
     function destroy() {
-        if (rect) {
-            rect.destroy();
-            rect = undefined;
+        if (noteBg) {
+            noteBg.destroy();
+            noteBg = undefined;
         }
 
         board = undefined;
