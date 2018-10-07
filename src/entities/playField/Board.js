@@ -10,10 +10,10 @@ import pipe from 'utils/pipe';
 
 const Board = function BoardFunc(parent) {
     const state = {};
-    const parentState = parent;
-    const laneReceptors = [];
-    const lanes = [];
-    const notes = [];
+    let parentState = parent;
+    let laneReceptors = [];
+    let lanes = [];
+    let notes = [];
     const laneCount = 4;
     const padding = 100;
     let freqMap;
@@ -125,13 +125,12 @@ const Board = function BoardFunc(parent) {
     function update() {
         const { duration } = song.audioBuffer;
         const currentTime = song.getCurrentTime();
-        const indexesPerSecond = freqMap.length / duration;
         const currentIndexF = (freqMap.length / duration) * currentTime;
         const currentIndex = parseInt(currentIndexF);
 
         notes.forEach((n) => {
             if (n) {
-                n.update(currentIndexF, indexesPerSecond, 150, freqMap.length);
+                n.update({ currentIndex: currentIndexF, stepSize: 150 });
             }
         });
 
@@ -163,6 +162,31 @@ const Board = function BoardFunc(parent) {
         return padding;
     }
 
+    function destroy() {
+        laneReceptors.forEach((lr) => {
+            lr.destroy();
+        });
+        laneReceptors = [];
+        notes = [];
+        notes.forEach((n) => {
+            n.destroy();
+        });
+        // no need to destroy, just empty
+        lanes = [];
+
+        song = undefined;
+        freqMap = undefined;
+        parentState = undefined;
+        if (scoreText) {
+            scoreText.destroy();
+            scoreText = undefined;
+        }
+        if (multiplierText) {
+            multiplierText.destroy();
+            multiplierText = undefined;
+        }
+    }
+
     const isGameEntityState = isGameEntity(state);
     const hasPositionState = hasPosition(state);
     const canListenState = canListen(state);
@@ -176,6 +200,7 @@ const Board = function BoardFunc(parent) {
         getParentState,
         getLaneCount,
         getPadding,
+        destroy,
     };
 
     const states = [
@@ -185,12 +210,17 @@ const Board = function BoardFunc(parent) {
         { state: hasPositionState, name: 'hasPosition' },
         { state: canListenState, name: 'canListen' },
     ];
+
     getFunctionUsage(states, 'Board');
     return Object.assign(...states.map(s => s.state), {
         // pipes and overrides
         update: pipe(
             localState.update,
             isGameEntityState.update,
+        ),
+        destroy: pipe(
+            localState.destroy,
+            canListen.destroy,
         ),
     });
 };

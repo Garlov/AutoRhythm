@@ -8,7 +8,7 @@ import pipe from 'utils/pipe';
 const Note = function NoteFunc(parent) {
     const state = {};
     let rect;
-    const board = parent;
+    let board = parent;
     let index = 0;
 
     function init(i, x) {
@@ -16,7 +16,7 @@ const Note = function NoteFunc(parent) {
         index = i;
     }
 
-    function update(currentIndex, stepsPerSec, stepSize, max) {
+    function update({ currentIndex, stepSize }) {
         const distance = (index - currentIndex) * stepSize;
         state.setY(board.getY() - distance);
         if (!rect && state.getY() > 0 && state.getY() < board.getY() + 400) {
@@ -40,6 +40,15 @@ const Note = function NoteFunc(parent) {
         state.hit = true;
     }
 
+    function destroy() {
+        if (rect) {
+            rect.destroy();
+            rect = undefined;
+        }
+
+        board = undefined;
+    }
+
     const isGameEntityState = isGameEntity(state);
     const hasPositionState = hasPosition(state);
     const canEmitState = canEmit(state);
@@ -51,6 +60,7 @@ const Note = function NoteFunc(parent) {
         init,
         update,
         onHit,
+        destroy,
     };
 
     const states = [
@@ -67,6 +77,10 @@ const Note = function NoteFunc(parent) {
         update: pipe(
             localState.update,
             isGameEntityState.update,
+        ),
+        destroy: pipe(
+            localState.destroy,
+            canEmitState.destroy,
         ),
     });
 };

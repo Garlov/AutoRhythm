@@ -11,7 +11,7 @@ import pipe from 'utils/pipe';
 
 const LaneReceptor = function LaneReceptorFunc(parent) {
     const state = {};
-    const board = parent;
+    let board = parent;
     let index = 0;
     let rect;
     let color = 0xcccccc;
@@ -57,6 +57,15 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         }
     }
 
+    function destroy() {
+        if (rect) {
+            rect.destroy();
+            rect = undefined;
+        }
+
+        board = undefined;
+    }
+
     const isGameEntityState = isGameEntity(state);
     const hasPositionState = hasPosition(state);
     const hasSizeState = hasSize(state);
@@ -72,6 +81,7 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         setColor,
         update,
         init,
+        destroy,
     };
 
     const states = [
@@ -88,10 +98,14 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     getFunctionUsage(states, 'LaneReceptor');
     return Object.assign(...states.map(s => s.state), {
         // pipes and overrides
-        update: pipe(localState.update, isGameEntityState.update),
+        update: pipe(
+            localState.update,
+            isGameEntityState.update,
+        ),
         destroy: pipe(
             canListenState.destroy,
             canEmitState.destroy,
+            localState.destroy,
         ),
     });
 };
