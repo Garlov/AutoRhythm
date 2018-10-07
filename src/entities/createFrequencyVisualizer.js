@@ -7,6 +7,8 @@ import pipe from 'utils/pipe';
 const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
     const state = {};
 
+    const numberOfPillars = 128; // Must be a power of 2.
+
     function setFillStyle(c, a) {
         state.color = c;
         state.alpha = a;
@@ -25,7 +27,7 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
         // setup analyser and buffer
         state.analyser = audioContext.createAnalyser();
         state.analyser.smoothingTimeConstant = 0;
-        state.analyser.fftSize = 256;
+        state.analyser.fftSize = numberOfPillars * 2;
         state.bufferLength = state.analyser.frequencyBinCount;
         state.dataArray = new Uint8Array(state.bufferLength);
 

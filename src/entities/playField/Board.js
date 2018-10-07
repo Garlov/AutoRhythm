@@ -30,6 +30,7 @@ const Board = function BoardFunc(parent) {
     let lastNpsCheckTime = 0;
     const npsWindow = 1000; // how long between each calculation in ms.
     let npsText;
+    let peak = 0;
 
     function incrementScore(val) {
         if (val < 0) {
@@ -80,7 +81,7 @@ const Board = function BoardFunc(parent) {
         });
 
         npsText = parent.add.text(20, gameConfig.GAME.VIEWHEIGHT, 'NPS', {
-            font: '48px Arial',
+            font: '32px Arial',
             fill: '#eeeeee',
             align: 'center',
         });
@@ -99,7 +100,7 @@ const Board = function BoardFunc(parent) {
         }
 
         const threshold = {
-            0: -60000,
+            0: -90000,
             1: -30000,
             2: -20000,
             3: -5000,
@@ -113,7 +114,7 @@ const Board = function BoardFunc(parent) {
             3: 0,
         };
         for (let i = 0; i < freqMap.length; i += 1) {
-            const signal = freqMap[i].slice(0, freqMap[i].length * 0.5);
+            const signal = freqMap[i].slice(0, freqMap[i].length * 0.8);
             for (let laneIndex = 0; laneIndex < laneCount; laneIndex += 1) {
                 let notesInLane = lanes[laneIndex];
                 if (!notesInLane) {
@@ -146,13 +147,15 @@ const Board = function BoardFunc(parent) {
         const currentIndexF = (freqMap.length / duration) * currentTime;
         const currentIndex = parseInt(currentIndexF);
 
+        // NPS Calculations.
         const npsCheckTime = performance.now();
         if (npsCheckTime - lastNpsCheckTime > npsWindow) {
             lastNpsCheckTime = npsCheckTime;
 
             const noteDifference = notesPastLane - notesAtLastCheck;
-            npsText.setText(`NPS:  ${noteDifference / (npsWindow / 1000)}`);
+            if (peak < noteDifference) peak = noteDifference;
 
+            npsText.setText(`NPS:  ${noteDifference / (npsWindow / 1000)} (Peak: ${peak})`);
             notesAtLastCheck = notesPastLane;
         }
 
