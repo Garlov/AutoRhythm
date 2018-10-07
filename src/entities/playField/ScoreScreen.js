@@ -54,6 +54,8 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
             background = parentState.add.graphics();
         }
         background.clear();
+        background.fillStyle(0x000000, 1);
+        background.fillRect(state.getX(), state.getY(), state.getWidth(), state.getHeight());
         background.lineStyle(3, 0xcccccc, 1);
         background.strokeRect(state.getX(), state.getY(), state.getWidth(), state.getHeight());
 
