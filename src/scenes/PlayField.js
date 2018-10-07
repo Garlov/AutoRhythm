@@ -8,10 +8,12 @@ import canListen from 'components/canListen';
 import eventConfig from 'configs/eventConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
+import ScoreScreen from 'entities/playField/ScoreScreen';
 
 const PlayField = function PlayFieldFunc(key) {
     const state = new Phaser.Scene(gameConfig.SCENES.PLAY_FIELD);
     let board;
+    let scoreScreen;
     const currentKey = key;
 
     function init() {}
@@ -40,6 +42,9 @@ const PlayField = function PlayFieldFunc(key) {
         board.init();
         currentSong.resume();
 
+        scoreScreen = ScoreScreen(state);
+        scoreScreen.init();
+
         setupListeners();
     }
 
@@ -51,6 +56,11 @@ const PlayField = function PlayFieldFunc(key) {
         if (board) {
             board.destroy();
             board = undefined;
+        }
+
+        if (scoreScreen) {
+            scoreScreen.destroy();
+            scoreScreen = undefined;
         }
     }
 

@@ -15,5 +15,8 @@ export default {
         TONE: {
             LEFT_LANE_NO_HIT: 'tone left lane no hit',
         },
+        BUTTON: {
+            CLICK: 'button click',
+        },
     },
 };
