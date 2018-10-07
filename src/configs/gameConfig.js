@@ -3,6 +3,7 @@ export default {
         VIEWHEIGHT: 1080,
         VIEWWIDTH: 1920,
         TITLE: 'Replace Me',
+        RNGSEED: 31415926535,
     },
     SCENES: {
         BOOT: 'game_boot',

@@ -26,7 +26,7 @@ const createFrequencyVisualizer = function createFrequencyVisualizerFunc() {
 
         // setup analyser and buffer
         state.analyser = audioContext.createAnalyser();
-        state.analyser.smoothingTimeConstant = 0;
+        state.analyser.smoothingTimeConstant = 0.8;
         state.analyser.fftSize = numberOfPillars * 2;
         state.bufferLength = state.analyser.frequencyBinCount;
         state.dataArray = new Uint8Array(state.bufferLength);

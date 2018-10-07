@@ -131,10 +131,12 @@ const Board = function BoardFunc(parent) {
             3: 0,
         };
 
+        /**
+         * As generating thousands of notes in memory simultaneously is rather heavy, consider doing this in 20-30second chunks throughout the song instead...
+         */
         const now = performance.now();
         for (let i = 0; i < freqMap.length; i += 1) {
-            // loop through all the song 'chunks'
-
+            // loop through all the song 'chunks' and generate notes per lane.
             for (let laneIndex = 0; laneIndex < laneCount; laneIndex += 1) {
                 let notesInLane = lanes[laneIndex];
                 if (!notesInLane) {
