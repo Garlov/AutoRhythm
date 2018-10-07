@@ -14,28 +14,43 @@ function equalize(value, i, l) {
 }
 
 const createFrequencyMap = function createFrequencyMapFunc(audioBuffer) {
-    const { sampleRate } = audioBuffer;
+    const { sampleRate, numberOfChannels } = audioBuffer;
     const freqMap = [];
     const bufferSize = 2 ** 12;
     const buffer = new Float64Array(bufferSize);
     let start = 0;
-    // Loop through each channel and generate a frequency spectrum map.
-    for (let i = 0; i < 1; i += 1) {
-        // const now = performance.now();
-        const channelData = audioBuffer.getChannelData(i);
-        while (start + bufferSize < channelData.length) {
-            buffer.set(channelData.slice(start, start + bufferSize));
-            start += bufferSize;
-            // Calculates a fast fourier transform spectrum.
-            const fft = new RFFT(bufferSize, sampleRate);
-            fft.forward(buffer);
-            for (let j = 0; j < fft.spectrum.length; j += 1) {
-                fft.spectrum[j] = equalize(fft.spectrum[j], j, fft.spectrum.length);
-            }
-            freqMap.push(fft.spectrum);
+
+    /**
+     * We down-mix from stereo (or higher) to mono for the purpose of the freq map.
+     * Conversion is always from stereo, so on files with more than two channels some detail will be lost.
+     */
+    // const now = performance.now();
+    let monoData = [];
+    if (numberOfChannels === 1) {
+        monoData = audioBuffer.getChannelData(0);
+    } else if (numberOfChannels >= 2) {
+        const left = audioBuffer.getChannelData(0);
+        const right = audioBuffer.getChannelData(1);
+
+        for (let i = 0; i < left.length; i += 1) {
+            monoData.push(0.5 * (left[i] + right[i]));
         }
-        // console.log(performance.now() - now);
     }
+
+    // console.log(performance.now() - now);
+    // Generate a frequency map in spectrum chunks, using a (RFFT) fast fourier transform.
+    while (start + bufferSize < monoData.length) {
+        buffer.set(monoData.slice(start, start + bufferSize));
+        start += bufferSize;
+        // Calculates a fast fourier transform spectrum.
+        const fft = new RFFT(bufferSize, sampleRate);
+        fft.forward(buffer);
+        for (let j = 0; j < fft.spectrum.length; j += 1) {
+            fft.spectrum[j] = equalize(fft.spectrum[j], j, fft.spectrum.length);
+        }
+        freqMap.push(fft.spectrum);
+    }
+    // console.log(performance.now() - now);
 
     return freqMap;
 };

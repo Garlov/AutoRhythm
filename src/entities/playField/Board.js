@@ -36,7 +36,9 @@ const Board = function BoardFunc(parent) {
         multiplierText.text = `${multiplier}x`;
     }
 
-    function onNoteLeftLane(note) {
+    function onNoteLeftLane(note) {}
+
+    function onNoteLeftLaneNoHit(note) {
         incrementScore(-10);
     }
 
@@ -108,8 +110,9 @@ const Board = function BoardFunc(parent) {
                 const res = laneSignal.reduce((tot, curr) => tot + curr, 0);
                 if (res < threshold[laneIndex]) {
                     const note = Note(state);
-                    note.init(i, state.getX() + (laneSize * laneIndex) + (laneSize / 2));
-                    state.listenOn(note, eventConfig.EVENTS.TONE.LEFT_LANE, onNoteLeftLane);
+                    note.init(i, state.getX() + laneSize * laneIndex + laneSize / 2);
+                    state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE_NO_HIT, onNoteLeftLaneNoHit);
+                    state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE, onNoteLeftLane);
                     notesInLane.push(note);
                     notes.push(note);
                     count[laneIndex] += 1;
