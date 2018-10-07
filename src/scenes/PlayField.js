@@ -19,18 +19,20 @@ const PlayField = function PlayFieldFunc(key) {
 
     function init() {}
 
-    function _showScoreScreen() {
+    function _showScoreScreen(gameData) {
         if (scoreScreen) return;
         const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
         audioMan.stopMusic();
-        scoreScreen = ScoreScreen(state);
+        scoreScreen = ScoreScreen(state, gameData);
         scoreScreen.init();
+        scoreScreen.setScore(gameData.score);
+        scoreScreen.setWin(!gameData.escape && !gameData.loss);
         state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.MENU, _onGoToMenu);
         state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.RETRY, _onRetry);
     }
 
     function _onSongEnd(e) {
-        _showScoreScreen();
+        _showScoreScreen(e);
     }
 
     function createBoard() {
