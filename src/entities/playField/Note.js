@@ -80,6 +80,11 @@ const Note = function NoteFunc(parent) {
             noteBg = undefined;
         }
 
+        if (noteEffect) {
+            noteEffect.destroy();
+            noteEffect = undefined;
+        }
+
         board = undefined;
     }
 
