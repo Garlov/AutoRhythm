@@ -85,15 +85,10 @@ const PlayField = function PlayFieldFunc(key) {
             const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
             const currentSong = audioMan.getCurrentSong();
 
-            const threshold = {
-                0: -40000,
-                1: -30000,
-                2: -30000,
-                3: -30000,
-            };
+            const threshold = [-40000, -30000, -30000, -30000];
 
             // percentile ranges for each lane in the frequency map.
-            const laneRanges = [0.05, 0.1, 0.3, 1];
+            const laneRanges = [0.05, 0.15, 0.4, 75];
             freqMap = createFrequencyMap(currentSong.audioBuffer, 4, laneRanges, threshold);
         }
     }
