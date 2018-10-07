@@ -15,6 +15,7 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     let index = 0;
     let pushIndicator;
     let color = 0xcccccc;
+    const pushIndicatorPadding = 5;
 
     function onKeyDown(e) {
         if (!e.repeat && e.keyCode === gameConfig.KEYCODES.Z && index === 0) {
@@ -34,12 +35,16 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     function init() {
         pushIndicator = board.getParentState().add.graphics();
 
-        pushIndicator.clear();
-        pushIndicator.lineStyle(2, color, 1);
-
         const x = state.getX() + board.getX();
         const y = state.getY() + board.getY();
-        pushIndicator.strokeRect(x, y, state.getWidth(), state.getHeight());
+
+        pushIndicator.lineStyle(5, color, 1);
+        pushIndicator.beginPath();
+        pushIndicator.moveTo(pushIndicatorPadding, 0);
+        pushIndicator.lineTo(state.getWidth() - pushIndicatorPadding * 2, 0);
+        pushIndicator.strokePath();
+        pushIndicator.x = x;
+        pushIndicator.y = y;
     }
 
     function setIndex(i) {
