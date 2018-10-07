@@ -24,6 +24,13 @@ const Board = function BoardFunc(parent) {
     let multiplier = 1;
     let multiplierText;
 
+    // NPS calculations.
+    let notesPastLane = 0;
+    let notesAtLastCheck = 0;
+    let lastNpsCheckTime = 0;
+    const npsWindow = 1000; // how long between each calculation in ms.
+    let npsText;
+
     function incrementScore(val) {
         if (val < 0) {
             multiplier = 1;
@@ -36,7 +43,9 @@ const Board = function BoardFunc(parent) {
         multiplierText.text = `${multiplier}x`;
     }
 
-    function onNoteLeftLane(note) {}
+    function onNoteLeftLane(note) {
+        notesPastLane += 1;
+    }
 
     function onNoteLeftLaneNoHit(note) {
         incrementScore(-10);
@@ -69,6 +78,13 @@ const Board = function BoardFunc(parent) {
             fill: '#eeeeee',
             align: 'center',
         });
+
+        npsText = parent.add.text(20, gameConfig.GAME.VIEWHEIGHT, 'NPS', {
+            font: '48px Arial',
+            fill: '#eeeeee',
+            align: 'center',
+        });
+        npsText.y -= npsText.height;
 
         const laneSize = (gameConfig.GAME.VIEWWIDTH - x * 2) / laneCount;
         state.setPosition({ x, y });
@@ -129,6 +145,16 @@ const Board = function BoardFunc(parent) {
         const currentTime = song.getCurrentTime();
         const currentIndexF = (freqMap.length / duration) * currentTime;
         const currentIndex = parseInt(currentIndexF);
+
+        const npsCheckTime = performance.now();
+        if (npsCheckTime - lastNpsCheckTime > npsWindow) {
+            lastNpsCheckTime = npsCheckTime;
+
+            const noteDifference = notesPastLane - notesAtLastCheck;
+            npsText.setText(`NPS:  ${noteDifference / (npsWindow / 1000)}`);
+
+            notesAtLastCheck = notesPastLane;
+        }
 
         notes.forEach((n) => {
             if (n) {
