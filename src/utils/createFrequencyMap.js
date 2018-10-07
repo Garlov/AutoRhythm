@@ -31,6 +31,12 @@ const createFrequencyMap = function createFrequencyMapFunc(audioBuffer, numberOf
     let start = 0;
 
     /**
+     * We use these to vary the magnitudal threshold based on note prevalence.
+     */
+    const defaultThresholds = [].concat(thresholds);
+    const currentThresholds = [].concat(thresholds);
+
+    /**
      * We down-mix from stereo (or higher) to mono for the purpose of the freq map.
      * Conversion is always from stereo, so on files with more than two channels some detail will be lost.
      */
@@ -69,8 +75,11 @@ const createFrequencyMap = function createFrequencyMapFunc(audioBuffer, numberOf
 
             const laneIndex = getLaneIndex(i, laneRanges, fft.spectrum.length);
             if (lastLaneIndex !== laneIndex) {
-                if (laneSignalSum < thresholds[lastLaneIndex]) {
+                if (laneSignalSum < currentThresholds[lastLaneIndex]) {
                     laneData[lastLaneIndex] = true;
+                    currentThresholds[lastLaneIndex] += defaultThresholds[lastLaneIndex] * 0.1;
+                } else {
+                    currentThresholds[lastLaneIndex] -= defaultThresholds[lastLaneIndex] * 0.01;
                 }
 
                 laneSignalSum = 0;
@@ -82,8 +91,11 @@ const createFrequencyMap = function createFrequencyMapFunc(audioBuffer, numberOf
             lastLaneIndex = laneIndex;
         }
 
-        if (laneSignalSum < thresholds[lastLaneIndex]) {
+        if (laneSignalSum < currentThresholds[lastLaneIndex]) {
             laneData[lastLaneIndex] = true;
+            currentThresholds[lastLaneIndex] += defaultThresholds[lastLaneIndex] * 0.1;
+        } else {
+            currentThresholds[lastLaneIndex] -= defaultThresholds[lastLaneIndex] * 0.01;
         }
 
         freqMap.push(laneData);
