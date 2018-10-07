@@ -16,7 +16,7 @@ const Board = function BoardFunc(parent) {
     let notes = [];
     const laneCount = 4;
     const x = 400;
-    const y = gameConfig.GAME.VIEWHEIGHT - 250;
+    const y = gameConfig.GAME.VIEWHEIGHT - 100;
     let freqMap;
     let song;
     let score = 0;
@@ -90,9 +90,9 @@ const Board = function BoardFunc(parent) {
         state.setPosition({ x, y });
         for (let i = 0; i < laneCount; i += 1) {
             const laneReceptor = LaneReceptor(state);
+            laneReceptor.setSize({ width: laneSize, height: 100 });
             laneReceptor.init();
             laneReceptor.setIndex(i);
-            laneReceptor.setSize({ width: laneSize, height: 100 });
             laneReceptors.push(laneReceptor);
 
             state.listenOn(laneReceptor, eventConfig.EVENTS.LANE.RECEPTOR_DOWN, onReceptorDown);
@@ -163,12 +163,12 @@ const Board = function BoardFunc(parent) {
         });
 
         laneReceptors.forEach((laneReceptor, i) => {
-            const note = lanes[i][currentIndex];
-            if (note) {
-                laneReceptor.setColor(0x00ff00);
-            } else {
-                laneReceptor.setColor(0xcccccc);
-            }
+            // const note = lanes[i][currentIndex];
+            // if (note) {
+            // laneReceptor.setColor(0x00ff00);
+            // } else {
+            // laneReceptor.setColor(0xcccccc);
+            // }
             laneReceptor.update();
         });
     }

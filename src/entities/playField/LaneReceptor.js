@@ -13,8 +13,9 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     const state = {};
     let board = parent;
     let index = 0;
-    let rect;
+    let pushIndicator;
     let color = 0xcccccc;
+    const pushIndicatorPadding = 5;
 
     function onKeyDown(e) {
         if (!e.repeat && e.keyCode === gameConfig.KEYCODES.Z && index === 0) {
@@ -32,7 +33,18 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     }
 
     function init() {
-        rect = board.getParentState().add.graphics();
+        pushIndicator = board.getParentState().add.graphics();
+
+        const x = state.getX() + board.getX();
+        const y = state.getY() + board.getY();
+
+        pushIndicator.lineStyle(5, color, 1);
+        pushIndicator.beginPath();
+        pushIndicator.moveTo(pushIndicatorPadding, 0);
+        pushIndicator.lineTo(state.getWidth() - pushIndicatorPadding * 2, 0);
+        pushIndicator.strokePath();
+        pushIndicator.x = x;
+        pushIndicator.y = y;
     }
 
     function setIndex(i) {
@@ -40,27 +52,21 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         const x = ((gameConfig.GAME.VIEWWIDTH - board.getX() * 2) / board.getLaneCount()) * index;
         state.listenOn(state.getKeyboard(), eventConfig.EVENTS.KEYBOARD.KEYDOWN, onKeyDown);
         state.setX(x);
+        if (pushIndicator) {
+            pushIndicator.x = state.getX() + board.getX();
+        }
     }
 
     function setColor(c) {
         color = c;
     }
 
-    function update() {
-        if (rect) {
-            rect.clear();
-            rect.lineStyle(2, color, 1);
-
-            const x = state.getX() + board.getX();
-            const y = state.getY() + board.getY();
-            rect.strokeRect(x, y, state.getWidth(), state.getHeight());
-        }
-    }
+    function update() {}
 
     function destroy() {
-        if (rect) {
-            rect.destroy();
-            rect = undefined;
+        if (pushIndicator) {
+            pushIndicator.destroy();
+            pushIndicator = undefined;
         }
 
         board = undefined;
