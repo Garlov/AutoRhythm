@@ -4,6 +4,9 @@
 Phaser 3.14.0 Open Jam 2018 project, built upon: https://github.com/Sidaroth/Phaser3.Boilerplate </br>
 Documentation for Phaser: https://photonstorm.github.io/phaser3-docs/index.html
 
+## Description
+A rhythm game that generates its own song maps based on audio signal processing. 
+
 ### Team
 Our team for the jam consisted of 3 people.
 
@@ -14,8 +17,7 @@ Our team for the jam consisted of 3 people.
 #### Audio
 - [bleepbloopbleep1](https://github.com/bleepbloopbleep1)
 
-### Description
-A rhythm game based upon doing sinewave/frequency analysis of audio files to generate maps.
+
 
 ### Tools
 -   [Visual Studio Code](https://github.com/Microsoft/vscode)
