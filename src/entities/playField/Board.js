@@ -15,6 +15,8 @@ const Board = function BoardFunc(parent) {
     let laneReceptors = [];
     let lanes = [];
     let notes = [];
+    const threshold = 0.1; // 100 ms both ways
+    let lastIndexInReceptor = 0;
     const laneCount = 4;
     const x = 600;
     const y = gameConfig.GAME.VIEWHEIGHT - 100;
@@ -109,8 +111,6 @@ const Board = function BoardFunc(parent) {
     }
 
     function onReceptorDown(e) {
-        const threshold = 0.1; // 100 ms both ways
-
         const { duration } = song.audioBuffer;
         const indexesPerSec = freqMap.length / duration;
         const secondsPerIndex = 1 / indexesPerSec;
@@ -122,7 +122,7 @@ const Board = function BoardFunc(parent) {
         let hit = false;
         for (let i = minIndex; i <= maxIndex; i += 1) {
             const note = lanes[e.index][i];
-            if (note && (!note.hit || !note.miss)) {
+            if (note && (!note.hit && !note.miss)) {
                 incrementScore(100);
                 note.onHit();
                 hit = true;
@@ -228,6 +228,12 @@ const Board = function BoardFunc(parent) {
         const currentTime = song.getCurrentTime();
         const currentIndexF = (freqMap.length / duration) * currentTime;
 
+        const indexesPerSec = freqMap.length / duration;
+        const secondsPerIndex = 1 / indexesPerSec;
+        const currentTimeWithOffset = song.getCurrentTime() - secondsPerIndex / 2; // move center of note to center of receptor
+
+        const missedIndex = parseInt(indexesPerSec * (currentTimeWithOffset - threshold)) - 1;
+
         if (currentTime > duration) {
             state.emit(eventConfig.EVENTS.SONG.SONG_END, {
                 escape: false,
@@ -262,6 +268,15 @@ const Board = function BoardFunc(parent) {
 
         laneReceptors.forEach((laneReceptor, i) => {
             laneReceptor.update();
+
+            for (let j = lastIndexInReceptor; j <= missedIndex; j += 1) {
+                const note = lanes[i][j];
+                if (note && (!note.hit && !note.miss)) {
+                    note.onMiss();
+                    break;
+                }
+            }
+            lastIndexInReceptor = missedIndex;
         });
     }
 

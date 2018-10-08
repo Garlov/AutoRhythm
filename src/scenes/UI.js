@@ -15,22 +15,22 @@ const UI = function UIFunc() {
     let stats;
 
     function setupPerformanceStats() {
-        stats = new Stats();
-        stats.setMode(0);
+        // stats = new Stats();
+        // stats.setMode(0);
 
-        stats.domElement.style.position = 'absolute';
-        stats.domElement.style.right = '0px';
-        stats.domElement.style.top = '0px';
+        // stats.domElement.style.position = 'absolute';
+        // stats.domElement.style.right = '0px';
+        // stats.domElement.style.top = '0px';
 
-        document.body.appendChild(stats.domElement);
+        // document.body.appendChild(stats.domElement);
 
-        // TODO cleanup listeners
-        state.events.on('preupdate', () => {
-            stats.begin();
-        });
-        state.events.on('postupdate', () => {
-            stats.end();
-        });
+        // // TODO cleanup listeners
+        // state.events.on('preupdate', () => {
+        //     stats.begin();
+        // });
+        // state.events.on('postupdate', () => {
+        //     stats.end();
+        // });
     }
 
     function setupDatGui() {

@@ -44,12 +44,9 @@ const Note = function NoteFunc(parent) {
             noteBg.fillCircle(0, 0, noteSize);
         }
         if (noteBg && state.getY() > board.getY() + 400) {
+            // destroy note after exit
             noteBg.destroy();
             noteBg = undefined;
-            if (!state.hit) {
-                state.miss = true;
-                state.emit(eventConfig.EVENTS.TONE.LEFT_LANE_NO_HIT, state);
-            }
         }
         if (noteBg) {
             noteBg.x = state.getX();
@@ -64,6 +61,11 @@ const Note = function NoteFunc(parent) {
                 drawNoteEffect();
             }
         }
+    }
+
+    function onMiss() {
+        state.miss = true;
+        state.emit(eventConfig.EVENTS.TONE.LEFT_LANE_NO_HIT, state);
     }
 
     function onHit() {
@@ -103,6 +105,7 @@ const Note = function NoteFunc(parent) {
         init,
         update,
         onHit,
+        onMiss,
         destroy,
     };
 
