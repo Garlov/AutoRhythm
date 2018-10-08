@@ -24,9 +24,7 @@ Our team for the jam consisted of 3 people.
 -   [Phaser 3.14](https://github.com/photonstorm/phaser)
 
 ### Requirements to build/host
--   A modern browser.
 -   Node.js and NPM
--   (preferably git)
 
 ### How to use
 1. Clone the repository
@@ -38,4 +36,6 @@ Our team for the jam consisted of 3 people.
 TODO: Update contributions
 
 ### Attributions
-TODO: Update later
+Music (CC-0):
+- All Alone - Hospitalized from WOWA.me
+- Bowers & Wilkins - NGS from WOWA.me
