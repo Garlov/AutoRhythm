@@ -7,6 +7,7 @@ import pipe from 'utils/pipe';
 
 const Note = function NoteFunc(parent) {
     const state = {};
+    let isDestroyed = false;
     let noteBg;
     let board = parent;
     let index = 0;
@@ -34,6 +35,7 @@ const Note = function NoteFunc(parent) {
     }
 
     function update({ currentIndex, stepSize, delta }) {
+        if (isDestroyed) return;
         const distance = (index - currentIndex) * stepSize;
         state.setY(board.getY() - distance);
         if (!noteBg && state.getY() > 0 && state.getY() < board.getY() + 400 && !state.hit) {
@@ -75,6 +77,7 @@ const Note = function NoteFunc(parent) {
     }
 
     function destroy() {
+        isDestroyed = true;
         if (noteBg) {
             noteBg.destroy();
             noteBg = undefined;
