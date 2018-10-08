@@ -38,4 +38,4 @@ TODO: Update contributions
 ### Attributions
 Music (CC-0):
 - All Alone - Hospitalized from WOWA.me
-- Bowers & Wilkins - NGS from WOWA.me
+- Bowers & Wilkins - JNGS from WOWA.me
