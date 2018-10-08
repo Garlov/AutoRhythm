@@ -27,7 +27,7 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
 
     function visualize(key) {
         const am = state.getAudioManager();
-        am.pauseMusic();
+        am.stopMusic();
         am.playMusic(key);
 
         visualizers.forEach((viz) => {
@@ -39,14 +39,6 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         visualizers.forEach((viz) => {
             viz.update();
         });
-    }
-
-    function stop() {
-        visualizers.forEach((viz) => {
-            viz.stop();
-        });
-
-        state.scene.stop();
     }
 
     function destroy() {
@@ -62,7 +54,6 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         visualize,
         update,
         destroy,
-        stop,
     };
 
     const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }, { state: hasAudioState, name: 'hasAudio' }];

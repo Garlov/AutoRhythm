@@ -17,7 +17,7 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     let titleText;
 
     let visualizer;
-    let songs = [];
+    const songs = [];
 
     function _renderSongs() {
         graphicsObj.clear();
@@ -110,16 +110,6 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
         }
     }
 
-    function stop() {
-        songs.forEach((song) => {
-            song.text.destroy();
-        });
-
-        songs = [];
-        visualizer.stop();
-        state.scene.stop();
-    }
-
     function create() {
         if (!titleText) {
             titleText = state.add.text(gameConfig.GAME.VIEWWIDTH / 2, 20, 'Song Selection', {
@@ -135,21 +125,22 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
         }
         state.listenOn(state.getKeyboard(), 'keydown', _onKeyDown);
 
-        if (!visualizer) {
-            visualizer = Visualizer();
-            state.scene.add(gameConfig.SCENES.VISUALIZER, visualizer, true);
-        }
+        visualizer = Visualizer();
+        state.scene.add(gameConfig.SCENES.VISUALIZER, visualizer, true);
 
         _renderSongs();
-        _previewSong();
+
+        setTimeout(() => {
+            _previewSong(); // if we preview too soon, it won't render.
+        }, 50);
     }
 
     function update(time, delta) {}
 
     function destroy() {
         visualizer.destroy();
-        state.scene.remove(gameConfig.SCENES.VISUALIZER);
         visualizer = undefined;
+        state.scene.remove(gameConfig.SCENES.VISUALIZER);
     }
 
     const hasInputState = hasInput(state);
@@ -163,7 +154,6 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
         create,
         update,
         destroy,
-        stop,
     };
 
     const states = [
