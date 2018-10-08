@@ -23,14 +23,12 @@ The hardest challenge for this was/is to balance the very quiet songs (or parts 
 ### Team
 Our team for the jam consisted of 3 people.
 
-#### Programming and Game Design
+##### Programming and Game Design
  - [Sidaroth](https://github.com/sidaroth)
  - [Garlov](https://github.com/garlov)
 
-#### Audio
+##### Audio
 - [bleepbloopbleep1](https://github.com/bleepbloopbleep1)
-
-
 
 ### Tools
 -   [Visual Studio Code](https://github.com/Microsoft/vscode)
@@ -44,9 +42,6 @@ Our team for the jam consisted of 3 people.
 2. Copy into a new folder/repository
 3. npm install
 4. npm start
-
-### Contributions
-TODO: Update contributions
 
 ### Attributions
 Music (CC-0):
