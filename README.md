@@ -33,6 +33,8 @@ Our team for the jam consisted of 3 people.
 ### Tools
 -   [Visual Studio Code](https://github.com/Microsoft/vscode)
 -   [Phaser 3.14](https://github.com/photonstorm/phaser)
+- Git (of course)
+- Special thanks to [dsp.js](https://github.com/corbanbrook/dsp.js)'s RFFT algorithm.
 
 ### Requirements to build/host
 -   Node.js and NPM
