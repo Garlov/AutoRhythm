@@ -32,8 +32,6 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         currentKey = key;
         am.stopMusic();
         am.playMusic(currentKey);
-        am.getCurrentSong().loop = false;
-
         loopViz = loop;
 
         visualizers.forEach((viz) => {

@@ -79,7 +79,6 @@ const AudioManager = function createAudioManagerFunc() {
     function playMusic(key = defaultSongKey) {
         if (!state.isMusicPlaying && music.has(key)) {
             currentSong = music.get(key);
-            currentSong.loop = true;
             currentSong.volume = currentVolume;
             currentSong.play();
             state.isMusicPlaying = true;

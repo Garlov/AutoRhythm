@@ -47,7 +47,6 @@ const PlayField = function PlayFieldFunc(key) {
         const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
         audioMan.playMusic(currentKey);
         const currentSong = audioMan.getCurrentSong();
-        currentSong.loop = false;
 
         board = Board(state);
         state.listenOnce(board, eventConfig.EVENTS.SONG.SONG_END, _onSongEnd);
@@ -68,7 +67,6 @@ const PlayField = function PlayFieldFunc(key) {
         audioMan.stopMusic();
         audioMan.playMusic(currentKey);
         const currentSong = audioMan.getCurrentSong();
-        currentSong.loop = false;
 
         createBoard();
     }
@@ -91,7 +89,6 @@ const PlayField = function PlayFieldFunc(key) {
         audioMan.playMusic(currentKey);
         const currentSong = audioMan.getCurrentSong();
         currentSong.pause();
-        currentSong.loop = false;
 
         createNotes();
         createBoard();
