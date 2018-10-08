@@ -9,6 +9,8 @@ import pipe from 'utils/pipe';
 const createVisualizerScene = function createVisualizerSceneFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.VISUALIZER);
     let visualizers = [];
+    let loopViz;
+    let currentKey;
 
     function create() {
         // // instantiate visualizers
@@ -25,13 +27,21 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         visualizers.push(freqViz);
     }
 
-    function visualize(key) {
+    function visualize(key, loop = true) {
         const am = state.getAudioManager();
+        currentKey = key;
         am.stopMusic();
-        am.playMusic(key);
+        am.playMusic(currentKey);
+        am.getCurrentSong().loop = false;
+
+        loopViz = loop;
 
         visualizers.forEach((viz) => {
-            viz.visualize(state.scene.manager.getScene(gameConfig.SCENES.GAME), am.getAudioContext(key), am.getAudioSource(key));
+            viz.visualize(
+                state.scene.manager.getScene(gameConfig.SCENES.GAME),
+                am.getAudioContext(currentKey),
+                am.getAudioSource(currentKey),
+            );
         });
     }
 
@@ -39,6 +49,12 @@ const createVisualizerScene = function createVisualizerSceneFunc() {
         visualizers.forEach((viz) => {
             viz.update();
         });
+
+        const currentSong = state.getAudioManager().getCurrentSong();
+        if (loopViz && currentSong && currentSong.getCurrentTime() > currentSong.duration) {
+            // restart vizualizers at end of song if we want to loop.
+            visualize(currentKey);
+        }
     }
 
     function destroy() {
