@@ -276,6 +276,7 @@ const Board = function BoardFunc(parent) {
                     break;
                 }
             }
+            lastIndexInReceptor = missedIndex;
         });
     }
 
