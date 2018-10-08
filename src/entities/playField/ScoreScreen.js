@@ -14,6 +14,13 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
     const parentState = parent;
 
     let background;
+    let notehits = 0;
+    let totalNotes = 0;
+    let noteHitRateText;
+    let bestCombo = 0;
+    let bestComboText;
+    let npsPeak = 0;
+    let npsPeakText;
     let score = 0;
     let scoreText;
     let titleText;
@@ -41,6 +48,22 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
 
     function setScore(val) {
         score = val;
+        state.refresh();
+    }
+
+    function setNoteHits(notehitsVal, totalNotesVal) {
+        notehits = notehitsVal;
+        totalNotes = totalNotesVal;
+        state.refresh();
+    }
+
+    function setNpsPeak(val) {
+        npsPeak = val;
+        state.refresh();
+    }
+
+    function setBestCombo(val) {
+        bestCombo = val;
         state.refresh();
     }
 
@@ -83,6 +106,42 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
         scoreText.x = state.getX() + state.getWidth() / 2 - scoreText.width / 2;
         scoreText.y = state.getY() + 100;
 
+        if (!noteHitRateText) {
+            noteHitRateText = parent.add.text(0, 0, '', {
+                font: '40px Arial',
+                fill: '#eeeeee',
+                align: 'center',
+            });
+        }
+
+        noteHitRateText.text = `Notes: ${notehits}/${totalNotes} (${(notehits / (totalNotes / 100)).toFixed(3)}%)`;
+        noteHitRateText.x = state.getX() + state.getWidth() / 2 - noteHitRateText.width / 2;
+        noteHitRateText.y = state.getY() + 180;
+
+        if (!npsPeakText) {
+            npsPeakText = parent.add.text(0, 0, '', {
+                font: '40px Arial',
+                fill: '#eeeeee',
+                align: 'center',
+            });
+        }
+
+        npsPeakText.text = `Highest notes per second: ${npsPeak}`;
+        npsPeakText.x = state.getX() + state.getWidth() / 2 - npsPeakText.width / 2;
+        npsPeakText.y = state.getY() + 260;
+
+        if (!bestComboText) {
+            bestComboText = parent.add.text(0, 0, '', {
+                font: '40px Arial',
+                fill: '#eeeeee',
+                align: 'center',
+            });
+        }
+
+        bestComboText.text = `Best combo: ${bestCombo}`;
+        bestComboText.x = state.getX() + state.getWidth() / 2 - bestComboText.width / 2;
+        bestComboText.y = state.getY() + 340;
+
         if (!retryButton) {
             retryButton = Button(parentState);
             retryButton.init();
@@ -121,6 +180,18 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
             scoreText.destroy();
             scoreText = undefined;
         }
+        if (noteHitRateText) {
+            noteHitRateText.destroy();
+            noteHitRateText = undefined;
+        }
+        if (npsPeakText) {
+            npsPeakText.destroy();
+            npsPeakText = undefined;
+        }
+        if (bestComboText) {
+            bestComboText.destroy();
+            bestComboText = undefined;
+        }
         if (retryButton) {
             retryButton.destroy();
             retryButton = undefined;
@@ -142,6 +213,9 @@ const ScoreScreen = function ScoreScreenFunc(parent) {
         // methods
         init,
         setScore,
+        setNoteHits,
+        setNpsPeak,
+        setBestCombo,
         setWin,
         refresh,
         destroy,

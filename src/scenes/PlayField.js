@@ -26,6 +26,9 @@ const PlayField = function PlayFieldFunc(key) {
         scoreScreen = ScoreScreen(state, gameData);
         scoreScreen.init();
         scoreScreen.setScore(gameData.score);
+        scoreScreen.setNoteHits(gameData.notesHit, gameData.totalNotes);
+        scoreScreen.setNpsPeak(gameData.npsPeak);
+        scoreScreen.setBestCombo(gameData.bestCombo);
         scoreScreen.setWin(!gameData.escape && !gameData.loss);
         state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.MENU, _onGoToMenu);
         state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.RETRY, _onRetry);
