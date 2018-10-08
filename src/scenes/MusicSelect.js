@@ -88,15 +88,23 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
 
     function _onKeyDown(e) {
         if (state.sys.isActive()) {
-            if (e.keyCode === gameConfig.KEYCODES.LEFT_ARROW || e.keyCode === gameConfig.KEYCODES.UP_ARROW) {
+            if (
+                e.keyCode === gameConfig.KEYS.LEFT_ARROW.CODE ||
+                e.keyCode === gameConfig.KEYS.UP_ARROW.CODE ||
+                e.keyCode === gameConfig.KEYS.Z.CODE
+            ) {
                 _navigateUp();
             }
 
-            if (e.keyCode === gameConfig.KEYCODES.RIGHT_ARROW || e.keyCode === gameConfig.KEYCODES.DOWN_ARROW) {
+            if (
+                e.keyCode === gameConfig.KEYS.RIGHT_ARROW.CODE ||
+                e.keyCode === gameConfig.KEYS.DOWN_ARROW.CODE ||
+                e.keyCode === gameConfig.KEYS.DOT.CODE
+            ) {
                 _navigateDown();
             }
 
-            if (e.keyCode === gameConfig.KEYCODES.ENTER) {
+            if (e.keyCode === gameConfig.KEYS.ENTER.CODE) {
                 _selectSong();
             }
         }

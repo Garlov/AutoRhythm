@@ -16,20 +16,14 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     let pushIndicator;
     let topGradient;
     let bottomGradient;
+    let keyText;
     let color = 0xcccccc;
     const pushIndicatorPadding = 1;
 
+    const keyConfig = [gameConfig.KEYS.Z, gameConfig.KEYS.X, gameConfig.KEYS.COMMA, gameConfig.KEYS.DOT];
+
     function onKeyDown(e) {
-        if (!e.repeat && e.keyCode === gameConfig.KEYCODES.Z && index === 0) {
-            state.emit(eventConfig.EVENTS.LANE.RECEPTOR_DOWN, { index });
-        }
-        if (!e.repeat && e.keyCode === gameConfig.KEYCODES.X && index === 1) {
-            state.emit(eventConfig.EVENTS.LANE.RECEPTOR_DOWN, { index });
-        }
-        if (!e.repeat && e.keyCode === gameConfig.KEYCODES.COMMA && index === 2) {
-            state.emit(eventConfig.EVENTS.LANE.RECEPTOR_DOWN, { index });
-        }
-        if (!e.repeat && e.keyCode === gameConfig.KEYCODES.DOT && index === 3) {
+        if (!e.repeat && e.keyCode === keyConfig[index].CODE) {
             state.emit(eventConfig.EVENTS.LANE.RECEPTOR_DOWN, { index });
         }
     }
@@ -73,6 +67,14 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
             topGradient.x = totX + pushIndicatorPadding;
             bottomGradient.x = totX + pushIndicatorPadding;
         }
+
+        keyText = board.getParentState().add.text(state.getX() + board.getX(), state.getY() + board.getY(), `${keyConfig[index].KEY}`, {
+            font: '32px Arial',
+            fill: '#eeeeee',
+            align: 'center',
+        });
+        keyText.y += state.getHeight() / 2 + keyText.height / 3;
+        keyText.x += state.getWidth() / 2 - keyText.width / 2;
     }
 
     function setColor(c) {
@@ -90,6 +92,11 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         if (topGradient) {
             topGradient.destroy();
             topGradient = undefined;
+        }
+
+        if (keyText) {
+            keyText.destroy();
+            keyText = undefined;
         }
 
         board = undefined;

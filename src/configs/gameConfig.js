@@ -14,21 +14,63 @@ export default {
         VISUALIZER: 'visualizer',
         PLAY_FIELD: 'game_play_field',
     },
-    KEYCODES: {
-        LEFT_ARROW: 37,
-        UP_ARROW: 38,
-        RIGHT_ARROW: 39,
-        DOWN_ARROW: 40,
-        Z: 90,
-        X: 88,
-        COMMA: 188,
-        DOT: 190,
-        A: 65,
-        S: 83,
-        K: 75,
-        L: 76,
-        ENTER: 13,
-        ESCAPE: 27,
+    KEYS: {
+        LEFT_ARROW: {
+            CODE: 37,
+            KEY: '',
+        },
+        UP_ARROW: {
+            CODE: 38,
+            KEY: '',
+        },
+        RIGHT_ARROW: {
+            CODE: 39,
+            KEY: '',
+        },
+        DOWN_ARROW: {
+            CODE: 40,
+            KEY: '',
+        },
+        Z: {
+            CODE: 90,
+            KEY: 'Z',
+        },
+        X: {
+            CODE: 88,
+            KEY: 'X',
+        },
+        COMMA: {
+            CODE: 188,
+            KEY: ',',
+        },
+        DOT: {
+            CODE: 190,
+            KEY: '.',
+        },
+        A: {
+            CODE: 65,
+            KEY: 'A',
+        },
+        S: {
+            CODE: 83,
+            KEY: 'S',
+        },
+        K: {
+            CODE: 75,
+            KEY: 'K',
+        },
+        L: {
+            CODE: 76,
+            KEY: 'L',
+        },
+        ENTER: {
+            CODE: 13,
+            KEY: '',
+        },
+        ESCAPE: {
+            CODE: 27,
+            KEY: '',
+        },
     },
     DEFAULT_TEXT_STYLE: {
         font: 'Roboto',

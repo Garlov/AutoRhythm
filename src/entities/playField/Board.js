@@ -8,7 +8,6 @@ import eventConfig from 'configs/eventConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 import canEmit from 'components/canEmit';
-import hasInput from 'components/hasInput';
 
 const Board = function BoardFunc(parent) {
     const state = {};
@@ -136,7 +135,7 @@ const Board = function BoardFunc(parent) {
     }
 
     function _onKeyDown(e) {
-        if (e.keyCode === gameConfig.KEYCODES.ESCAPE) {
+        if (e.keyCode === gameConfig.KEYS.ESCAPE.CODE) {
             state.emit(eventConfig.EVENTS.SONG.SONG_END, {
                 escape: true,
                 loss: true,
