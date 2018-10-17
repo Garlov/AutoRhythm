@@ -45,6 +45,10 @@ Our team for the jam consisted of 3 people.
 3. npm install
 4. npm start
 
+
+### Contribute
+If you want to contribute to the project, any pull requests are very much welcome! If you have any ideas for additional features, improvements or have found any bugs feel free to open an issue and we'll get to it as soon as time allows.
+
 ### Attributions
 Music (CC-0):
 - All Alone - Hospitalized from WOWA.me
