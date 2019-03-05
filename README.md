@@ -7,7 +7,7 @@ Documentation for Phaser: https://photonstorm.github.io/phaser3-docs/index.html
 ## Description
 TL;DR: A rhythm game that generates its own song maps based on audio signal processing. 
 
-<b>Controls: You play using ![Z](img/z.png =20x20), ![X](img/x.png =20x20), ![,](img/,.png =20x20), and ![.](img/..png =20x20) in the field. Song Selection can also be navigated with the arrow keys.</b></br>
+<b>Controls: You play using <img src="img/z.png" width="20" height="20" />, <img src="img/x.png" width="20" height="20" />, <img src="img/,.png" width="20" height="20" />, and <img src="img/..png" width="20" height="20" /> in the field. Song Selection can also be navigated with the arrow keys.</b></br>
 An open source rhythm game, where the goal is to hit the notes at the correct time.
 
 Every song is parsed and mapped automatically by the AI, based on the frequencies in the audio-file. Each song is unique, but the generation process yields the same result for the same song each time.
