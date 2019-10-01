@@ -47,7 +47,7 @@ Our team for the jam consisted of 3 people.
 
 
 ### Contribute
-If you want to contribute to the project, and submit any pull requests are very much welcome! If you have any ideas for additional features, improvements or have found any bugs feel free to open an issue and we'll get to it as soon as time allows.
+If you want to contribute to the project, any pull requests are very much welcome! If you have any ideas for additional features, improvements or have found any bugs feel free to open an issue and we'll get to it as soon as time allows.
 
 ### Attributions
 Music (CC-0):
