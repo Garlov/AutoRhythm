@@ -72,7 +72,6 @@ const Game = function GameFunc() {
     function createArrowTexture(fillColor, strokeWidth, strokeColor, key, scale = 0.6) {
         if (store.game.textures.exists(key)) {
             store.game.textures.remove(key);
-            console.log('removed', key);
         }
 
         const width = 165 * scale;
@@ -101,7 +100,6 @@ const Game = function GameFunc() {
     function createCircleTexture(strokeWidth, color, key) {
         if (store.game.textures.exists(key)) {
             store.game.textures.remove(key);
-            console.log('removed', key);
         }
 
         const d = new Phaser.GameObjects.Graphics(state);

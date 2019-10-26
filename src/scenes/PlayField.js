@@ -70,22 +70,23 @@ const PlayField = function PlayFieldFunc(key) {
         _showScoreScreen(e);
     }
 
-    function createNotes() {
+    async function createNotes() {
         if (!freqMap) {
             const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
             const currentSong = audioMan.getCurrentSong();
 
-            freqMap = createNoteMap(currentSong.audioBuffer, 4, noteConfig.RANGES, noteConfig.THRESHOLD);
+            freqMap = await createNoteMap(currentSong.audioBuffer, 4, noteConfig.RANGES, noteConfig.THRESHOLD);
         }
+        return freqMap;
     }
 
-    function create() {
+    async function create() {
         const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
         audioMan.playMusic(currentKey);
         const currentSong = audioMan.getCurrentSong();
         currentSong.pause();
 
-        createNotes();
+        await createNotes();
         createBoard();
 
         currentSong.resume();
