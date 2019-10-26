@@ -9,6 +9,7 @@ import hasAudio from 'components/hasAudio';
 import canEmit from 'components/canEmit';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
+import store from '../store';
 
 const MusicSelectScene = function MusicSelectSceneFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.MUSIC_SELECT);
@@ -131,7 +132,12 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
 
         setTimeout(() => {
             _previewSong(); // if we preview too soon, it won't render.
-        }, 50);
+        }, 150);
+
+        // show settings.
+        store.ui.getGUIRef().show();
+        store.ui.getGUIRef().open();
+        store.settings.open();
     }
 
     function update(time, delta) { }
@@ -140,6 +146,10 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
         visualizer.destroy();
         visualizer = undefined;
         state.scene.remove(gameConfig.SCENES.VISUALIZER);
+
+        // hide settings
+        store.ui.getGUIRef().close();
+        store.ui.getGUIRef().hide();
     }
 
     const hasInputState = hasInput(state);

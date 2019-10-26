@@ -35,6 +35,7 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         pushIndicator = board.getParentState().add.graphics();
         const x = state.getX() + board.getX();
         const y = state.getY() + board.getY();
+        if (sprite) sprite.destroy();
 
         // TODO spriteify?
         if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE) {

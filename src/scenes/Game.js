@@ -10,6 +10,7 @@ import canListen from 'components/canListen';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 import noteConfig from 'configs/noteConfig';
+import store from '../store';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -18,6 +19,8 @@ const Game = function GameFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.GAME);
     let audioManager;
     const gui = UI();
+    store.ui = gui;
+    store.game = state;
     const keyboard = createKeyboard();
 
     function cameraSetup() {
@@ -67,6 +70,11 @@ const Game = function GameFunc() {
     }
 
     function createArrowTexture(fillColor, strokeWidth, strokeColor, key, scale = 0.6) {
+        if (store.game.textures.exists(key)) {
+            store.game.textures.remove(key);
+            console.log('removed', key);
+        }
+
         const width = 165 * scale;
         const height = 160 * scale;
         const d = new Phaser.GameObjects.Graphics(state);
@@ -91,17 +99,21 @@ const Game = function GameFunc() {
     }
 
     function createCircleTexture(strokeWidth, color, key) {
+        if (store.game.textures.exists(key)) {
+            store.game.textures.remove(key);
+            console.log('removed', key);
+        }
+
         const d = new Phaser.GameObjects.Graphics(state);
         d.fillStyle(color, 1);
-        d.fillCircle(noteConfig.NOTE_RADIUS, noteConfig.NOTE_RADIUS, noteConfig.NOTE_RADIUS - strokeWidth);
+        d.fillCircle(noteConfig.NOTE_RADIUS + strokeWidth, noteConfig.NOTE_RADIUS + strokeWidth, noteConfig.NOTE_RADIUS - strokeWidth);
         d.lineStyle(strokeWidth, 0x000000, 1);
-        d.strokeCircle(noteConfig.NOTE_RADIUS, noteConfig.NOTE_RADIUS, noteConfig.NOTE_RADIUS);
-        d.generateTexture(key, 2 * noteConfig.NOTE_RADIUS, 2 * noteConfig.NOTE_RADIUS);
+        d.strokeCircle(noteConfig.NOTE_RADIUS + strokeWidth, noteConfig.NOTE_RADIUS + strokeWidth, noteConfig.NOTE_RADIUS);
+        d.generateTexture(key, 2 * (noteConfig.NOTE_RADIUS + strokeWidth), 2 * (noteConfig.NOTE_RADIUS + strokeWidth));
         d.destroy();
     }
 
-    function create() {
-        // Create some note textures.
+    function createTextures() {
         if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE || noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.GRADIENT) {
             createCircleTexture(2, noteConfig.EDGE_COLOR, 'edgeNote');
             createCircleTexture(2, noteConfig.MIDDLE_COLOR, 'middleNote');
@@ -110,7 +122,10 @@ const Game = function GameFunc() {
             createArrowTexture(noteConfig.MIDDLE_COLOR, 3, 0xCCCCCC, 'middleNote');
             createArrowTexture(0x444444, 3, 0xCCCCCC, 'receptor', 0.63);
         }
+    }
 
+    function create() {
+        createTextures();
         cameraSetup();
     }
 
@@ -125,6 +140,7 @@ const Game = function GameFunc() {
         // methods
         init,
         getAudioManager,
+        createTextures,
         getKeyboard,
         create,
         update,

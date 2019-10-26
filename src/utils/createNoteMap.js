@@ -32,17 +32,12 @@ function balanceLaneData(laneData, notesInAllLanes, rng) {
     const balancedLaneData = [].concat(laneData);
 
     // Reduce prevalence of 3-4 note spreads. This gets very dense very fast.
-    let notesLeft = 0;
-    for (let i = 0; i < balancedLaneData.length; i += 1) {
-        balancedLaneData[i] = rng.random() > 0.25 ? !balancedLaneData[i] : balancedLaneData[i]; // 75% chance to get swapped. (i.e, it's likely that fields that were turned on before are now off).
-        if (balancedLaneData) {
-            notesLeft += 1;
-        }
-    }
-
-    if (!notesLeft && rng.random() > 0.5) {
-        const laneToToggle = Math.floor(rng.random() * (3 + 1));
-        balancedLaneData[laneToToggle] = true;
+    const numberOfNotes = balancedLaneData.reduce((acc, cur) => acc + cur, 0);
+    const chanceToKeepSpread = 0.01; // % chance.
+    if (numberOfNotes > 3 && rng.random() > chanceToKeepSpread) {
+        balancedLaneData.forEach((val, index) => {
+            balancedLaneData[index] = !val; // swap from 3 or 4, to 1 or 0.
+        });
     }
 
     return balancedLaneData;
