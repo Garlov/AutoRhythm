@@ -2,8 +2,14 @@ export default {
     GAME: {
         VIEWHEIGHT: 1080,
         VIEWWIDTH: 1920,
-        TITLE: 'Replace Me',
+        TITLE: 'Auto Rhythm',
         RNGSEED: 31415926535,
+    },
+    HEALTH: {
+        MAX: 25,
+        FAIL_OFF: true, // Set to true to be unable to fail.
+        GAIN: 0.2, // Amount of health added when a note is hit succesfully.
+        REDUCE: 0.65, // Amount of health that is reduced when a note is missed.
     },
     SCENES: {
         BOOT: 'game_boot',

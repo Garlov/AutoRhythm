@@ -27,8 +27,7 @@ const Board = function BoardFunc(parent) {
     let combo = 1;
     let multiplierText;
 
-    const maxHealth = 25;
-    let health = maxHealth;
+    let health = gameConfig.HEALTH.MAX;
     let healthBar;
 
     // NPS calculations.
@@ -49,21 +48,23 @@ const Board = function BoardFunc(parent) {
         healthBar.clear();
         healthBar.fillStyle(0xcccccc, 1);
         const width = 20 * health;
-        healthBar.fillRect(gameConfig.GAME.VIEWWIDTH - width - 20, 20, width, 25);
+        if (width > 0) {
+            healthBar.fillRect(gameConfig.GAME.VIEWWIDTH - width - 20, 20, width, 25);
+        }
     }
 
     function updateHealth(val) {
         if (val < 0) {
-            health -= 0.65;
+            health -= gameConfig.HEALTH.REDUCE;
         } else {
-            health += 0.2;
+            health += gameConfig.HEALTH.GAIN;
         }
 
-        if (health > 25) {
-            health = 25;
+        if (health > gameConfig.HEALTH.MAX) {
+            health = gameConfig.HEALTH.MAX;
         }
 
-        if (health <= 0) {
+        if (health <= 0 && !gameConfig.HEALTH.FAIL_OFF) {
             state.emit(eventConfig.EVENTS.SONG.SONG_END, {
                 escape: false,
                 loss: true,
@@ -129,6 +130,7 @@ const Board = function BoardFunc(parent) {
                 break;
             }
         }
+
         if (!hit) {
             incrementScore(-10);
         }

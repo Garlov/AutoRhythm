@@ -1,6 +1,7 @@
 import { RFFT } from 'dsp.js';
 import MersenneTwister from 'mersenne-twister';
 import gameConfig from 'configs/gameConfig';
+import noteConfig from 'configs/noteConfig';
 
 function constrain(n, min, max) {
     if (n < min) return 0;
@@ -41,26 +42,37 @@ function balanceLaneData(laneData, notesInAllLanes, rng) {
 
     if (!notesLeft && rng.random() > 0.5) {
         const laneToToggle = Math.floor(rng.random() * (3 + 1));
-        console.log(laneToToggle);
         balancedLaneData[laneToToggle] = true;
     }
 
     return balancedLaneData;
 }
 
+function compareTresholdAndAdjustSensitivity(laneSignalSum, lastLaneIndex, currentThresholds) {
+    if (laneSignalSum < currentThresholds[lastLaneIndex]) {
+        currentThresholds[lastLaneIndex] += noteConfig.THRESHOLD[lastLaneIndex] * noteConfig.THRESHOLDMODS.UP; // note found, threshold increased by a set %.
+        return true;
+    } else {
+        currentThresholds[lastLaneIndex] -= noteConfig.THRESHOLD[lastLaneIndex] * noteConfig.THRESHOLDMODS.DOWN; // no note found, threshold lowered by a set %.
+        if (currentThresholds[lastLaneIndex] > noteConfig.THRESHOLD[lastLaneIndex] * noteConfig.MAX_MOD) { // We don't want to get any more sensitive. NOTE It's > and not < because thresholds are negative.
+            currentThresholds[lastLaneIndex] = noteConfig.THRESHOLD[lastLaneIndex] * noteConfig.MAX_MOD;
+        }
+        return false;
+    }
+}
+
 const createNoteMap = function createNoteMapFunc(audioBuffer, numberOfLanes, laneRanges, thresholds) {
     const { sampleRate, numberOfChannels } = audioBuffer;
     const freqMap = [];
-    const bufferSize = 2 ** 12;
+    const bufferSize = noteConfig.BUFFERSIZE;
     const buffer = new Float64Array(bufferSize);
     let start = 0;
 
     const generator = new MersenneTwister(gameConfig.GAME.RNGSEED);
 
     /**
-     * We use these to vary the magnitudal threshold based on note prevalence.
+     * We use this to vary the magnitudal threshold based on note prevalence.
      */
-    const defaultThresholds = [].concat(thresholds);
     const currentThresholds = [].concat(thresholds);
 
     /**
@@ -103,17 +115,10 @@ const createNoteMap = function createNoteMapFunc(audioBuffer, numberOfLanes, lan
             const laneIndex = getLaneIndex(i, laneRanges, rfft.spectrum.length);
             if (lastLaneIndex !== laneIndex) {
                 // we've swapped lane, compare sums against threshold.
-                if (laneSignalSum < currentThresholds[lastLaneIndex]) {
-                    laneData[lastLaneIndex] = true;
+                if (compareTresholdAndAdjustSensitivity(laneSignalSum, lastLaneIndex, currentThresholds)) {
                     notesInAllLanes += 1;
-                    currentThresholds[lastLaneIndex] += defaultThresholds[lastLaneIndex] * 0.15;
-                } else {
-                    currentThresholds[lastLaneIndex] -= defaultThresholds[lastLaneIndex] * 0.03;
-                    if (currentThresholds[lastLaneIndex] > defaultThresholds[lastLaneIndex] * 0.25) {
-                        currentThresholds[lastLaneIndex] = defaultThresholds[lastLaneIndex] * 0.25;
-                    }
+                    laneData[lastLaneIndex] = true;
                 }
-
                 laneSignalSum = 0;
             }
 
@@ -122,18 +127,10 @@ const createNoteMap = function createNoteMapFunc(audioBuffer, numberOfLanes, lan
 
             lastLaneIndex = laneIndex;
         }
-
-        // Function? ... it's used twice...
         // we've finished the lane (spectrum), compare sums against threshold. As there's likely more chunks to process, the thresholds need to be adjusted here as well.
-        if (laneSignalSum < currentThresholds[lastLaneIndex]) {
-            laneData[lastLaneIndex] = true;
+        if (compareTresholdAndAdjustSensitivity(laneSignalSum, lastLaneIndex, currentThresholds)) {
             notesInAllLanes += 1;
-            currentThresholds[lastLaneIndex] += defaultThresholds[lastLaneIndex] * 0.15; // note found, threshold increased by 15%.
-        } else {
-            currentThresholds[lastLaneIndex] -= defaultThresholds[lastLaneIndex] * 0.03; // no note found, threshold lowered by 3%
-            if (currentThresholds[lastLaneIndex] > defaultThresholds[lastLaneIndex] * 0.25) {
-                currentThresholds[lastLaneIndex] = defaultThresholds[lastLaneIndex] * 0.25;
-            }
+            laneData[lastLaneIndex] = true;
         }
 
         const balancedLaneData = balanceLaneData(laneData, notesInAllLanes, generator);

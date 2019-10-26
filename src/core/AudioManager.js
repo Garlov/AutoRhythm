@@ -38,9 +38,10 @@ const AudioManager = function createAudioManagerFunc() {
     function init() {
         _setupMute();
 
-        music.set(audioConfig.MUSIC.ALL_ALONE.KEY, scene.sound.add(audioConfig.MUSIC.ALL_ALONE.KEY));
-        music.set(audioConfig.MUSIC.BOWERS_WILKINS.KEY, scene.sound.add(audioConfig.MUSIC.BOWERS_WILKINS.KEY));
-        music.set(audioConfig.MUSIC.OPEN_JAM.KEY, scene.sound.add(audioConfig.MUSIC.OPEN_JAM.KEY));
+        Object.keys(audioConfig.MUSIC).forEach((key) => {
+            const SONG = audioConfig.MUSIC[key];
+            music.set(SONG.KEY, scene.sound.add(SONG.KEY));
+        });
 
         Object.keys(audioConfig.SFX).forEach((objKey) => {
             const SFX = audioConfig.SFX[objKey];

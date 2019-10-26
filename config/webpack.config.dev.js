@@ -99,7 +99,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: '../node_modules/html-webpack-template/index.ejs',
-            title: 'OpenJam.SpamToWin',
+            title: 'Auto Rhythm',
             meta: [{ name: 'robots', content: 'noindex,nofollow' }],
             appMountIds: ['game'],
             inject: false,

@@ -9,6 +9,7 @@ import eventConfig from 'configs/eventConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 import ScoreScreen from 'entities/playField/ScoreScreen';
+import noteConfig from 'configs/noteConfig';
 
 const PlayField = function PlayFieldFunc(key) {
     const state = new Phaser.Scene(gameConfig.SCENES.PLAY_FIELD);
@@ -17,26 +18,7 @@ const PlayField = function PlayFieldFunc(key) {
     const currentKey = key;
     let freqMap;
 
-    function init() {}
-
-    function _showScoreScreen(gameData) {
-        if (scoreScreen) return;
-        const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
-        audioMan.stopMusic();
-        scoreScreen = ScoreScreen(state, gameData);
-        scoreScreen.init();
-        scoreScreen.setScore(gameData.score);
-        scoreScreen.setNoteHits(gameData.notesHit, gameData.totalNotes);
-        scoreScreen.setNpsPeak(gameData.npsPeak);
-        scoreScreen.setBestCombo(gameData.bestCombo);
-        scoreScreen.setWin(!gameData.escape && !gameData.loss);
-        state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.MENU, _onGoToMenu);
-        state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.RETRY, _onRetry);
-    }
-
-    function _onSongEnd(e) {
-        _showScoreScreen(e);
-    }
+    function init() { }
 
     function createBoard() {
         if (board) {
@@ -66,9 +48,26 @@ const PlayField = function PlayFieldFunc(key) {
         const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
         audioMan.stopMusic();
         audioMan.playMusic(currentKey);
-        const currentSong = audioMan.getCurrentSong();
-
         createBoard();
+    }
+
+    function _showScoreScreen(gameData) {
+        if (scoreScreen) return;
+        const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
+        audioMan.stopMusic();
+        scoreScreen = ScoreScreen(state, gameData);
+        scoreScreen.init();
+        scoreScreen.setScore(gameData.score);
+        scoreScreen.setNoteHits(gameData.notesHit, gameData.totalNotes);
+        scoreScreen.setNpsPeak(gameData.npsPeak);
+        scoreScreen.setBestCombo(gameData.bestCombo);
+        scoreScreen.setWin(!gameData.escape && !gameData.loss);
+        state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.MENU, _onGoToMenu);
+        state.listenOnce(scoreScreen, eventConfig.EVENTS.SCORE_SCREEN.RETRY, _onRetry);
+    }
+
+    function _onSongEnd(e) {
+        _showScoreScreen(e);
     }
 
     function createNotes() {
@@ -76,11 +75,7 @@ const PlayField = function PlayFieldFunc(key) {
             const audioMan = state.scene.manager.getScene(gameConfig.SCENES.GAME).getAudioManager();
             const currentSong = audioMan.getCurrentSong();
 
-            const threshold = [-40000, -30000, -30000, -30000];
-
-            // percentile ranges for each lane in the frequency map.
-            const laneRanges = [0.05, 0.15, 0.4, 75];
-            freqMap = createNoteMap(currentSong.audioBuffer, 4, laneRanges, threshold);
+            freqMap = createNoteMap(currentSong.audioBuffer, 4, noteConfig.RANGES, noteConfig.THRESHOLD);
         }
     }
 
