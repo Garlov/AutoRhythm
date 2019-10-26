@@ -7,7 +7,7 @@ Documentation for Phaser: https://photonstorm.github.io/phaser3-docs/index.html
 ## Description
 TL;DR: A rhythm game that generates its own song maps based on audio signal processing. 
 
-<b>Controls: You play using <img src="img/z.png" width="20" height="20" />, <img src="img/x.png" width="20" height="20" />, <img src="img/,.png" width="20" height="20" />, and <img src="img/..png" width="20" height="20" /> in the field. Song Selection can also be navigated with the arrow keys.</b></br>
+<b>Controls: You play using <img src="assets/images/z.png" width="20" height="20" />, <img src="assets/images/x.png" width="20" height="20" />, <img src="assets/images/,.png" width="20" height="20" />, and <img src="assets/images/..png" width="20" height="20" /> in the field. Song Selection can also be navigated with the arrow keys.</b></br>
 An open source rhythm game, where the goal is to hit the notes at the correct time.
 
 Every song is parsed and mapped automatically by the AI, based on the frequencies in the audio-file. Each song is unique, but the generation process yields the same result for the same song each time.
@@ -18,7 +18,7 @@ Scoring per note is calculated based on your current combo, and how accurately y
 
 Future ideas include: Rate modifiers, noteskins, general visual and algorithmic improvements, youtube integration or some other form of user provided audio, applying an ANN or some other machine learning algorithm to this, key configuration, lots of community features like export to other rhythm game formats, online leaderboards, local scores, grading of scores, pass-fail, more effects etc.
 
-The hardest challenge for this was/is to balance the very quiet songs (or parts of songs) with the loudest parts, without one or the other ending up empty or insanely dense. We got some of the ways there, but there's much more work to be done on the algorithms to call this a complete product.
+The hardest challenge for this was/is to balance the very quiet songs (or parts of songs) with the loudest parts, without one or the other ending up empty or insanely dense. We got some of the way there, but there's much more work to be done on the algorithms to call this a complete product.
 
 ### Team
 Our team for the jam consisted of 3 people.
