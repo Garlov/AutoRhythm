@@ -127,7 +127,6 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
 
         visualizer = Visualizer();
         state.scene.add(gameConfig.SCENES.VISUALIZER, visualizer, true);
-
         _renderSongs();
 
         setTimeout(() => {
@@ -135,7 +134,7 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
         }, 50);
     }
 
-    function update(time, delta) {}
+    function update(time, delta) { }
 
     function destroy() {
         visualizer.destroy();

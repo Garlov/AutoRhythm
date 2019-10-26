@@ -5,19 +5,18 @@ import eventConfig from 'configs/eventConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 import noteConfig from 'configs/noteConfig';
+import Phaser from 'phaser';
 
 const Note = function NoteFunc(parent) {
     const state = {};
     let isDestroyed = false;
-    let noteBg;
     let board = parent;
     let index = 0;
-    let color;
-    const noteSize = noteConfig.NOTE_SIZE;
+    let sprite;
+    const noteSize = noteConfig.NOTE_RADIUS;
     let noteEffect;
     let noteEffectSize = noteSize;
     const noteEffectPos = { x: 0, y: 0 };
-    const strokeWidth = 2;
 
     function drawNoteEffect() {
         noteEffect.clear();
@@ -32,32 +31,32 @@ const Note = function NoteFunc(parent) {
         drawNoteEffect();
     }
 
-    function init(i, x, noteColor) {
+    function init(i, x, texture, lane) {
         state.setX(x);
         index = i;
-        color = noteColor;
+        sprite = new Phaser.GameObjects.Sprite(board.getParentState(), x, 0, texture);
+        sprite.setOrigin(0.5);
+        board.getParentState().add.existing(sprite);
+        if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.ARROWS) {
+            if (lane === 0) sprite.rotation = Math.PI / 2;
+            if (lane === 2) sprite.rotation = Math.PI;
+            if (lane === 3) sprite.rotation = -Math.PI / 2;
+        }
     }
 
     function update({ currentIndex, stepSize, delta }) {
         if (isDestroyed) return;
         const distance = (index - currentIndex) * stepSize;
         state.setY(board.getY() - distance);
-        if (!noteBg && state.getY() > 0 && state.getY() < board.getY() + 400 && !state.hit) {
-            noteBg = board.getParentState().add.graphics();
-            noteBg.fillStyle(color, 1);
-            noteBg.fillCircle(0, 0, noteSize - strokeWidth);
-            noteBg.lineStyle(strokeWidth, 0x000000, 1);
-            noteBg.strokeCircle(0, 0, noteSize);
-        }
 
-        if (noteBg && state.getY() > board.getY() + 400) {
+        if (sprite && state.getY() > board.getY() + 400) {
             // destroy note after exit
-            noteBg.destroy();
-            noteBg = undefined;
+            sprite.destroy();
+            sprite = undefined;
         }
-        if (noteBg) {
-            noteBg.x = state.getX();
-            noteBg.y = state.getY();
+        if (sprite) {
+            sprite.x = state.getX();
+            sprite.y = state.getY();
         }
         if (noteEffect) {
             noteEffectSize += (delta / 1000) * 800;
@@ -78,18 +77,18 @@ const Note = function NoteFunc(parent) {
     function onHit() {
         state.hit = true;
         createNoteEffect();
-        if (noteBg) {
-            noteBg.destroy();
-            noteBg = undefined;
+        if (sprite) {
+            sprite.destroy();
+            sprite = undefined;
         }
         state.emit(eventConfig.EVENTS.TONE.LEFT_LANE, state);
     }
 
     function destroy() {
         isDestroyed = true;
-        if (noteBg) {
-            noteBg.destroy();
-            noteBg = undefined;
+        if (sprite) {
+            sprite.destroy();
+            sprite = undefined;
         }
 
         if (noteEffect) {

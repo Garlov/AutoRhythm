@@ -9,6 +9,7 @@ import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 import canEmit from 'components/canEmit';
 import noteConfig from 'configs/noteConfig';
+import Phaser from 'phaser';
 
 const Board = function BoardFunc(parent) {
     const state = {};
@@ -209,9 +210,9 @@ const Board = function BoardFunc(parent) {
                 }
 
                 if (freqMap[i][laneIndex]) {
-                    const color = laneIndex === 0 || laneIndex === 3 ? noteConfig.EDGE_COLOR : noteConfig.MIDDLE_COLOR;
+                    const texture = laneIndex === 0 || laneIndex === 3 ? 'edgeNote' : 'middleNote';
                     const note = Note(state);
-                    note.init(i, state.getX() + laneSize * laneIndex + laneSize / 2, color);
+                    note.init(i, state.getX() + laneSize * laneIndex + laneSize / 2, texture, laneIndex);
                     state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE_NO_HIT, onNoteLeftLaneNoHit);
                     state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE, onNoteLeftLane);
                     notesInLane[i] = note;

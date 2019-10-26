@@ -9,6 +9,7 @@ import eventConfig from 'configs/eventConfig';
 import canListen from 'components/canListen';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
+import noteConfig from 'configs/noteConfig';
 
 /**
  * Responsible for delegating the various levels, holding the various core systems and such.
@@ -65,13 +66,57 @@ const Game = function GameFunc() {
         return audioManager;
     }
 
+    function createArrowTexture(fillColor, strokeWidth, strokeColor, key, scale = 0.6) {
+        const width = 165 * scale;
+        const height = 160 * scale;
+        const d = new Phaser.GameObjects.Graphics(state);
+
+        d.beginPath();
+        d.fillStyle(fillColor);
+        d.lineStyle(strokeWidth, strokeColor);
+        d.moveTo(60 * scale, 0); // top left
+        d.lineTo(90 * scale, 0); // top right
+        d.lineTo(90 * scale, 100 * scale); // middle-bottom-right
+        d.lineTo(130 * scale, 65 * scale); // top-middle-right
+        d.lineTo(150 * scale, 85 * scale); // top-middle-down-right
+        d.lineTo(75 * scale, 155 * scale); // bottom
+        d.lineTo(0, 85 * scale); // top-middle-down-left
+        d.lineTo(20 * scale, 65 * scale); // top-middle-left
+        d.lineTo(60 * scale, 100 * scale); // middle-bottom-left
+        d.closePath();
+        d.fillPath();
+        d.strokePath();
+        d.generateTexture(key, width, height);
+        d.destroy();
+    }
+
+    function createCircleTexture(strokeWidth, color, key) {
+        const d = new Phaser.GameObjects.Graphics(state);
+        d.fillStyle(color, 1);
+        d.fillCircle(noteConfig.NOTE_RADIUS, noteConfig.NOTE_RADIUS, noteConfig.NOTE_RADIUS - strokeWidth);
+        d.lineStyle(strokeWidth, 0x000000, 1);
+        d.strokeCircle(noteConfig.NOTE_RADIUS, noteConfig.NOTE_RADIUS, noteConfig.NOTE_RADIUS);
+        d.generateTexture(key, 2 * noteConfig.NOTE_RADIUS, 2 * noteConfig.NOTE_RADIUS);
+        d.destroy();
+    }
+
     function create() {
+        // Create some note textures.
+        if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE || noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.GRADIENT) {
+            createCircleTexture(2, noteConfig.EDGE_COLOR, 'edgeNote');
+            createCircleTexture(2, noteConfig.MIDDLE_COLOR, 'middleNote');
+        } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.ARROWS) {
+            createArrowTexture(noteConfig.EDGE_COLOR, 3, 0xCCCCCC, 'edgeNote');
+            createArrowTexture(noteConfig.MIDDLE_COLOR, 3, 0xCCCCCC, 'middleNote');
+            createArrowTexture(0x444444, 3, 0xCCCCCC, 'receptor', 0.63);
+        }
+
         cameraSetup();
     }
 
-    function update(time, delta) {}
+    function update(time, delta) { }
 
-    function destroy() {}
+    function destroy() { }
 
     const canListenState = canListen(state);
 

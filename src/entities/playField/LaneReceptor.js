@@ -9,6 +9,7 @@ import canEmit from 'components/canEmit';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 import noteConfig from 'configs/noteConfig';
+import Phaser from 'phaser';
 
 const LaneReceptor = function LaneReceptorFunc(parent) {
     const state = {};
@@ -19,6 +20,7 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     let bottomGradient;
     let keyText;
     let color = 0xcccccc;
+    let sprite;
     const pushIndicatorPadding = 1;
 
     const keyConfig = [gameConfig.KEYS.Z, gameConfig.KEYS.X, gameConfig.KEYS.COMMA, gameConfig.KEYS.DOT];
@@ -34,10 +36,11 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         const x = state.getX() + board.getX();
         const y = state.getY() + board.getY();
 
+        // TODO spriteify?
         if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE) {
             const lineWidth = 6;
             pushIndicator.lineStyle(lineWidth, color);
-            pushIndicator.strokeCircle(0, 0, noteConfig.NOTE_SIZE);
+            pushIndicator.strokeCircle(0, 0, noteConfig.NOTE_RADIUS);
             pushIndicator.x = x;
             pushIndicator.y = y;
         } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.GRADIENT) {
@@ -61,6 +64,12 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
             bottomGradient.fillRect(0, 0, elemWidth, state.getHeight() / 2);
             bottomGradient.x = x;
             bottomGradient.y = y;
+        } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.ARROWS) {
+            sprite = new Phaser.GameObjects.Sprite(board.getParentState(), x, y, 'receptor');
+            sprite.setOrigin(0.5);
+            sprite.x = x;
+            sprite.y = y;
+            board.getParentState().add.existing(sprite);
         }
     }
 
@@ -80,6 +89,13 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
                     bottomGradient.x = totX + pushIndicatorPadding;
                 }
             }
+        }
+
+        if (sprite) {
+            sprite.x = totX + state.getWidth() / 2;
+            if (i === 0) sprite.rotation = Math.PI / 2;
+            if (i === 2) sprite.rotation = Math.PI;
+            if (i === 3) sprite.rotation = -Math.PI / 2;
         }
 
         keyText = board.getParentState().add.text(state.getX() + board.getX(), state.getY() + board.getY(), `${keyConfig[index].KEY}`, {
