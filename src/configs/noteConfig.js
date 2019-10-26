@@ -9,4 +9,13 @@ export default {
         UP: 0.15,
         DOWN: 0.03,
     },
+    MIDDLE_COLOR: 0xb71c1c, // Color of the 2 middle notes
+    EDGE_COLOR: 0x1565c0,
+    NOTE_SPEED: 100, // Speed at which the notes fall down the screen (higher number reduces note density)
+    NOTE_SIZE: 40,
+    RECEPTOR_MODES: {
+        GRADIENT: 'gradient',
+        CIRCLE: 'circle',
+    },
+    RECEPTOR_MODE: 'circle',
 };

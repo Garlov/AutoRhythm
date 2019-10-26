@@ -8,6 +8,7 @@ import eventConfig from 'configs/eventConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 import canEmit from 'components/canEmit';
+import noteConfig from 'configs/noteConfig';
 
 const Board = function BoardFunc(parent) {
     const state = {};
@@ -208,8 +209,9 @@ const Board = function BoardFunc(parent) {
                 }
 
                 if (freqMap[i][laneIndex]) {
+                    const color = laneIndex === 0 || laneIndex === 3 ? noteConfig.EDGE_COLOR : noteConfig.MIDDLE_COLOR;
                     const note = Note(state);
-                    note.init(i, state.getX() + laneSize * laneIndex + laneSize / 2);
+                    note.init(i, state.getX() + laneSize * laneIndex + laneSize / 2, color);
                     state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE_NO_HIT, onNoteLeftLaneNoHit);
                     state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE, onNoteLeftLane);
                     notesInLane[i] = note;
@@ -264,7 +266,7 @@ const Board = function BoardFunc(parent) {
         const { delta } = parentState.game.loop;
         notes.forEach((n) => {
             if (n) {
-                n.update({ currentIndex: currentIndexF, stepSize: 150, delta });
+                n.update({ currentIndex: currentIndexF, stepSize: noteConfig.NOTE_SPEED, delta });
             }
         });
 

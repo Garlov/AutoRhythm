@@ -4,6 +4,7 @@ import canEmit from 'components/canEmit';
 import eventConfig from 'configs/eventConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
+import noteConfig from 'configs/noteConfig';
 
 const Note = function NoteFunc(parent) {
     const state = {};
@@ -11,10 +12,12 @@ const Note = function NoteFunc(parent) {
     let noteBg;
     let board = parent;
     let index = 0;
-    const noteSize = 40;
+    let color;
+    const noteSize = noteConfig.NOTE_SIZE;
     let noteEffect;
     let noteEffectSize = noteSize;
     const noteEffectPos = { x: 0, y: 0 };
+    const strokeWidth = 2;
 
     function drawNoteEffect() {
         noteEffect.clear();
@@ -29,9 +32,10 @@ const Note = function NoteFunc(parent) {
         drawNoteEffect();
     }
 
-    function init(i, x) {
+    function init(i, x, noteColor) {
         state.setX(x);
         index = i;
+        color = noteColor;
     }
 
     function update({ currentIndex, stepSize, delta }) {
@@ -40,9 +44,12 @@ const Note = function NoteFunc(parent) {
         state.setY(board.getY() - distance);
         if (!noteBg && state.getY() > 0 && state.getY() < board.getY() + 400 && !state.hit) {
             noteBg = board.getParentState().add.graphics();
-            noteBg.fillStyle(0xcccccc, 1);
-            noteBg.fillCircle(0, 0, noteSize);
+            noteBg.fillStyle(color, 1);
+            noteBg.fillCircle(0, 0, noteSize - strokeWidth);
+            noteBg.lineStyle(strokeWidth, 0x000000, 1);
+            noteBg.strokeCircle(0, 0, noteSize);
         }
+
         if (noteBg && state.getY() > board.getY() + 400) {
             // destroy note after exit
             noteBg.destroy();

@@ -8,6 +8,7 @@ import eventConfig from 'configs/eventConfig';
 import canEmit from 'components/canEmit';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
+import noteConfig from 'configs/noteConfig';
 
 const LaneReceptor = function LaneReceptorFunc(parent) {
     const state = {};
@@ -30,30 +31,37 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
 
     function init() {
         pushIndicator = board.getParentState().add.graphics();
-
         const x = state.getX() + board.getX();
         const y = state.getY() + board.getY();
 
-        const elemWidth = state.getWidth() - pushIndicatorPadding * 2;
-        pushIndicator.lineStyle(5, color, 1);
-        pushIndicator.beginPath();
-        pushIndicator.moveTo(0, 0);
-        pushIndicator.lineTo(elemWidth, 0);
-        pushIndicator.strokePath();
-        pushIndicator.x = x;
-        pushIndicator.y = y;
+        if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE) {
+            const lineWidth = 6;
+            pushIndicator.lineStyle(lineWidth, color);
+            pushIndicator.strokeCircle(0, 0, noteConfig.NOTE_SIZE);
+            pushIndicator.x = x;
+            pushIndicator.y = y;
+        } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.GRADIENT) {
+            const elemWidth = state.getWidth() - pushIndicatorPadding * 2;
+            pushIndicator.lineStyle(5, color, 1);
+            pushIndicator.beginPath();
+            pushIndicator.moveTo(0, 0);
+            pushIndicator.lineTo(elemWidth, 0);
+            pushIndicator.strokePath();
+            pushIndicator.x = x;
+            pushIndicator.y = y;
 
-        topGradient = board.getParentState().add.graphics();
-        topGradient.fillGradientStyle(0x000000, 0x000000, color, color, 0.4);
-        topGradient.fillRect(0, -state.getHeight() / 2, elemWidth, state.getHeight() / 2);
-        topGradient.x = x;
-        topGradient.y = y;
+            topGradient = board.getParentState().add.graphics();
+            topGradient.fillGradientStyle(0x000000, 0x000000, color, color, 0.4);
+            topGradient.fillRect(0, -state.getHeight() / 2, elemWidth, state.getHeight() / 2);
+            topGradient.x = x;
+            topGradient.y = y;
 
-        bottomGradient = board.getParentState().add.graphics();
-        bottomGradient.fillGradientStyle(color, color, 0x000000, 0x000000, 0.4);
-        bottomGradient.fillRect(0, 0, elemWidth, state.getHeight() / 2);
-        bottomGradient.x = x;
-        bottomGradient.y = y;
+            bottomGradient = board.getParentState().add.graphics();
+            bottomGradient.fillGradientStyle(color, color, 0x000000, 0x000000, 0.4);
+            bottomGradient.fillRect(0, 0, elemWidth, state.getHeight() / 2);
+            bottomGradient.x = x;
+            bottomGradient.y = y;
+        }
     }
 
     function setIndex(i) {
@@ -61,11 +69,17 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         const x = ((gameConfig.GAME.VIEWWIDTH - board.getX() * 2) / board.getLaneCount()) * index;
         state.listenOn(state.getKeyboard(), eventConfig.EVENTS.KEYBOARD.KEYDOWN, onKeyDown);
         state.setX(x);
+        const totX = state.getX() + board.getX();
         if (pushIndicator) {
-            const totX = state.getX() + board.getX();
-            pushIndicator.x = totX + pushIndicatorPadding;
-            topGradient.x = totX + pushIndicatorPadding;
-            bottomGradient.x = totX + pushIndicatorPadding;
+            if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE) {
+                pushIndicator.x = totX + state.getWidth() / 2;
+            } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.GRADIENT) {
+                pushIndicator.x = totX + pushIndicatorPadding;
+                if (topGradient && bottomGradient) {
+                    topGradient.x = totX + pushIndicatorPadding;
+                    bottomGradient.x = totX + pushIndicatorPadding;
+                }
+            }
         }
 
         keyText = board.getParentState().add.text(state.getX() + board.getX(), state.getY() + board.getY(), `${keyConfig[index].KEY}`, {
@@ -81,7 +95,7 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         color = c;
     }
 
-    function update() {}
+    function update() { }
 
     function destroy() {
         if (pushIndicator) {
@@ -92,6 +106,11 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         if (topGradient) {
             topGradient.destroy();
             topGradient = undefined;
+        }
+
+        if (bottomGradient) {
+            bottomGradient.destroy();
+            bottomGradient = undefined;
         }
 
         if (keyText) {
