@@ -388,6 +388,11 @@ const Board = function BoardFunc(parent) {
             healthBar.destroy();
             healthBar = undefined;
         }
+
+        if (judgmentText) {
+            judgmentText.destroy();
+            judgmentText = undefined;
+        }
     }
 
     const isGameEntityState = isGameEntity(state);
