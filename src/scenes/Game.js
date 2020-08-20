@@ -115,6 +115,7 @@ const Game = function GameFunc() {
         if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE || noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.GRADIENT) {
             createCircleTexture(2, noteConfig.EDGE_COLOR, 'edgeNote');
             createCircleTexture(2, noteConfig.MIDDLE_COLOR, 'middleNote');
+            createCircleTexture(2, 0xAAAAAA, 'circleReceptor');
         } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.ARROWS) {
             createArrowTexture(noteConfig.EDGE_COLOR, 3, 0xCCCCCC, 'edgeNote');
             createArrowTexture(noteConfig.MIDDLE_COLOR, 3, 0xCCCCCC, 'middleNote');

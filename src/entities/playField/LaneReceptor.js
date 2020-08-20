@@ -60,13 +60,12 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         bottomGradient.y = y;
     }
 
-    // TODO spriteify?
     function createCircleReceptor(x, y) {
-        const lineWidth = 6;
-        pushIndicator.lineStyle(lineWidth, color);
-        pushIndicator.strokeCircle(0, 0, noteConfig.NOTE_RADIUS);
-        pushIndicator.x = x;
-        pushIndicator.y = y;
+        sprite = new Phaser.GameObjects.Sprite(board.getParentState(), x, y, 'circleReceptor');
+        sprite.setOrigin(0.5);
+        sprite.x = x;
+        sprite.y = y;
+        board.getParentState().add.existing(sprite);
     }
 
     function createArrowReceptor(x, y) {
@@ -132,22 +131,17 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
 
     function onPushIndication() {
         pushIndication = true;
-        sprite.alpha = 0.5;
+        if (sprite) {
+            sprite.alpha = 0.5;
+        }
     }
 
     function onPushIndicationOver() {
         pushIndication = false;
         pushIndicationTimeLeft = pushIndicationTime;
-        sprite.alpha = 1.0;
-
-        // // TODO spriteify?
-        // if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE) {
-        //     pushIndicator.setAlpha(0.7);
-        // } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.GRADIENT) {
-        //     pushIndicator.setAlpha(0.7);
-        // } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.ARROWS) {
-        //     sprite.setAlpha(0.7);
-        // }
+        if (sprite) {
+            sprite.alpha = 1.0;
+        }
     }
 
     function update(delta) {

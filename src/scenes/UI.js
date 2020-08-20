@@ -5,6 +5,7 @@ import gameConfig from 'configs/gameConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
 import noteConfig from 'configs/noteConfig';
 import store from '../store';
+import hasAudio from 'components/hasAudio';
 
 /**
  * Layer/Scene for UI elements.
@@ -55,6 +56,11 @@ const UI = function UIFunc() {
         // No fail mode.
         folder.add(gameConfig.HEALTH, 'FAIL_OFF').listen().onChange((v) => {
             gameConfig.HEALTH.FAIL_OFF = v;
+        });
+
+        folder.add(gameConfig.AUDIO, 'VOLUME', 0, 100).listen().onChange((v) => {
+            gameConfig.AUDIO.VOLUME = v;
+            state.getAudioManager().setVolume(v);
         });
 
         // Receptor mode.
@@ -165,7 +171,10 @@ const UI = function UIFunc() {
         destroy,
     };
 
-    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }];
+    const states = [{ state, name: 'state' }, { state: localState, name: 'localState' }, {
+        state: hasAudio(state),
+        name: 'hasAudio',
+    }];
 
     getFunctionUsage(states, 'UIScene');
     return Object.assign(...states.map(s => s.state), {

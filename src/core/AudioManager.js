@@ -11,7 +11,7 @@ const AudioManager = function createAudioManagerFunc() {
     const soundEffects = new Map();
     const music = new Map();
     let currentSong;
-    const currentVolume = 0.7;
+    let currentVolume = gameConfig.AUDIO.VOLUME / 100;
     const defaultSongKey = audioConfig.MUSIC.ALL_ALONE.KEY;
 
     function _updateMute() {
@@ -55,6 +55,11 @@ const AudioManager = function createAudioManagerFunc() {
         // TODO move from old to new, if scene is already defined
         scene = newScene;
         return state;
+    }
+
+    function setVolume(vol) {
+        currentVolume = vol / 100;
+        currentSong.volume = currentVolume;
     }
 
     function setPauseOnBlur(pauseOnBlur) {
@@ -151,6 +156,7 @@ const AudioManager = function createAudioManagerFunc() {
 
     getFunctionUsage(states, 'AudioManager');
     return Object.assign(...states.map(s => s.state), {
+        setVolume,
         // pipes and overrides
     });
 };

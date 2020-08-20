@@ -133,9 +133,10 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
 
         if (!descriptionText) {
             descriptionText = state.add.text(10, 20, `Controls\n
-Select Music by using Z and . or the arrow keys.
+Select Music by using (Z) and (.) or the arrow keys.
 During play, press (Z), (X), (,), (.) or the arrow keys
-when notes pass through the receptors.\n
+when notes pass through the receptors. Confirm your selection
+by pressing the (Enter) Key.\n
 Difficulty, receptor and note types, fail off etc.
 can be changed using the menu on the right.
 

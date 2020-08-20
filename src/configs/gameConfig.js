@@ -117,5 +117,6 @@ export default {
     AUDIO: {
         musicKeys: ['bgScore'],
         sfxKeys: ['coinSfx'],
+        VOLUME: 30,
     },
 };

@@ -62,7 +62,7 @@ const createNoteMap = async function createNoteMapFunc(audioBuffer, numberOfLane
         const freqMap = [];
         const bufferSize = noteConfig.BUFFERSIZE;
         const buffer = new Float64Array(bufferSize);
-        let start = 0;
+        let start = 3 * bufferSize;
 
         const generator = new MersenneTwister(gameConfig.GAME.RNGSEED);
 
