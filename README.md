@@ -51,5 +51,14 @@ If you want to contribute to the project, any pull requests are very much welcom
 
 ### Attributions
 Music (CC-0):
-- All Alone - Hospitalized from WOWA.me
-- Bowers & Wilkins - JNGS from WOWA.me
+* All Alone - Hospitalized from WOWA.me (https://www.unminus.com/)
+* Bowers & Wilkins - JNGS from WOWA.me (https://www.unminus.com/)
+* They Say - eckskwisit from WOWA.me (https://www.unminus.com/)
+
+Music (CC-BY 4.0):
+* Another Step Back - Of Far Different Nature (https://fardifferent.carrd.co/)
+* Flow - Of Far Different Nature (https://fardifferent.carrd.co/)
+* Force Field - Of Far Different Nature (https://fardifferent.carrd.co/)
+* No Time - Of Far Different Nature (https://fardifferent.carrd.co/)
+* Windfish - Of Far Different Nature (https://fardifferent.carrd.co/)
+* Vengeance Electro - Of Far Different Nature (https://fardifferent.carrd.co/)
