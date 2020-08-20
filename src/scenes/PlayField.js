@@ -11,11 +11,11 @@ import pipe from 'utils/pipe';
 import ScoreScreen from 'entities/playField/ScoreScreen';
 import noteConfig from 'configs/noteConfig';
 
-const PlayField = function PlayFieldFunc(key) {
+const PlayField = function PlayFieldFunc(songInfo) {
     const state = new Phaser.Scene(gameConfig.SCENES.PLAY_FIELD);
     let board;
     let scoreScreen;
-    const currentKey = key;
+    const currentKey = songInfo.key;
     let freqMap;
 
     function init() { }
@@ -33,7 +33,7 @@ const PlayField = function PlayFieldFunc(key) {
         board = Board(state);
         state.listenOnce(board, eventConfig.EVENTS.SONG.SONG_END, _onSongEnd);
         board.setFrequencyMap(currentSong, freqMap);
-        board.init();
+        board.init(songInfo);
     }
 
     function _onGoToMenu() {

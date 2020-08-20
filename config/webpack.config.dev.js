@@ -42,6 +42,7 @@ module.exports = {
         headers: {
             'X-Content-Type-Options': 'nosniff',
             'X-Frame-Options': 'DENY',
+            'Access-Control-Allow-Origin': '*',
         },
         open: true,
         overlay: {

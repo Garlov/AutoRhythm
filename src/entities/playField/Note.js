@@ -31,9 +31,10 @@ const Note = function NoteFunc(parent) {
         drawNoteEffect();
     }
 
-    function init(i, x, texture, lane) {
+    function init(i, x, texture, lane, time) {
         state.setX(x);
         index = i;
+        state.timestamp = time;
         sprite = new Phaser.GameObjects.Sprite(board.getParentState(), x, 0, texture);
         sprite.setOrigin(0.5);
         board.getParentState().add.existing(sprite);
@@ -107,6 +108,7 @@ const Note = function NoteFunc(parent) {
         // props
         hit: false,
         miss: false,
+        timestamp: 0,
         // methods
         init,
         update,

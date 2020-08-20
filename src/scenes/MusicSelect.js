@@ -16,6 +16,7 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     let currentSongIndex = 0;
     let graphicsObj;
     let titleText;
+    let descriptionText;
 
     let visualizer;
     const songs = [];
@@ -41,15 +42,18 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
                 songs.push(songObj);
             }
 
-            const fontSize = i === currentSongIndex ? 50 : 32;
+            const fontSize = i === currentSongIndex ? 50 : 25;
+            const fill = i === currentSongIndex ? '#81c784' : '#eeeeee';
             song.text.setText(`${song.title} by ${song.artist}`);
             song.text.setPosition(gameConfig.GAME.VIEWWIDTH / 2, 200 + i * 60);
             song.text.setFont(`${fontSize}px Arial`);
-            song.text.setFill('#eeeeee');
+            song.text.setFill(fill);
             song.text.setAlign('center');
             song.text.setOrigin(0.5);
+            song.text.setStroke('#000000', 3);
 
             if (i === currentSongIndex) {
+                // TODO Make a tween
                 graphicsObj.lineStyle(5, 0xffffff, 1);
                 graphicsObj.beginPath();
                 graphicsObj.moveTo(song.text.x - song.text.width / 2, song.text.y + song.text.height / 2);
@@ -60,7 +64,11 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     }
 
     function _selectSong() {
-        state.emitGlobal(eventConfig.EVENTS.GAME.SONG_SELECTED, { key: songs[currentSongIndex].key });
+        state.emitGlobal(eventConfig.EVENTS.GAME.SONG_SELECTED, {
+            key: songs[currentSongIndex].key,
+            title: songs[currentSongIndex].title,
+            artist: songs[currentSongIndex].artist,
+        });
     }
 
     function _previewSong() {
@@ -114,11 +122,31 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
     function create() {
         if (!titleText) {
             titleText = state.add.text(gameConfig.GAME.VIEWWIDTH / 2, 20, 'Song Selection', {
-                font: '64px Arial',
+                font: '72px Arial',
                 fill: '#eeeeee',
                 align: 'center',
+                stroke: '#000000',
+                strokeThickness: 4,
             });
             titleText.x -= titleText.width / 2;
+        }
+
+        if (!descriptionText) {
+            descriptionText = state.add.text(10, 20, `Controls\n
+Select Music by using Z and . or the arrow keys.
+During play, press (Z), (X), (,), (.) or the arrow keys
+when notes pass through the receptors.\n
+Difficulty, receptor and note types, fail off etc.
+can be changed using the menu on the right.
+
+Music by Of Far Different Nature (https://fardifferent.carrd.co/)
+Other songs from https://unminus.com/`, {
+                font: '20px Arial',
+                fill: '#eeeeee',
+                align: 'Left',
+                stroke: '#000000',
+                strokeThickness: 2,
+            });
         }
 
         if (!graphicsObj) {

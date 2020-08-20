@@ -22,13 +22,59 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
     let color = 0xcccccc;
     let sprite;
     const pushIndicatorPadding = 1;
+    const pushIndicationTime = 100;
+    let pushIndicationTimeLeft = pushIndicationTime;
+    let pushIndication = false;
 
-    const keyConfig = [gameConfig.KEYS.Z, gameConfig.KEYS.X, gameConfig.KEYS.COMMA, gameConfig.KEYS.DOT];
+    const keyConfig = [gameConfig.KEYS.Z, gameConfig.KEYS.X, gameConfig.KEYS.COMMA, gameConfig.KEYS.DOT,
+        gameConfig.KEYS.LEFT_ARROW, gameConfig.KEYS.DOWN_ARROW, gameConfig.KEYS.UP_ARROW, gameConfig.KEYS.RIGHT_ARROW];
 
     function onKeyDown(e) {
-        if (!e.repeat && e.keyCode === keyConfig[index].CODE) {
+        if (!e.repeat && e.keyCode === keyConfig[index].CODE || e.keyCode === keyConfig[index + 4].CODE) {
             state.emit(eventConfig.EVENTS.LANE.RECEPTOR_DOWN, { index });
+            onPushIndication();
         }
+    }
+
+    // TODO spriteify?
+    function createGradiantReceptor(x, y) {
+        const elemWidth = state.getWidth() - pushIndicatorPadding * 2;
+        pushIndicator.lineStyle(5, color, 1);
+        pushIndicator.beginPath();
+        pushIndicator.moveTo(0, 0);
+        pushIndicator.lineTo(elemWidth, 0);
+        pushIndicator.strokePath();
+        pushIndicator.x = x;
+        pushIndicator.y = y;
+
+        topGradient = board.getParentState().add.graphics();
+        topGradient.fillGradientStyle(0x000000, 0x000000, color, color, 0.4);
+        topGradient.fillRect(0, -state.getHeight() / 2, elemWidth, state.getHeight() / 2);
+        topGradient.x = x;
+        topGradient.y = y;
+
+        bottomGradient = board.getParentState().add.graphics();
+        bottomGradient.fillGradientStyle(color, color, 0x000000, 0x000000, 0.4);
+        bottomGradient.fillRect(0, 0, elemWidth, state.getHeight() / 2);
+        bottomGradient.x = x;
+        bottomGradient.y = y;
+    }
+
+    // TODO spriteify?
+    function createCircleReceptor(x, y) {
+        const lineWidth = 6;
+        pushIndicator.lineStyle(lineWidth, color);
+        pushIndicator.strokeCircle(0, 0, noteConfig.NOTE_RADIUS);
+        pushIndicator.x = x;
+        pushIndicator.y = y;
+    }
+
+    function createArrowReceptor(x, y) {
+        sprite = new Phaser.GameObjects.Sprite(board.getParentState(), x, y, 'receptor');
+        sprite.setOrigin(0.5);
+        sprite.x = x;
+        sprite.y = y;
+        board.getParentState().add.existing(sprite);
     }
 
     function init() {
@@ -37,40 +83,12 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         const y = state.getY() + board.getY();
         if (sprite) sprite.destroy();
 
-        // TODO spriteify?
         if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE) {
-            const lineWidth = 6;
-            pushIndicator.lineStyle(lineWidth, color);
-            pushIndicator.strokeCircle(0, 0, noteConfig.NOTE_RADIUS);
-            pushIndicator.x = x;
-            pushIndicator.y = y;
+            createCircleReceptor(x, y);
         } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.GRADIENT) {
-            const elemWidth = state.getWidth() - pushIndicatorPadding * 2;
-            pushIndicator.lineStyle(5, color, 1);
-            pushIndicator.beginPath();
-            pushIndicator.moveTo(0, 0);
-            pushIndicator.lineTo(elemWidth, 0);
-            pushIndicator.strokePath();
-            pushIndicator.x = x;
-            pushIndicator.y = y;
-
-            topGradient = board.getParentState().add.graphics();
-            topGradient.fillGradientStyle(0x000000, 0x000000, color, color, 0.4);
-            topGradient.fillRect(0, -state.getHeight() / 2, elemWidth, state.getHeight() / 2);
-            topGradient.x = x;
-            topGradient.y = y;
-
-            bottomGradient = board.getParentState().add.graphics();
-            bottomGradient.fillGradientStyle(color, color, 0x000000, 0x000000, 0.4);
-            bottomGradient.fillRect(0, 0, elemWidth, state.getHeight() / 2);
-            bottomGradient.x = x;
-            bottomGradient.y = y;
+            createGradiantReceptor(x, y);
         } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.ARROWS) {
-            sprite = new Phaser.GameObjects.Sprite(board.getParentState(), x, y, 'receptor');
-            sprite.setOrigin(0.5);
-            sprite.x = x;
-            sprite.y = y;
-            board.getParentState().add.existing(sprite);
+            createArrowReceptor(x, y);
         }
     }
 
@@ -112,7 +130,34 @@ const LaneReceptor = function LaneReceptorFunc(parent) {
         color = c;
     }
 
-    function update() { }
+    function onPushIndication() {
+        pushIndication = true;
+        sprite.alpha = 0.5;
+    }
+
+    function onPushIndicationOver() {
+        pushIndication = false;
+        pushIndicationTimeLeft = pushIndicationTime;
+        sprite.alpha = 1.0;
+
+        // // TODO spriteify?
+        // if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.CIRCLE) {
+        //     pushIndicator.setAlpha(0.7);
+        // } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.GRADIENT) {
+        //     pushIndicator.setAlpha(0.7);
+        // } else if (noteConfig.RECEPTOR_MODE === noteConfig.RECEPTOR_MODES.ARROWS) {
+        //     sprite.setAlpha(0.7);
+        // }
+    }
+
+    function update(delta) {
+        if (pushIndication) {
+            pushIndicationTimeLeft -= delta;
+            if (pushIndicationTimeLeft < 0) {
+                onPushIndicationOver();
+            }
+        }
+    }
 
     function destroy() {
         if (pushIndicator) {

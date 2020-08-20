@@ -33,7 +33,7 @@ const Game = function GameFunc() {
         audioManager.stopMusic();
         state.scene.manager.getScene(gameConfig.SCENES.MUSIC_SELECT).destroy();
         state.scene.remove(gameConfig.SCENES.MUSIC_SELECT);
-        state.scene.add(gameConfig.SCENES.PLAY_FIELD, PlayField(e.key), true);
+        state.scene.add(gameConfig.SCENES.PLAY_FIELD, PlayField(e), true);
     }
 
     function _onSongEnded(e) {

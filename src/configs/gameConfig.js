@@ -6,10 +6,10 @@ export default {
         RNGSEED: 31415926535,
     },
     HEALTH: {
-        MAX: 25,
+        MAX: 100,
         FAIL_OFF: true, // Set to true to be unable to fail.
-        GAIN: 0.2, // Amount of health added when a note is hit succesfully.
-        REDUCE: 0.65, // Amount of health that is reduced when a note is missed.
+        GAIN: 0.8, // Amount of health added when a note is hit succesfully.
+        REDUCE: 2.5, // Amount of health that is reduced when a note is missed.
     },
     SCENES: {
         BOOT: 'game_boot',
@@ -19,6 +19,33 @@ export default {
         MUSIC_SELECT: 'music_select',
         VISUALIZER: 'visualizer',
         PLAY_FIELD: 'game_play_field',
+    },
+    HIT_THRESHOLDS: {
+        FLAWLESS: {
+            MS: 15,
+            TEXT: 'Flawless!!',
+            COLOR: '#4fc3f7',
+        },
+        GREAT: {
+            MS: 30,
+            TEXT: 'Great!',
+            COLOR: '#43a047',
+        },
+        GOOD: {
+            MS: 45,
+            TEXT: 'Good!',
+            COLOR: '#ffee58',
+        },
+        BAD: {
+            MS: 60,
+            TEXT: 'Bad!',
+            COLOR: '#673ab7',
+        },
+        MISS: {
+            MS: Infinity,
+            TEXT: 'MISS!',
+            COLOR: '#d50000',
+        },
     },
     KEYS: {
         LEFT_ARROW: {

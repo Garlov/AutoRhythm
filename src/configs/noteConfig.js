@@ -1,12 +1,12 @@
 export default {
     BUFFERSIZE: 2 ** 12,
     // percentile ranges for each lane in the frequency map.
-    RANGES: [0.05, 0.15, 0.4, 1],
+    RANGES: [0.08, 0.22, 0.5, 1],
     // sensitivity threshold in each lane before we add a note. (Lower frequencies on the left).
-    THRESHOLD: [-60000, -50000, -50000, -50000],
+    THRESHOLD: [-70000, -625000, -53000, -38000],
     MAX_MODIFIER: 0.25,
     THRESHOLDMODS: {
-        UP: 0.15,
+        UP: 0.22,
         DOWN: 0.03,
     },
     MIDDLE_COLOR: 0xb71c1c, // Color of the 2 middle notes

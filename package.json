@@ -41,16 +41,16 @@
         "html-webpack-plugin": "^3.1.0",
         "html-webpack-template": "^6.1.0",
         "mini-css-extract-plugin": "^0.4.3",
-        "node-sass": "^4.9.3",
+        "node-sass": "^4.14.1",
         "raw-loader": "^0.5.1",
         "resolve-url-loader": "^2.3.1",
         "rimraf": "^2.6.2",
         "sass-loader": "^7.1.0",
         "stats-js": "^1.0.0-alpha1",
         "style-loader": "^0.21.0",
-        "webpack": "^4.20.2",
-        "webpack-cli": "^3.1.1",
-        "webpack-dev-server": "^3.9.0"
+        "webpack": "^4.44.1",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.11.0"
     },
     "dependencies": {
         "dat.gui": "^0.7.2",

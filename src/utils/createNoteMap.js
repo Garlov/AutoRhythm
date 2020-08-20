@@ -62,7 +62,7 @@ const createNoteMap = async function createNoteMapFunc(audioBuffer, numberOfLane
         const freqMap = [];
         const bufferSize = noteConfig.BUFFERSIZE;
         const buffer = new Float64Array(bufferSize);
-        let start = 3 * bufferSize;
+        let start = 0;
 
         const generator = new MersenneTwister(gameConfig.GAME.RNGSEED);
 
@@ -94,10 +94,10 @@ const createNoteMap = async function createNoteMapFunc(audioBuffer, numberOfLane
          * We summarize each lanes frequency levels, and compare against the laneIndex threshold values. We vary the thresholds based on the frequency of notes as well.
          */
         let lastLaneIndex = 0;
+        const rfft = new RFFT(bufferSize, sampleRate);
         while (start + bufferSize < monoData.length) {
             buffer.set(monoData.slice(start, start + bufferSize));
             start += bufferSize;
-            const rfft = new RFFT(bufferSize, sampleRate);
             rfft.forward(buffer);
 
             const laneData = new Array(numberOfLanes).fill(false);

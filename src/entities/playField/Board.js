@@ -9,7 +9,6 @@ import getFunctionUsage from 'utils/getFunctionUsage';
 import pipe from 'utils/pipe';
 import canEmit from 'components/canEmit';
 import noteConfig from 'configs/noteConfig';
-import Phaser from 'phaser';
 
 const Board = function BoardFunc(parent) {
     const state = {};
@@ -28,6 +27,9 @@ const Board = function BoardFunc(parent) {
     let scoreText;
     let combo = 1;
     let multiplierText;
+    let songText;
+    let judgmentText;
+    let judgmentTextTimeLeft = 1500;
 
     let health = gameConfig.HEALTH.MAX;
     let healthBar;
@@ -42,14 +44,22 @@ const Board = function BoardFunc(parent) {
 
     let notesHit = 0;
     let comboPeak = 0;
+    let indicesPerSec = 0;
 
     function drawHealthBar() {
         if (!healthBar) {
             healthBar = parentState.add.graphics();
         }
         healthBar.clear();
-        healthBar.fillStyle(0xcccccc, 1);
-        const width = 20 * health;
+        if (health > 50) {
+            healthBar.fillStyle(0x66bb6a, 1);
+        } else if (health > 25) {
+            healthBar.fillStyle(0xffd54f, 1);
+        } else {
+            healthBar.fillStyle(0xb71c1c, 1);
+        }
+
+        const width = 5 * health;
         if (width > 0) {
             healthBar.fillRect(gameConfig.GAME.VIEWWIDTH - width - 20, 20, width, 25);
         }
@@ -82,7 +92,7 @@ const Board = function BoardFunc(parent) {
         drawHealthBar();
     }
 
-    function incrementScore(val) {
+    function adjustScore(val) {
         if (val < 0) {
             combo = 1;
         }
@@ -100,6 +110,13 @@ const Board = function BoardFunc(parent) {
         updateHealth(val);
     }
 
+    function setJudgmentText(text, fillColor) {
+        judgmentTextTimeLeft = 1500;
+        judgmentText.setText(text);
+        judgmentText.setFill(fillColor);
+        judgmentText.setX(gameConfig.GAME.VIEWWIDTH / 2 - judgmentText.width / 2);
+    }
+
     function onNoteLeftLane(note) {
         if (note.hit) {
             notesHit += 1;
@@ -109,24 +126,35 @@ const Board = function BoardFunc(parent) {
     }
 
     function onNoteLeftLaneNoHit(note) {
-        incrementScore(-10);
+        setJudgmentText(gameConfig.HIT_THRESHOLDS.MISS.TEXT, gameConfig.HIT_THRESHOLDS.MISS.COLOR);
+        adjustScore(-10);
         notesPastLane += 1;
     }
 
     function onReceptorDown(e) {
-        const { duration } = song.audioBuffer;
-        const indexesPerSec = freqMap.length / duration;
-        const secondsPerIndex = 1 / indexesPerSec;
+        const secondsPerIndex = 1 / indicesPerSec;
         const currentTime = song.getCurrentTime() - secondsPerIndex / 2; // move center of note to center of receptor
 
-        const minIndex = parseInt(indexesPerSec * (currentTime - threshold));
-        const maxIndex = parseInt(indexesPerSec * (currentTime + threshold));
+        const minIndex = parseInt(indicesPerSec * (currentTime - threshold));
+        const maxIndex = parseInt(indicesPerSec * (currentTime + threshold));
+
 
         let hit = false;
         for (let i = minIndex; i <= maxIndex; i += 1) {
             const note = lanes[e.index][i];
             if (note && (!note.hit && !note.miss)) {
-                incrementScore(100);
+                const msOffset = Math.abs(note.timestamp - currentTime) * 1000;
+                if (msOffset < gameConfig.HIT_THRESHOLDS.FLAWLESS.MS) {
+                    setJudgmentText(gameConfig.HIT_THRESHOLDS.FLAWLESS.TEXT, gameConfig.HIT_THRESHOLDS.FLAWLESS.COLOR);
+                } else if (msOffset < gameConfig.HIT_THRESHOLDS.GREAT.MS) {
+                    setJudgmentText(gameConfig.HIT_THRESHOLDS.GREAT.TEXT, gameConfig.HIT_THRESHOLDS.GREAT.COLOR);
+                } else if (msOffset < gameConfig.HIT_THRESHOLDS.GOOD.MS) {
+                    setJudgmentText(gameConfig.HIT_THRESHOLDS.GOOD.TEXT, gameConfig.HIT_THRESHOLDS.GOOD.COLOR);
+                } else if (msOffset < gameConfig.HIT_THRESHOLDS.BAD.MS) {
+                    setJudgmentText(gameConfig.HIT_THRESHOLDS.BAD.TEXT, gameConfig.HIT_THRESHOLDS.BAD.COLOR);
+                }
+
+                adjustScore(100);
                 note.onHit();
                 hit = true;
                 break;
@@ -134,7 +162,8 @@ const Board = function BoardFunc(parent) {
         }
 
         if (!hit) {
-            incrementScore(-10);
+            setJudgmentText(gameConfig.HIT_THRESHOLDS.MISS.TEXT, gameConfig.HIT_THRESHOLDS.MISS.COLOR);
+            adjustScore(-10);
         }
     }
 
@@ -156,25 +185,48 @@ const Board = function BoardFunc(parent) {
         state.listenOn(parentState.getKeyboard(), eventConfig.EVENTS.KEYBOARD.KEYDOWN, _onKeyDown);
     }
 
-    function init() {
+    function init(songInfo) {
         scoreText = parent.add.text(20, 20, `${score}`, {
             font: '64px Arial',
             fill: '#eeeeee',
             align: 'center',
+            stroke: '#000000',
+            strokeThickness: 4,
+        });
+
+        judgmentText = parent.add.text(gameConfig.GAME.VIEWWIDTH / 2, gameConfig.GAME.VIEWHEIGHT / 2, '', {
+            font: '64px Arial',
+            fill: '#eeeeee',
+            align: 'center',
+            stroke: '#000000',
+            strokeThickness: 4,
         });
 
         multiplierText = parent.add.text(20, 100, `${combo}x`, {
             font: '64px Arial',
             fill: '#eeeeee',
             align: 'center',
+            stroke: '#000000',
+            strokeThickness: 4,
         });
 
         npsText = parent.add.text(20, gameConfig.GAME.VIEWHEIGHT, 'NPS', {
             font: '32px Arial',
             fill: '#eeeeee',
             align: 'center',
+            stroke: '#000000',
+            strokeThickness: 3,
         });
         npsText.y -= npsText.height;
+
+        songText = parent.add.text(20, npsText.y - 10, `${songInfo.title} - ${songInfo.artist}`, {
+            font: '24px Arial',
+            fill: '#eeeeee',
+            align: 'center',
+            stroke: '#000000',
+            strokeThickness: 3,
+        });
+        songText.y -= songText.height;
 
         const laneSize = (gameConfig.GAME.VIEWWIDTH - x * 2) / laneCount;
         state.setPosition({ x, y });
@@ -199,6 +251,9 @@ const Board = function BoardFunc(parent) {
         /**
          * As generating thousands of notes in memory simultaneously is rather heavy, consider doing this in 20-30second chunks throughout the song instead...
          */
+        const { duration } = song.audioBuffer;
+        indicesPerSec = freqMap.length / duration;
+        const timePerLaneFill = duration / freqMap.length; // This is the minimum difference between each note.
         const now = performance.now();
         for (let i = 0; i < freqMap.length; i += 1) {
             // loop through all the song 'chunks' and generate notes per lane.
@@ -212,7 +267,8 @@ const Board = function BoardFunc(parent) {
                 if (freqMap[i][laneIndex]) {
                     const texture = laneIndex === 0 || laneIndex === 3 ? 'edgeNote' : 'middleNote';
                     const note = Note(state);
-                    note.init(i, state.getX() + laneSize * laneIndex + laneSize / 2, texture, laneIndex);
+                    const timestamp = timePerLaneFill * i;
+                    note.init(i, state.getX() + laneSize * laneIndex + laneSize / 2, texture, laneIndex, timestamp);
                     state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE_NO_HIT, onNoteLeftLaneNoHit);
                     state.listenOnce(note, eventConfig.EVENTS.TONE.LEFT_LANE, onNoteLeftLane);
                     notesInLane[i] = note;
@@ -221,8 +277,7 @@ const Board = function BoardFunc(parent) {
                 }
             }
         }
-        console.log(performance.now() - now);
-        console.log(count, notes.length);
+        console.log(`Notemap Generation took ${performance.now() - now}ms.`);
 
         setupListeners();
         drawHealthBar();
@@ -233,11 +288,10 @@ const Board = function BoardFunc(parent) {
         const currentTime = song.getCurrentTime();
         const currentIndexF = (freqMap.length / duration) * currentTime;
 
-        const indexesPerSec = freqMap.length / duration;
-        const secondsPerIndex = 1 / indexesPerSec;
+        const secondsPerIndex = 1 / indicesPerSec;
         const currentTimeWithOffset = song.getCurrentTime() - secondsPerIndex / 2; // move center of note to center of receptor
 
-        const missedIndex = parseInt(indexesPerSec * (currentTimeWithOffset - threshold)) - 1;
+        const missedIndex = parseInt(indicesPerSec * (currentTimeWithOffset - threshold)) - 1;
 
         if (currentTime > duration) {
             state.emit(eventConfig.EVENTS.SONG.SONG_END, {
@@ -271,8 +325,11 @@ const Board = function BoardFunc(parent) {
             }
         });
 
+        judgmentTextTimeLeft -= delta;
+        if (judgmentTextTimeLeft < 0) judgmentText.setText('');
+
         laneReceptors.forEach((laneReceptor, i) => {
-            laneReceptor.update();
+            laneReceptor.update(delta);
 
             for (let j = lastIndexInReceptor; j <= missedIndex; j += 1) {
                 const note = lanes[i][j];
