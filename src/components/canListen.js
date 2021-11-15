@@ -1,7 +1,7 @@
 import messageBus from 'core/MessageBus';
 
 const canListen = function canListenFunc(state) {
-    const listeners = [];
+    let listeners = [];
 
     function listenOn(emitState, event, fn, context) {
         listeners.push(emitState.on(event, fn, context));
@@ -23,6 +23,8 @@ const canListen = function canListenFunc(state) {
         listeners.forEach((l) => {
             l.drop();
         });
+
+        listeners = [];
     }
 
     return {

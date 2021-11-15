@@ -6,6 +6,7 @@ import getFunctionUsage from 'utils/getFunctionUsage';
 import noteConfig from 'configs/noteConfig';
 import store from '../store';
 import hasAudio from 'components/hasAudio';
+import createTextures from 'utils/textureGenerator';
 
 /**
  * Layer/Scene for UI elements.
@@ -37,7 +38,7 @@ const UI = function UIFunc() {
 
     // Recreate textures when we change the colors.
     function triggerTextureRecreation() {
-        store.game.createTextures();
+        createTextures(store.game);
     }
 
     function setupDatGui() {

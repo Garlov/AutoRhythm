@@ -15,29 +15,42 @@ export default {
         BOOT: 'game_boot',
         LOAD: 'game_load',
         GAME: 'game_game',
+        MAIN_MENU: 'game_menu',
+        OPTIONS: 'game_options',
+        KEY_CONFIG: 'game_key_config',
         UI: 'UI',
         MUSIC_SELECT: 'music_select',
         VISUALIZER: 'visualizer',
         PLAY_FIELD: 'game_play_field',
     },
+    /**
+     * Hit Thresholds based on Stepmania/Etterna Judge 4.
+     * Judge Modifiers inspired by Judge 1-9 + 0/10.
+     */
+    JUDGE_MODIFIERS: [2.0, 1.5, 1.33, 1.16, 1.0, 0.84, 0.66, 0.5, 0.33, 0.2, 0.1],
     HIT_THRESHOLDS: {
         FLAWLESS: {
-            MS: 15,
+            MS: 22.5,
             TEXT: 'Flawless!!',
             COLOR: '#4fc3f7',
         },
+        PERFECT: {
+            MS: 45,
+            TEXT: 'Perfect!',
+            COLOR: '#EDA800',
+        },
         GREAT: {
-            MS: 30,
+            MS: 90,
             TEXT: 'Great!',
             COLOR: '#43a047',
         },
         GOOD: {
-            MS: 45,
+            MS: 135,
             TEXT: 'Good!',
             COLOR: '#ffee58',
         },
         BAD: {
-            MS: 60,
+            MS: 180,
             TEXT: 'Bad!',
             COLOR: '#673ab7',
         },

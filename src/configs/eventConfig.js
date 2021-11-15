@@ -27,5 +27,9 @@ export default {
             RETRY: 'score screen retry clicked',
             MENU: 'score screen menu clicked',
         },
+        MENU: {
+            SELECTED_ITEM: 'menu selected item',
+            ENTERED: 'menu entered',
+        },
     },
 };

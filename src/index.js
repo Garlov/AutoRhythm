@@ -6,6 +6,8 @@ import BootScene from 'scenes/Boot';
 import LoadScene from 'scenes/Load';
 import Game from 'scenes/Game';
 import resizeCanvas from 'utils/resizeCanvas';
+import createKeyboardInput from 'core/Keyboard';
+import store from './store';
 
 const phaserConfig = {
     type: Phaser.WEBGL,
@@ -20,5 +22,9 @@ const phaserConfig = {
 };
 
 const game = new Phaser.Game(phaserConfig);
+store.keyboard = createKeyboardInput();
+store.keyboard.enable();
+store.phaserGame = game;
+
 
 window.addEventListener('resize', resizeCanvas);

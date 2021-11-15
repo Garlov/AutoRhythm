@@ -1,8 +1,8 @@
-import gameConfig from 'configs/gameConfig';
+import store from '../store';
 
 const hasInput = function hasInputFunc(state) {
     function getKeyboard() {
-        return state.scene.manager.getScene(gameConfig.SCENES.GAME).getKeyboard();
+        return store.keyboard;
     }
 
     return {

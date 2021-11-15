@@ -4,7 +4,6 @@ import LoadingBar from 'core/LoadingBar';
 import spriteConfig from 'configs/spriteConfig';
 import audioConfig from 'configs/audioConfig';
 import getFunctionUsage from 'utils/getFunctionUsage';
-import pipe from 'utils/pipe';
 
 const LoadScene = function LoadSceneFunc() {
     const state = new Phaser.Scene(gameConfig.SCENES.LOAD);

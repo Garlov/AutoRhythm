@@ -116,6 +116,13 @@ const MusicSelectScene = function MusicSelectSceneFunc() {
             if (e.keyCode === gameConfig.KEYS.ENTER.CODE) {
                 _selectSong();
             }
+
+            if (e.keyCode === gameConfig.KEYS.ESCAPE.CODE) {
+                const data = {
+                    sourceScene: gameConfig.SCENES.MUSIC_SELECT,
+                };
+                state.emitGlobal(eventConfig.EVENTS.MENU.ENTERED, data);
+            }
         }
     }
 
@@ -176,6 +183,8 @@ Other songs from https://unminus.com/`, {
         visualizer = undefined;
         state.scene.remove(gameConfig.SCENES.VISUALIZER);
 
+        state.getAudioManager().stopMusic();
+
         // hide settings
         store.ui.getGUIRef().close();
         store.ui.getGUIRef().hide();
@@ -212,8 +221,8 @@ Other songs from https://unminus.com/`, {
         ),
         destroy: pipe(
             localState.destroy,
-            canListen.destroy,
-            canEmit.destroy,
+            canListenState.destroy,
+            canEmitState.destroy,
         ),
     });
 };
